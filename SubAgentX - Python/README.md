@@ -1,9 +1,9 @@
 SubagentX Python
 ================
-1 - Instalar a biblioteca "netsnmp-python" : https://github.com/pief/python-netsnmpagent/
-2 - Utilizar a arquivo de configuração fornecido (snmpd.conf)
-3 - Iniciar o agente snmpd como master
-4 - Rodar o subagent como administrador
+ - 1 : Instalar a biblioteca "netsnmp-python" : https://github.com/pief/python-netsnmpagent/
+ - 2 : Utilizar a arquivo de configuração fornecido (snmpd.conf)
+ - 3 : Iniciar o agente snmpd como master
+ - 4 : Rodar o subagent como administrador
 
 Mibs
 ====
