@@ -1,0 +1,35 @@
+MINHAMIB-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, Integer32, Unsigned32, Counter32, Counter64, TimeTicks, IpAddress, enterprises
+        FROM SNMPv2-SMI
+    TEXTUAL-CONVENTION, DisplayString
+        FROM SNMPv2-TC
+    OBJECT-TYPE
+		FROM RFC-1212
+    MODULE-COMPLIANCE, OBJECT-GROUP, NOTIFICATION-GROUP
+        FROM SNMPv2-CONF
+    agentxObjects
+        FROM AGENTX-MIB
+    gerenciaUFRGS
+        FROM BASE-MIB;
+
+minhaMIB     OBJECT IDENTIFIER ::= { gerenciaUFRGS 1 }
+informacoes  OBJECT IDENTIFIER ::= { minhaMIB 1 }
+
+-----------------------------------
+--- Scalars
+-----------------------------------
+infoAlunos  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	ACCESS     read-only
+	STATUS     mandatory
+	DESCRIPTION 
+		"Nome dos alunos pertencentes ao grupo"
+	::= { informacoes 1 }
+	
+-----------------------------------
+--- Tables
+-----------------------------------
+
+END

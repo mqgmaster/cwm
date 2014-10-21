@@ -1,0 +1,9 @@
+BASE-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+   enterprises
+        FROM SNMPv2-SMI;
+
+gerenciaUFRGS   OBJECT IDENTIFIER ::= { enterprises 12619 }
+
+END
