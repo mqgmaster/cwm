@@ -49,7 +49,7 @@ except netsnmpagent.netsnmpAgentException as e:
 #################
 ### Scalars
 #################
-infoAlunos = agent.OctetString (
+infoAlunos = agent.DisplayString (
     oidstr   = "MINHAMIB-MIB::infoAlunos",
     initval  = "Daniel & Mauricio"
     )
@@ -62,8 +62,8 @@ tbTeste = agent.Table (
     indexes = [agent.Integer32()],
     columns =
         [
-            (2, agent.OctetString("Vogal")),
-            (3, agent.OctetString("Description")),
+            (2, agent.DisplayString("Vogal")),
+            (3, agent.DisplayString("Description")),
             (4, agent.Integer32(0))
         ],
     counterobj = agent.Integer32 (

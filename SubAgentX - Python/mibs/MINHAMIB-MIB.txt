@@ -22,7 +22,7 @@ tabelas      OBJECT IDENTIFIER ::= { minhaMIB 2 }
 --- Scalars
 -----------------------------------
 infoAlunos  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     DisplayString
 	ACCESS     read-only
 	STATUS     mandatory
 	DESCRIPTION 
@@ -51,8 +51,8 @@ tbTeste OBJECT-TYPE
 TbTesteEntry ::=
     SEQUENCE {
         tbTesteEntryIndex           Integer32,
-        tbTesteEntryVogal           OCTET STRING,
-        tbTesteEntryDescricao       OCTET STRING,
+        tbTesteEntryVogal           DisplayString,
+        tbTesteEntryDescricao       DisplayString,
         tbTesteEntryPosicaoAlfabeto Integer32
     }
 
@@ -75,7 +75,7 @@ tbTesteEntryIndex OBJECT-TYPE
     ::= { tbTesteEntry 1 }
 
 tbTesteEntryVogal OBJECT-TYPE
-    SYNTAX OCTET STRING
+    SYNTAX DisplayString
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
@@ -83,7 +83,7 @@ tbTesteEntryVogal OBJECT-TYPE
     ::= { tbTesteEntry 2 }
  
 tbTesteEntryDescricao OBJECT-TYPE
-    SYNTAX OCTET STRING
+    SYNTAX DisplayString
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
