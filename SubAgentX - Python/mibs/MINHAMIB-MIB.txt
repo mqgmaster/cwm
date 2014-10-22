@@ -11,11 +11,12 @@ IMPORTS
         FROM SNMPv2-CONF
     agentxObjects
         FROM AGENTX-MIB
-    gerenciaUFRGS
+   gerenciaUFRGS
         FROM BASE-MIB;
 
 minhaMIB     OBJECT IDENTIFIER ::= { gerenciaUFRGS 1 }
 informacoes  OBJECT IDENTIFIER ::= { minhaMIB 1 }
+tabelas      OBJECT IDENTIFIER ::= { minhaMIB 2 }
 
 -----------------------------------
 --- Scalars
@@ -31,5 +32,70 @@ infoAlunos  OBJECT-TYPE
 -----------------------------------
 --- Tables
 -----------------------------------
+tbTesteCount OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Numero de entradas na tabela Teste"
+    ::= { tabelas 1 }
+
+tbTeste OBJECT-TYPE
+    SYNTAX SEQUENCE OF TbTesteEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Tabela de teste"
+    ::= { tabelas 2 }
+
+TbTesteEntry ::=
+    SEQUENCE {
+        tbTesteEntryIndex           Integer32,
+        tbTesteEntryVogal           OCTET STRING,
+        tbTesteEntryDescricao       OCTET STRING,
+        tbTesteEntryPosicaoAlfabeto Integer32
+    }
+
+tbTesteEntry OBJECT-TYPE
+    SYNTAX TbTesteEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Uma linha da tabela"
+    INDEX { tbTesteEntryIndex }
+    
+    ::= { tbTeste 1 }
+
+tbTesteEntryIndex OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Coluna indice"   
+    ::= { tbTesteEntry 1 }
+
+tbTesteEntryVogal OBJECT-TYPE
+    SYNTAX OCTET STRING
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "A vogal desta linha"    
+    ::= { tbTesteEntry 2 }
+ 
+tbTesteEntryDescricao OBJECT-TYPE
+    SYNTAX OCTET STRING
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Descricao da vogal"    
+    ::= { tbTesteEntry 3 }
+
+tbTesteEntryPosicaoAlfabeto OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Posicao da vogal no alfabeto"    
+    ::= { tbTesteEntry 4 }
 
 END

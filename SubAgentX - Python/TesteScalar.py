@@ -45,10 +45,60 @@ except netsnmpagent.netsnmpAgentException as e:
     sys.exit(1)
 
 # Then we create all SNMP scalar variables we're willing to serve
+
+#################
+### Scalars
+#################
 infoAlunos = agent.OctetString (
     oidstr   = "MINHAMIB-MIB::infoAlunos",
     initval  = "Daniel & Mauricio"
     )
+
+#################
+### Tables
+#################
+tbTeste = agent.Table (
+    oidstr  = "MINHAMIB-MIB::tbTeste",
+    indexes = [agent.Integer32()],
+    columns =
+        [
+            (2, agent.OctetString("Vogal")),
+            (3, agent.OctetString("Description")),
+            (4, agent.Integer32(0))
+        ],
+    counterobj = agent.Integer32 (
+        oidstr = "MINHAMIB-MIB::tbTesteCount"
+        )
+    )
+
+#################
+### Table's rows
+#################
+tbTesteLinha1 = tbTeste.addRow([agent.Integer32(1)])                  # Adiciona o valor do indice (coluna 1)
+tbTesteLinha1.setRowCell(2, agent.OctetString("A"))                   # Adiciona o valor para a segunda coluna
+tbTesteLinha1.setRowCell(3, agent.OctetString("Primeira vogal"))      # Adiciona o valor para a terceira coluna
+tbTesteLinha1.setRowCell(4, agent.Integer32(1))                       # Adiciona o valor para a quarta coluna
+
+tbTesteLinha2 = tbTeste.addRow([agent.Integer32(2)])
+tbTesteLinha2.setRowCell(2, agent.OctetString("E"))
+tbTesteLinha2.setRowCell(3, agent.OctetString("Segunda vogal"))
+tbTesteLinha2.setRowCell(4, agent.Integer32(5))
+
+tbTesteLinha3 = tbTeste.addRow([agent.Integer32(3)])
+tbTesteLinha3.setRowCell(2, agent.OctetString("I"))
+tbTesteLinha3.setRowCell(3, agent.OctetString("Terceira vogal"))
+tbTesteLinha3.setRowCell(4, agent.Integer32(9))
+
+tbTesteLinha4 = tbTeste.addRow([agent.Integer32(4)])
+tbTesteLinha4.setRowCell(2, agent.OctetString("O"))
+tbTesteLinha4.setRowCell(3, agent.OctetString("Quarta vogal"))
+tbTesteLinha4.setRowCell(4, agent.Integer32(15))
+
+tbTesteLinha5 = tbTeste.addRow([agent.Integer32(5)])
+tbTesteLinha5.setRowCell(2, agent.OctetString("U"))
+tbTesteLinha5.setRowCell(3, agent.OctetString("Quinta vogal"))
+tbTesteLinha5.setRowCell(4, agent.Integer32(21)) 
+
 
 # Finally, we tell the agent to "start". This actually connects the agent
 # to the master agent
