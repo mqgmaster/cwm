@@ -1,10 +1,10 @@
 SubagentX Python
 ================
-1 - Instalar a biblioteca "netsnmp-python" : https://github.com/pief/python-netsnmpagent/
-2 - Utilizar a arquivo de configuração fornecido (snmpd.conf)
-3 - Colocar os arquivos de MIB no PATH do net-snmp (e.g /home/user/.snmp/mibs)
-4 - Iniciar o agente snmpd como master
-5 - Rodar o subagent como administrador
+ - 1 : Instalar a biblioteca "netsnmp-python" : https://github.com/pief/python-netsnmpagent/
+ - 2 : Utilizar a arquivo de configuração fornecido (snmpd.conf)
+ - 3 : Colocar os arquivos de MIB no PATH do net-snmp (e.g /home/user/.snmp/mibs)
+ - 4 : Iniciar o agente snmpd como master
+ - 5 : Rodar o subagent como administrador
 
 Mibs
 ====
