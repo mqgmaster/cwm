@@ -1,4 +1,4 @@
-package br.ufrgs.inf.gar.snmp.manager.ui.tab;
+package br.ufrgs.inf.gar.snmp.manager.ui.tab.generic;
 
 import java.io.Serializable;
 

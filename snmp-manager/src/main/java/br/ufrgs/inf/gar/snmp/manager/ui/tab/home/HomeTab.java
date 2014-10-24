@@ -3,11 +3,10 @@ package br.ufrgs.inf.gar.snmp.manager.ui.tab.home;
 import java.io.IOException;
 
 import br.ufrgs.inf.gar.snmp.manager.service.SNMPManager;
-import br.ufrgs.inf.gar.snmp.manager.ui.tab.ManagerTab;
+import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.ManagerTab;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Label;
 
 @SuppressWarnings("serial")
 public class HomeTab implements ManagerTab<HomeLayout> {
@@ -24,10 +23,10 @@ public class HomeTab implements ManagerTab<HomeLayout> {
 		layout.getOidButton().addClickListener(new Button.ClickListener() {
 	        public void buttonClick(ClickEvent event) {
 	            try {
-	            	layout.getBaseLayout().addComponent(new Label(
-	            			manager.getAsString(layout.getOidField().getValue())));
+	            	layout.getResponseLabel().setValue(
+	            			manager.getAsString(layout.getOidField().getValue()));
 				} catch (IOException e) {
-					layout.getBaseLayout().addComponent(new Label("error?"));
+					layout.getResponseLabel().setValue("error?");
 					e.printStackTrace();
 				}
 	        }
