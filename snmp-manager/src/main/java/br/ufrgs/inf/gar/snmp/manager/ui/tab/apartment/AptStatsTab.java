@@ -4,8 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import br.ufrgs.inf.gar.snmp.manager.service.SNMPManager;
-import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.ManagerTab;
+import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.AbstractTab;
 
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.ChartType;
@@ -21,7 +20,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
-public class AptStatsTab implements ManagerTab<AptStatsLayout> {
+public class AptStatsTab extends AbstractTab<AptStatsLayout> {
 	
 	private static final String CHART_NAME = "Consumo por Apartamento";
 	private static final String COLOR = "Cor";
@@ -47,9 +46,9 @@ public class AptStatsTab implements ManagerTab<AptStatsLayout> {
 			16.0,
 			10.0};
 	
-	private AptStatsLayout layout = new AptStatsLayout();
-
-	public AptStatsTab(SNMPManager manager) {
+	public AptStatsTab() {
+		super(AptStatsLayout.class);
+		
         ContainerDataSeries container = createContainer();
         Component table = createTable(container.getVaadinContainer());
         Component chart = createChart(container);
@@ -109,8 +108,4 @@ public class AptStatsTab implements ManagerTab<AptStatsLayout> {
 
         return chart;
     }
-
-	public AptStatsLayout getLayout() {
-		return layout;
-	}
 }

@@ -10,6 +10,7 @@ import br.ufrgs.inf.gar.snmp.manager.ui.tab.condominium.CondominiumLightTab;
 import br.ufrgs.inf.gar.snmp.manager.ui.tab.home.HomeTab;
 import br.ufrgs.inf.gar.snmp.manager.ui.tab.service.TabService;
 
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.Page;
@@ -19,6 +20,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
+@Push
 @Theme("mytheme")
 @SuppressWarnings("serial")
 public class ManagerUI extends UI {
@@ -31,7 +33,6 @@ public class ManagerUI extends UI {
 	* Porta 161 é usada para gets and sets
 	* Porta 162 é usada para traps
 	*/
-	private final SNMPManager manager = new SNMPManager(AGENT_ADDRESS);
 	private final ManagerLayout layout = new ManagerLayout();
 	private final TabService tabService = new TabService(layout.getTabs());
 	
@@ -45,27 +46,27 @@ public class ManagerUI extends UI {
     protected void init(VaadinRequest request) {
     	Page.getCurrent().setTitle(BROWSER_TITLE);
         setContent(layout);
-        tabService.openTab(new HomeTab(manager));
+        tabService.openTab(new HomeTab());
         layout.getAptosButton().addClickListener(new Button.ClickListener() {
 	        public void buttonClick(ClickEvent event) {
-	        	tabService.openExclusiveTab(new AptStatsTab(manager));
+	        	tabService.openExclusiveTab(new AptStatsTab());
 	        }
 	    });
         
         layout.getHomeButton().addClickListener(new Button.ClickListener() {
 	        public void buttonClick(ClickEvent event) {
-	        	tabService.openExclusiveTab(new HomeTab(manager));
+	        	tabService.openExclusiveTab(new HomeTab());
 	        }
 	    });
         
         layout.getCondominiumButton().addClickListener(new Button.ClickListener() {
 	        public void buttonClick(ClickEvent event) {
-	        	tabService.openExclusiveTab(new CondominiumLightTab(manager));
+	        	tabService.openExclusiveTab(new CondominiumLightTab());
 	        }
 	    });
         
         try {
-			manager.start();
+			SNMPManager.start(AGENT_ADDRESS);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

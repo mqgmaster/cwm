@@ -21,22 +21,10 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 */
 public class SNMPManager {
 	
-	/**
-	* OID - .1.3.6.1.2.1.1.4.0 => sysContact
-	* => MIB explorer/ browser é util para confirmar isso
-	*/
-	public static final OID OID_SYS_CONTACT = new OID(".1.3.6.1.2.1.1.4.0");
-
-	Snmp snmp = null;
-	String address = null;
-
-	/**
-	* Construtor
-	* 
-	* @param add IP do agente
-	*/
-	public SNMPManager(String add)	{
-		address = add;
+	private static Snmp snmp = null;
+	private static String ipAddress = null;
+	
+	private SNMPManager() {
 	}
 	
 	/**
@@ -44,7 +32,8 @@ public class SNMPManager {
 	* pois a comunicação é assincrona.
 	* @throws IOException
 	*/
-	public void start() throws IOException {
+	public static void start(String ipAddress) throws IOException {
+		SNMPManager.ipAddress = ipAddress;
 		TransportMapping transport = new DefaultUdpTransportMapping();
 		snmp = new Snmp(transport);
 		transport.listen();
@@ -57,7 +46,7 @@ public class SNMPManager {
 	* @return Valor associado ao objeto gerenciado.
 	* @throws IOException
 	*/
-	public String getAsString(OID oid) throws IOException {
+	public static String getAsString(OID oid) throws IOException {
 		ResponseEvent event = get(new OID[] { oid });
 		return event.getResponse().get(0).getVariable().toString();
 	}
@@ -68,7 +57,7 @@ public class SNMPManager {
 	* @return
 	* @throws IOException
 	*/
-	public ResponseEvent get(OID oids[]) throws IOException {
+	public static ResponseEvent get(OID oids[]) throws IOException {
 		PDU pdu = new PDU();
 		for (OID oid : oids) {
 		pdu.add(new VariableBinding(oid));
@@ -86,8 +75,8 @@ public class SNMPManager {
 	* where the data should be fetched and how.
 	* @return
 	*/
-	private Target getTarget() {
-		Address targetAddress = GenericAddress.parse(address);
+	private static Target getTarget() {
+		Address targetAddress = GenericAddress.parse(ipAddress);
 		CommunityTarget target = new CommunityTarget();
 		target.setCommunity(new OctetString("public"));
 		target.setAddress(targetAddress);
@@ -97,7 +86,7 @@ public class SNMPManager {
 		return target;
 	}
 
-	public String getAsString(String value) throws IOException {
+	public static String getAsString(String value) throws IOException {
 		return getAsString(new OID(value));
 	}
 }

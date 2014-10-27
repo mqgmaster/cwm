@@ -6,8 +6,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import br.ufrgs.inf.gar.snmp.manager.service.SNMPManager;
-import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.ManagerTab;
+import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.AbstractTab;
 
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.Axis;
@@ -25,13 +24,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
-public class CondominiumLightTab implements ManagerTab<CondominiumLightLayout> {
+public class CondominiumLightTab extends AbstractTab<CondominiumLightLayout> {
 
 	private static final String CHART_SIZE = "300px";
 	private static final String CHART_TITLE = "Consumo de Eletricidade em Tempo Real";
-	private CondominiumLightLayout layout = new CondominiumLightLayout();
 
-	public CondominiumLightTab(SNMPManager manager) {
+	public CondominiumLightTab() {
+		super(CondominiumLightLayout.class);
+		
 		final Random random = new Random();
 
 		final Chart chart = new Chart();
@@ -78,24 +78,16 @@ public class CondominiumLightTab implements ManagerTab<CondominiumLightLayout> {
 
 	public static void runWhileAttached(final Component component,
 			final Runnable task, final int interval, final int initialPause) {
-		// Until reliable push available in our demo servers
-		UI.getCurrent().setPollInterval(interval);
-
 		final Thread thread = new Thread() {
 			public void run() {
 				try {
 					Thread.sleep(initialPause);
 					while (true) {
-						Future<Void> future = component.getUI().access(task);
-						future.get();
+						UI.getCurrent().access(task);
+						System.out.println("thread running");
 						Thread.sleep(interval);
 					}
 				} catch (InterruptedException e) {
-				} catch (ExecutionException e) {
-					Logger.getLogger(getClass().getName())
-							.log(Level.WARNING,
-									"Stopping repeating command due to an exception",
-									e);
 				} catch (com.vaadin.ui.UIDetachedException e) {
 				} catch (Exception e) {
 					Logger.getLogger(getClass().getName())
@@ -108,10 +100,5 @@ public class CondominiumLightTab implements ManagerTab<CondominiumLightLayout> {
 			};
 		};
 		thread.start();
-	}
-
-	@Override
-	public CondominiumLightLayout getLayout() {
-		return layout;
 	}
 }

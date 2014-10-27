@@ -1,10 +1,13 @@
 package br.ufrgs.inf.gar.snmp.manager.ui.tab.service;
 
-import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.ManagerTab;
+import java.io.Serializable;
+
+import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.AbstractTab;
 
 import com.vaadin.ui.TabSheet;
 
-public class TabService {
+@SuppressWarnings("serial")
+public class TabService implements Serializable {
 	
 	private TabSheet tabs;
 	
@@ -15,7 +18,7 @@ public class TabService {
 	/**
 	* Remove todas as abas abertas e adiciona a aba passada como parametro.
 	*/
-	public void openExclusiveTab(ManagerTab<?> tab) {
+	public void openExclusiveTab(AbstractTab<?> tab) {
 		tabs.removeAllComponents();
 		tabs.addComponent(tab.getLayout());
 	}
@@ -23,7 +26,7 @@ public class TabService {
 	/**
 	* Adiciona a aba ao navegador mantendo as abas atualmente abertas.
 	*/
-	public void openTab(ManagerTab<?> tab) {
+	public void openTab(AbstractTab<?> tab) {
 		tabs.addComponent(tab.getLayout());
 	}
 }

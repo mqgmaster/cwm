@@ -1,19 +1,11 @@
 package br.ufrgs.inf.gar.snmp.manager.ui.tab.condominium;
 
-import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.ManagerTab;
+import br.ufrgs.inf.gar.snmp.manager.ui.tab.generic.AbstractTab;
 
 @SuppressWarnings("serial")
-public class CondominiumInfoTab implements ManagerTab<CondominiumInfoLayout>{
+public class CondominiumInfoTab extends AbstractTab<CondominiumInfoLayout>{
 
-	private CondominiumInfoLayout layout = new CondominiumInfoLayout();
-	
 	public CondominiumInfoTab() {
-		
+		super(CondominiumInfoLayout.class);
 	}
-	
-	@Override
-	public CondominiumInfoLayout getLayout() {
-		return layout;
-	}
-
 }
