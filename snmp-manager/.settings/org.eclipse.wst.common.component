@@ -46,10 +46,10 @@
     <dependent-module archiveName="vaadin-themes-7.3.3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/vaadin/vaadin-themes/7.3.3/vaadin-themes-7.3.3.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="snmp4j-1.10.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/snmp4j/snmp4j/1.10.1/snmp4j-1.10.1.jar">
+    <dependent-module archiveName="snmp4j-2.3.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/snmp4j/snmp4j/2.3.1/snmp4j-2.3.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="log4j-1.2.9.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/log4j/log4j/1.2.9/log4j-1.2.9.jar">
+    <dependent-module archiveName="log4j-1.2.14.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/log4j/log4j/1.2.14/log4j-1.2.14.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="vaadin-charts-1.1.7.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/vaadin/addon/vaadin-charts/1.1.7/vaadin-charts-1.1.7.jar">
