@@ -24,7 +24,7 @@ public class Garage implements Serializable {
     private Integer number;
      
     @Column(name="is_occupied")
-    private String isOccupied;
+    private Boolean isOccupied;
     
     @ManyToOne
     @JoinColumn(name="apartment_id")
@@ -34,8 +34,13 @@ public class Garage implements Serializable {
     @JoinColumn(name="condominium_id")
     private Condominium condominium;
     
-    public Garage(Integer number, Condominium condominium) {
+    public Garage() {
+	}
+    
+    public Garage(Integer number, Apartment apt, Condominium condominium) {
         this.number = number;
+        this.apartment = apt;
+        this.isOccupied = false;
         this.condominium = condominium;
     }
     
@@ -63,11 +68,11 @@ public class Garage implements Serializable {
 		this.number = number;
 	}
 
-	public String getIsOccupied() {
+	public Boolean isOccupied() {
 		return isOccupied;
 	}
 
-	public void setIsOccupied(String isOccupied) {
+	public void setOccupied(Boolean isOccupied) {
 		this.isOccupied = isOccupied;
 	}
 

@@ -39,10 +39,14 @@ public class Employee implements Serializable {
     @JoinColumn(name="condominium_id")
     private Condominium condominium;
     
+    public Employee() {
+	}
+    
     public Employee(String name, String role, Integer monthWage, Integer weekWorkload, Condominium condominium) {
         this.name = name;
         this.role = role;
         this.monthWage = monthWage;
+        this.isWorking = false;
         this.weekWorkload = weekWorkload;
         this.condominium = condominium;
     }
@@ -107,11 +111,11 @@ public class Employee implements Serializable {
 		this.weekWorkload = weekWorkload;
 	}
 
-	public Boolean getIsWorking() {
+	public Boolean isWorking() {
 		return isWorking;
 	}
 
-	public void setIsWorking(Boolean isWorking) {
+	public void setWorking(Boolean isWorking) {
 		this.isWorking = isWorking;
 	}
 }

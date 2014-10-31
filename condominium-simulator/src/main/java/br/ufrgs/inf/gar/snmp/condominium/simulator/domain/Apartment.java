@@ -37,20 +37,26 @@ public class Apartment implements Serializable {
     private Integer numPeople;
     
     @Column(name="water_consumption")
-    private Double waterConsumption;
+    private Float waterConsumption;
      
     @Column(name="light_consumption")
-    private Double lightConsumption;
+    private Float lightConsumption;
     
     @ManyToOne
     @JoinColumn(name="condominium_id")
     private Condominium condominium;
+    
+    public Apartment() {
+	}
      
     public Apartment(Integer number, String ownerName, Integer numRooms, Condominium condominium) {
         this.number = number;
         this.ownerName = ownerName;
         this.numRooms = numRooms;
         this.condominium = condominium;
+        this.numPeople = 0;
+        this.lightConsumption = new Float(0);
+        this.waterConsumption = new Float(0);
     }
      
     public boolean equals(Object another) {
@@ -101,19 +107,19 @@ public class Apartment implements Serializable {
 		this.numPeople = numPeople;
 	}
 
-	public Double getWaterConsumption() {
+	public Float getWaterConsumption() {
 		return waterConsumption;
 	}
 
-	public void setWaterConsumption(Double waterConsumption) {
+	public void setWaterConsumption(Float waterConsumption) {
 		this.waterConsumption = waterConsumption;
 	}
 
-	public Double getLightConsumption() {
+	public Float getLightConsumption() {
 		return lightConsumption;
 	}
 
-	public void setLightConsumption(Double lightConsumption) {
+	public void setLightConsumption(Float lightConsumption) {
 		this.lightConsumption = lightConsumption;
 	}
 

@@ -32,10 +32,13 @@ public class Condominium implements Serializable {
     private String managerName;
     
     @Column(name="water_consumption")
-    private Float waterConsumption;
+    private Float waterConsumption; //litros
     
     @Column(name="light_consumption")
-    private Float lightConsumption;
+    private Float lightConsumption; //watts
+    
+    public Condominium() {
+    }
      
     public Condominium(String name, String address, String managerName) {
         this.name = name;
