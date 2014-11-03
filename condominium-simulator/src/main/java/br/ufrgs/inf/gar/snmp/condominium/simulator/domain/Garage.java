@@ -31,17 +31,17 @@ public class Garage implements Serializable {
     private Apartment apartment;
     
     @ManyToOne
-    @JoinColumn(name="condominium_id")
-    private Condominium condominium;
+    @JoinColumn(name="sector_id")
+    private Sector sector;
     
     public Garage() {
 	}
     
-    public Garage(Integer number, Apartment apt, Condominium condominium) {
+    public Garage(Integer number, Apartment apt, Sector sector) {
         this.number = number;
         this.apartment = apt;
         this.isOccupied = false;
-        this.condominium = condominium;
+        this.sector = sector;
     }
     
     public boolean equals(Object another) {
@@ -84,11 +84,11 @@ public class Garage implements Serializable {
 		this.apartment = apartment;
 	}
 
-	public Condominium getCondominium() {
-		return condominium;
+	public Sector getSector() {
+		return sector;
 	}
 
-	public void setCondominium(Condominium condominium) {
-		this.condominium = condominium;
+	public void setSector(Sector sector) {
+		this.sector = sector;
 	}
 }

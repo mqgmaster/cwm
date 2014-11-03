@@ -10,6 +10,8 @@ import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Apartment;
 import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Condominium;
 import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Employee;
 import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Garage;
+import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Lamp;
+import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Sector;
 import br.ufrgs.inf.gar.snmp.condominium.simulator.persistence.SessionFactoryService;
 
 /**
@@ -23,10 +25,14 @@ public class Simulator {
 	
 	private static final long INTERVAL_ONE = 5000;
 	private static final long INTERVAL_TWO = 8000;
-	private static Integer condominiumId = 7;
+	private static Integer condominiumId;
+	private static Integer sectorGarageId;
+	private static Integer sectorFirstFloorId;
+	private static Integer sectorSecondFloorId;
 	private static final List<Integer> APTS = new ArrayList<Integer>();
 	private static final List<Integer> EMPS = new ArrayList<Integer>();
 	private static final List<Integer> GARS = new ArrayList<Integer>();
+	private static final List<Integer> LAMPS = new ArrayList<Integer>();
 	
     public static void main( String[] args ) {
         System.out.println( "test started" );
@@ -48,6 +54,10 @@ public class Simulator {
 			            //acumulado de 5 segundos, devido ao interalo da thread
 			            condo.setLightConsumption(generateLightConsumption(random));  //ex: 0.449
 			            condo.setWaterConsumption(generateWaterConsumption(random));  //ex: 0.008
+			            if (random.nextInt(10) == 1) 
+			            	condo.setNumUnknownPeople(random.nextInt(10));
+			            else condo.setNumUnknownPeople(0);
+
 			            session.save(condo);
 			            session.getTransaction().commit();
 			            
@@ -134,21 +144,33 @@ public class Simulator {
 		condominiumId = (Integer) session.save(new Condominium("Floresta", "Bento Gonçalves 133", "Silveira"));
         Condominium condo = (Condominium) session.get(Condominium.class, condominiumId);
         
-        APTS.add((Integer) session.save(new Apartment(101, "Silva", 2, condo)));
-        APTS.add((Integer) session.save(new Apartment(102, "Silva", 2, condo)));
-        APTS.add((Integer) session.save(new Apartment(103, "Bento", 3, condo)));
-        APTS.add((Integer) session.save(new Apartment(104, "Bento", 3, condo)));
-        APTS.add((Integer) session.save(new Apartment(201, "Silva", 2, condo)));
-        APTS.add((Integer) session.save(new Apartment(202, "Silva", 2, condo)));
-        APTS.add((Integer) session.save(new Apartment(203, "Bento", 2, condo)));
-        APTS.add((Integer) session.save(new Apartment(204, "Bento", 2, condo)));
+        sectorGarageId = (Integer) session.save(new Sector("Garagem", condo));
+        Sector sectorGarage = (Sector) session.get(Sector.class, sectorGarageId);
+        sectorFirstFloorId = (Integer) session.save(new Sector("Primeiro andar", condo));
+        Sector sectorFirstFloor = (Sector) session.get(Sector.class, sectorFirstFloorId);
+        sectorSecondFloorId = (Integer) session.save(new Sector("Segundo andar", condo));
+        Sector sectorSecondFloor = (Sector) session.get(Sector.class, sectorSecondFloorId);
+        
+        APTS.add((Integer) session.save(new Apartment(101, "Silva", 2, sectorFirstFloor)));
+        APTS.add((Integer) session.save(new Apartment(102, "Silva", 2, sectorFirstFloor)));
+        APTS.add((Integer) session.save(new Apartment(103, "Bento", 3, sectorFirstFloor)));
+        APTS.add((Integer) session.save(new Apartment(104, "Bento", 3, sectorFirstFloor)));
+        APTS.add((Integer) session.save(new Apartment(201, "Silva", 2, sectorSecondFloor)));
+        APTS.add((Integer) session.save(new Apartment(202, "Silva", 2, sectorSecondFloor)));
+        APTS.add((Integer) session.save(new Apartment(203, "Bento", 2, sectorSecondFloor)));
+        APTS.add((Integer) session.save(new Apartment(204, "Bento", 2, sectorSecondFloor)));
         
         EMPS.add((Integer) session.save(new Employee("Juarez", "Porteiro", 1000, 40, condo)));
         EMPS.add((Integer) session.save(new Employee("Roberto", "Faxineiro", 1000, 40, condo)));
         EMPS.add((Integer) session.save(new Employee("Ronaldo", "Porteiro", 1000, 40, condo)));
         
-        GARS.add((Integer) session.save(new Garage(1, (Apartment) session.get(Apartment.class, APTS.get(0)), condo)));
-        GARS.add((Integer) session.save(new Garage(2, (Apartment) session.get(Apartment.class, APTS.get(1)), condo)));
+        GARS.add((Integer) session.save(new Garage(1, (Apartment) session.get(Apartment.class, APTS.get(0)), sectorGarage)));
+        GARS.add((Integer) session.save(new Garage(2, (Apartment) session.get(Apartment.class, APTS.get(1)), sectorGarage)));
+        
+        LAMPS.add((Integer) session.save(new Lamp(sectorGarage)));
+        LAMPS.add((Integer) session.save(new Lamp(sectorGarage)));
+        LAMPS.add((Integer) session.save(new Lamp(sectorFirstFloor)));
+        LAMPS.add((Integer) session.save(new Lamp(sectorSecondFloor)));
         
         session.getTransaction().commit();
         session.close();

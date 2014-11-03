@@ -32,10 +32,21 @@ public class Condominium implements Serializable {
     private String managerName;
     
     @Column(name="water_consumption")
-    private Float waterConsumption; //litros
+    private Float waterConsumption; //litros de agua consumidos pelo condominio, retirando
+    								//o consumo de cada apartamento
+    
+    @Column(name="water_cons_limit")
+    private Float waterConsLimit;
     
     @Column(name="light_consumption")
-    private Float lightConsumption; //watts
+    private Float lightConsumption; //watts consumidos pelo condominio, retirando
+    								//o consumo de cada apartamento
+    
+    @Column(name="light_cons_limit")
+    private Float lightConsLimit;
+    
+    @Column(name="num_unknown_people")
+    private Integer numUnknownPeople; 	//numero total de pessoas não identificadas no condominio (ladrão?).
     
     public Condominium() {
     }
@@ -45,7 +56,10 @@ public class Condominium implements Serializable {
         this.address = address;
         this.managerName = managerName;
         this.waterConsumption = new Float(0);
+        this.waterConsLimit = new Float(0.01);
         this.lightConsumption = new Float(0);
+        this.lightConsLimit = new Float(0.8);
+        this.numUnknownPeople = 0;
     }
      
     public String getName() {
@@ -102,5 +116,29 @@ public class Condominium implements Serializable {
 
 	public void setLightConsumption(Float lightConsumption) {
 		this.lightConsumption = lightConsumption;
+	}
+
+	public Integer getNumUnknownPeople() {
+		return numUnknownPeople;
+	}
+
+	public void setNumUnknownPeople(Integer numUnknownPeople) {
+		this.numUnknownPeople = numUnknownPeople;
+	}
+
+	public Float getWaterConsLimit() {
+		return waterConsLimit;
+	}
+
+	public void setWaterConsLimit(Float waterConsLimit) {
+		this.waterConsLimit = waterConsLimit;
+	}
+
+	public Float getLightConsLimit() {
+		return lightConsLimit;
+	}
+
+	public void setLightConsLimit(Float lightConsLimit) {
+		this.lightConsLimit = lightConsLimit;
 	}
 }

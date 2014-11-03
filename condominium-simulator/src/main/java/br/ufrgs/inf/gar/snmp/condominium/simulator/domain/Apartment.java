@@ -38,25 +38,33 @@ public class Apartment implements Serializable {
     
     @Column(name="water_consumption")
     private Float waterConsumption;
+    
+    @Column(name="water_cons_limit")
+    private Float waterConsLimit;
      
     @Column(name="light_consumption")
     private Float lightConsumption;
     
+    @Column(name="light_cons_limit")
+    private Float lightConsLimit;
+    
     @ManyToOne
-    @JoinColumn(name="condominium_id")
-    private Condominium condominium;
+    @JoinColumn(name="sector_id")
+    private Sector sector;
     
     public Apartment() {
 	}
      
-    public Apartment(Integer number, String ownerName, Integer numRooms, Condominium condominium) {
+    public Apartment(Integer number, String ownerName, Integer numRooms, Sector sector) {
         this.number = number;
         this.ownerName = ownerName;
         this.numRooms = numRooms;
-        this.condominium = condominium;
+        this.sector = sector;
         this.numPeople = 0;
         this.lightConsumption = new Float(0);
+        this.lightConsLimit = new Float(0.8);        
         this.waterConsumption = new Float(0);
+        this.waterConsLimit = new Float(0.01);
     }
      
     public boolean equals(Object another) {
@@ -123,11 +131,27 @@ public class Apartment implements Serializable {
 		this.lightConsumption = lightConsumption;
 	}
 
-	public Condominium getCondominium() {
-		return condominium;
+	public Sector getSector() {
+		return sector;
 	}
 
-	public void setCondominium(Condominium condominium) {
-		this.condominium = condominium;
+	public void setSector(Sector sector) {
+		this.sector = sector;
+	}
+	
+	public Float getWaterConsLimit() {
+		return waterConsLimit;
+	}
+
+	public void setWaterConsLimit(Float waterConsLimit) {
+		this.waterConsLimit = waterConsLimit;
+	}
+
+	public Float getLightConsLimit() {
+		return lightConsLimit;
+	}
+
+	public void setLightConsLimit(Float lightConsLimit) {
+		this.lightConsLimit = lightConsLimit;
 	}
 }

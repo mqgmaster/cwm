@@ -18,5 +18,7 @@
         <mapping class="br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Apartment" />
         <mapping class="br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Employee" />
         <mapping class="br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Garage" />
+        <mapping class="br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Lamp" />
+        <mapping class="br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Sector" />
     </session-factory>
 </hibernate-configuration>
