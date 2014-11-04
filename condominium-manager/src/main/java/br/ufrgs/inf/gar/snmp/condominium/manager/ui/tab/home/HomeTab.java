@@ -23,7 +23,7 @@ public class HomeTab extends AbstractTab<HomeLayout> {
 	        public void buttonClick(ClickEvent event) {
 	            try {
 	            	layout.getResponseLabel().setValue(
-	            			SNMPManager.getAsString(layout.getOidField().getValue()));
+	            			SNMPManager.get(layout.getOidField().getValue()));
 				} catch (IOException e) {
 					layout.getResponseLabel().setValue("error?");
 					e.printStackTrace();
