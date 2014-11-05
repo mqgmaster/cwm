@@ -6,12 +6,12 @@ import java.util.Random;
 
 import org.hibernate.Session;
 
-import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Apartment;
-import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Condominium;
-import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Employee;
-import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Garage;
-import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Lamp;
-import br.ufrgs.inf.gar.snmp.condominium.simulator.domain.Sector;
+import br.ufrgs.inf.gar.snmp.condominium.domain.Apartment;
+import br.ufrgs.inf.gar.snmp.condominium.domain.Condominium;
+import br.ufrgs.inf.gar.snmp.condominium.domain.Employee;
+import br.ufrgs.inf.gar.snmp.condominium.domain.Garage;
+import br.ufrgs.inf.gar.snmp.condominium.domain.Lamp;
+import br.ufrgs.inf.gar.snmp.condominium.domain.Sector;
 import br.ufrgs.inf.gar.snmp.condominium.simulator.persistence.SessionFactoryService;
 
 /**
@@ -29,10 +29,10 @@ public class Simulator {
 	private static Integer sectorGarageId;
 	private static Integer sectorFirstFloorId;
 	private static Integer sectorSecondFloorId;
-	private static final List<Integer> APTS = new ArrayList<Integer>();
-	private static final List<Integer> EMPS = new ArrayList<Integer>();
-	private static final List<Integer> GARS = new ArrayList<Integer>();
-	private static final List<Integer> LAMPS = new ArrayList<Integer>();
+	private static final List<Integer> APTS = new ArrayList<>();
+	private static final List<Integer> EMPS = new ArrayList<>();
+	private static final List<Integer> GARS = new ArrayList<>();
+	private static final List<Integer> LAMPS = new ArrayList<>();
 	
     public static void main( String[] args ) {
         System.out.println( "test started" );
