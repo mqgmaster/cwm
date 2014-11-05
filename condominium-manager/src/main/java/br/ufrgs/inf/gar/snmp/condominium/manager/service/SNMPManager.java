@@ -2,6 +2,8 @@ package br.ufrgs.inf.gar.snmp.condominium.manager.service;
 
 import java.io.IOException;
 import java.rmi.UnexpectedException;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
@@ -17,6 +19,10 @@ import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
+import org.snmp4j.util.DefaultPDUFactory;
+import org.snmp4j.util.TableEvent;
+import org.snmp4j.util.TableUtils;
+
 
 /**
 * Gerente SNMP.
@@ -100,19 +106,12 @@ public class SNMPManager {
 		return target;
 	}
 
-	public static String getNext(String oid) throws IOException {
-		ResponseEvent event = getNext(new OID(oid));
-		return event.getResponse().get(0).getVariable().toString();
-	}
-	
-	private static ResponseEvent getNext(OID oid) throws IOException {
-		PDU pdu = new PDU();
-		pdu.add(new VariableBinding(oid));
-		pdu.setType(PDU.GET);
-		ResponseEvent event = snmp.send(pdu, getTarget(), null);
-		if(event != null) {
-			return event;
-		}
-		throw new RuntimeException("GET timed out");
+	public static Iterator<TableEvent> walk(String[] columnsOids) throws IOException {
+		DefaultPDUFactory localfactory=new DefaultPDUFactory();
+		TableUtils tableRet=new TableUtils(snmp,localfactory);
+		tableRet.setMaxNumColumnsPerPDU(30);
+		OID[] oids=new OID[columnsOids.length];
+		Arrays.asList(columnsOids).toArray(oids);
+		return tableRet.getTable(getTarget(),oids,null,null).iterator();
 	}
 }
