@@ -38,7 +38,7 @@ try:
         AgentName      = "Simple Agent",
         MasterSocket   = options.mastersocket,
         PersistenceDir = options.persistencedir,
-        MIBFiles       = [os.path.abspath(os.path.dirname(sys.argv[0])) + "/mibs/BASE-MIB.txt",os.path.abspath(os.path.dirname(sys.argv[0])) + "/mibs/MINHAMIB-MIB.txt"]
+        MIBFiles       = [os.path.abspath(os.path.dirname(sys.argv[0])) + "/mibs/BASE-MIB.txt",os.path.abspath(os.path.dirname(sys.argv[0])) + "/mibs/CONDOMINIO-MIB.txt"]
         )
 except netsnmpagent.netsnmpAgentException as e:
     print "{0}: {1}".format(prgname, e)
@@ -47,29 +47,169 @@ except netsnmpagent.netsnmpAgentException as e:
 # Then we create all SNMP scalar variables we're willing to serve
 
 #################
-### Scalars
+### Apartment
 #################
-infoAlunos = agent.DisplayString (
-    oidstr   = "MINHAMIB-MIB::infoAlunos",
-    initval  = "Daniel & Mauricio"
-    )
-
-#################
-### Tables
-#################
-tbTeste = agent.Table (
-    oidstr  = "MINHAMIB-MIB::tbTeste",
+tbApartments = agent.Table (
+    oidstr  = "CONDOMINIO-MIB::tbApartments",
     indexes = [agent.Integer32()],
     columns =
         [
-            (2, agent.DisplayString("Vogal")),
-            (3, agent.DisplayString("Description")),
-            (4, agent.Integer32(0))
-        ],
+            (2, agent.Integer32(0)),
+            (3, agent.DisplayString("No Owner")),
+            (4, agent.Integer32(0)),
+            (5, agent.Integer32(0))
+        ]
     counterobj = agent.Integer32 (
-        oidstr = "MINHAMIB-MIB::tbTesteCount"
-        )
+        oidstr = "CONDOMINIO-MIB::apCount"
+        )    
     )
+
+
+#################
+### Condominium
+#################
+cmName = agent.DisplayString (
+    oidstr  = "CONDOMINIO-MIB::cmName",
+    initVal = "Condominio"
+    )
+
+cmAddress = agent.DisplayString (
+    oidstr  = "CONDOMINIO-MIB::cmAddress",
+    initVal = "Rua Inventada, 00 - Bairro Imaginario"
+    )
+
+cmManager = agent.DisplayString (
+    oidstr   = "CONDOMINIO-MIB::cmManager",
+    initVal  = "Sindico Contratado",
+    writable = True
+    )
+
+cmUPeople = agent.Integer32 (
+    oidstr  = "CONDOMINIO-MIB::cmUPeople",
+    initVal = 0
+    )
+
+
+#################
+### Employee
+#################
+tbEmployee = agent.Table (
+    oidstr  = "CONDOMINIO-MIB::tbEmployee",
+    indexes = [agent.Integer32()],
+    columns =
+        [
+            (2, agent.DisplayString("No name")),
+            (3, agent.DisplayString("No role")),
+            (4, agent.Integer32(0)),
+            (5, agent.Integer32(0)),
+            (6, agent.DisplayString("False"))
+        ]
+    counterobj = agent.Integer32 (
+        oidstr = "CONDOMINIO-MIB::epCount"
+        )    
+    )
+
+
+#################
+### Garage
+#################
+tbGarage = agent.Table (
+    oidstr  = "CONDOMINIO-MIB::tbGarage",
+    indexes = [agent.Integer32()],
+    columns =
+        [
+            (2, agent.Integer32(0)),
+            (3, agent.Integer32(0)),
+            (4, agent.DisplayString("False")),
+        ]
+    counterobj = agent.Integer32 (
+        oidstr = "CONDOMINIO-MIB::ggCount"
+        )    
+    )
+
+
+#################
+### Water
+#################
+tbApWater = agent.Table (
+    oidstr  = "CONDOMINIO-MIB::tbApWater",
+    indexes = [agent.Integer32()],
+    columns =
+        [
+            (2, agent.Integer32(0)),
+            (3, agent.Integer32(0)),
+            (4, agent.Integer32(0)),
+        ]
+    counterobj = agent.Integer32 (
+        oidstr = "CONDOMINIO-MIB::wtApCount"
+        )    
+    )
+
+wtIConsumption = agent.Integer32 (
+    oidstr  = "CONDOMINIO-MIB::wtIConsumption",
+    initVal = 0
+    )
+
+wtIConsuptionLimit = agent.Integer32 (
+    oidstr   = "CONDOMINIO-MIB::wtIConsuptionLimit",
+    initVal  = 0,
+    writable = True
+    )
+
+wtAConsumption = agent.Counter32 (
+    oidstr   = "CONDOMINIO-MIB::wtAConsumption",
+    initVal  = 0,
+    )
+
+wtAConsumptionLimit = agent.Integer32 (
+    oidstr   = "CONDOMINIO-MIB::wtAConsumptionLimit",
+    initVal  = 0,
+    writable = True
+    )
+
+
+#################
+### Electricity
+#################
+tbApElectricity = agent.Table (
+    oidstr  = "CONDOMINIO-MIB::tbApElectricity",
+    indexes = [agent.Integer32()],
+    columns =
+        [
+            (2, agent.Integer32(0)),
+            (3, agent.Integer32(0)),
+            (4, agent.Integer32(0)),
+        ]
+    counterobj = agent.Integer32 (
+        oidstr = "CONDOMINIO-MIB::elApCount"
+        )    
+    )
+
+tbBulbElectricity = agent.Table (
+    oidstr  = "CONDOMINIO-MIB::tbBulbElectricity",
+    indexes = [agent.Integer32()],
+    columns =
+        [
+            (2, agent.Integer32(0)),
+            (3, agent.DisplayString("None")),
+            (4, agent.Integer32(0)),
+        ]
+    counterobj = agent.Integer32 (
+        oidstr = "CONDOMINIO-MIB::elBulbCounter"
+        )    
+    )
+
+elConsumption = agent.Integer32 (
+    oidstr  = "CONDOMINIO-MIB::elConsumption",
+    initVal = 0
+    )
+
+elConsumptionLimit = agent.Integer32 (
+    oidstr   = "CONDOMINIO-MIB::elConsumptionLimit",
+    initVal  = 0,
+    writable = True
+    )
+
 
 #################
 ### Table's rows
