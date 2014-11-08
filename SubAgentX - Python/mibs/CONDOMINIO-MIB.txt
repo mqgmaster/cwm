@@ -1,0 +1,548 @@
+CONDOMINIO-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, Integer32, Unsigned32, Counter32, Counter64, TimeTicks, IpAddress, enterprises
+        FROM SNMPv2-SMI
+    TEXTUAL-CONVENTION, DisplayString
+        FROM SNMPv2-TC
+    OBJECT-TYPE
+        FROM RFC-1212
+    MODULE-COMPLIANCE, OBJECT-GROUP, NOTIFICATION-GROUP
+        FROM SNMPv2-CONF
+    agentxObjects
+        FROM AGENTX-MIB
+   gerenciaUFRGS
+        FROM BASE-MIB;
+
+condominioGerencia OBJECT-IDENTIFIER ::= { gerenciaUFRGS 2 }
+
+
+apartment     OBJECT-IDENTIFIER ::= { condominioGerencia 1 }
+condominium   OBJECT-IDENTIFIER ::= { condominioGerencia 2 }
+employee      OBJECT-IDENTIFIER ::= { condominioGerencia 3 }
+garage        OBJECT-IDENTIFIER ::= { condominioGerencia 4 }
+water         OBJECT-IDENTIFIER ::= { condominioGerencia 5 }
+electricity   OBJECT-IDENTIFIER ::= { condominioGerencia 6 }
+
+
+-----------------------------------
+--- APARTMENT
+-----------------------------------
+apCount OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of apartments in the condominium"
+    ::= { apartment 1 }
+
+tbApartments OBJECT-TYPE
+    SYNTAX SEQUENCE OF TbApEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Table containing informations about apartments"
+    ::= { apartment 2 }
+
+TbApEntry ::=
+    SEQUENCE {
+        tbApEntryIndex  Integer32,
+        tbApEntryNumber Integer32,
+        tbApEntryOwner  DisplayString,
+        tbApEntryRooms  Integer32,
+        tbApEntryPeople Integer32
+    }
+
+tbApEntry OBJECT-TYPE
+    SYNTAX TbApEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about a single apartment"
+    INDEX  { tbApEntryIndex }
+    ::= { tbApartments 1 }
+
+tbApEntryIndex OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Table index"
+    ::= { tbApEntry 1 }
+
+tbApEntryNumber OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The number of this apartment"
+    ::= { tbApEntry 2 }
+
+tbApEntryOwner OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Current owner name of this apartment"
+    ::= { tbApEntry 3 }
+
+tbApEntryRooms OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "The number of rooms in this apartment"
+    ::= { tbApEntry 4 }
+
+tbApEntryPeople OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of people currently inside condominium related to this apartment"
+    ::= { tbApEntry 5 }
+
+
+-----------------------------------
+--- CONDOMINIUM
+-----------------------------------
+cmName OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Name of this condominium"
+    ::= { condominium 1 }
+
+cmAddress OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Address of this condominium"
+    ::= { condominium 2 }
+
+cmManager OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Name of condominium manager"
+    ::= { condominium 3 }
+
+cmUPeople OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of unknown people in the condominium"
+    ::= { condominium 4 }
+
+
+-----------------------------------
+--- EMPLOYEE
+-----------------------------------
+epCount OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of employees"
+    ::= { employee 1 }
+
+tbEmployee OBJECT-TYPE
+    SYNTAX SEQUENCE OF TbEpEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Table containing information about employees"
+    ::= { employee 2 }
+
+TbEpEntry ::=
+    SEQUENCE {
+        tbEpEntryIndex    Integer32,
+        tbEpEntryName     DisplayString,
+        tbEpEntryRole     DisplayString,
+        tbEpEntryWage     Integer32,
+        tbEpEntryWorkLoad Integer32,
+        tbEpEntryWorking  DisplayString
+    }
+
+tbEpEntry OBJECT-TYPE
+    SYNTAX TbEpEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about one employee"
+    INDEX { tbEpEntryIndex }
+    ::= { tbEmployee 1 }
+
+tbEpEntryIndex OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-onlye
+    STATUS mandatory
+    DESCRIPTION
+        "Table index"
+    ::= { tbEpEntry 1 }
+
+tbEpEntryName OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Name of employee"
+    ::= { tbEpEntry 2 }
+
+tbEpEntryRole OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Employee current role"
+    ::= { tbEpEntry 3 }
+
+tbEpEntryWage OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Employee month wage"
+    ::= { tbEpEntry 4 }
+
+tbEpEntryWorkLoad OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Employee week worload"
+    ::= { tbEpEntry 5 }
+
+tbEpEntryWorking OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Information if employee is working at this moment"
+    ::= { tbEpEntry 6}
+
+-----------------------------------
+--- GARAGE
+-----------------------------------
+
+ggCount OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of garage spots"
+    ::= { garage 1 }
+
+tbGarage OBJECT-TYPE
+    SYNTAX SEQUENCE OF TbGgEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about garage spots"
+    ::= { garage 2 }
+
+TbGgEntry ::=
+    SEQUENCE {
+        tbGgEntryIndex    Integer32,
+        tbGgEntryNumber   Integer32,
+        tbGgEntryApNumber Integer32,
+        tbGgEntryOccupied DisplayString
+    }
+
+tbGgEntry OBJECT-TYPE
+    SYNTAX TbGgEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about a single garage spot"
+    INDEX { tbGgEntryIndex }
+    ::= { tbGarage 1 }
+
+tbGgEntryIndex OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Table index"
+    ::= { tbGgEntry 1 }
+
+tbGgEntryNumber OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of this garage spot"
+    ::= { tbGgEntry 2 }
+
+tbGgEntryApNumber OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Number of apartment this spot is related to"
+    ::= { tbGgEntry 3 }
+
+tbGgEntryOccupied OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Information if spot is occupied"
+    ::= { tbGgEntry 4 }
+
+
+-----------------------------------
+--- WATER
+-----------------------------------
+
+wtApCount OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of apartment consuming water"
+    ::= { water 1 }
+
+tbApWater OBJECT-TYPE
+    SYNTAX SEQUENCE OF TbApWtEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about apartments water consumption"
+    ::= { water 2 }
+
+TbApWtEntry ::=
+    SEQUENCE {
+        tbApWtEntryIndex      Integer32
+        tbApWtEntryNumber     Integer32
+        tbApWtEntryConsuption Integer32
+        tbApWtEntryLimit      Integer32
+    }
+
+tbApWtEntry OBJECT-TYPE
+    SYNTAX TbApWtEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about a single apartment water consumption"
+    INDEX { tbApWtEntryIndex }
+    ::= { tbApWater 1}
+
+tbApWtEntryIndex OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Table index"
+    ::= { tbApWtEntry 1 }
+
+tbApWtEntryNumber OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of apartment related to this consumption"
+    ::= { tbApWtEntry 2 }
+
+tbApWtEntryConsuption OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Water consumption of this apartment"
+    ::= { tbApWtEntry 3 }
+
+tbApWtEntryLimit OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Water consumption limit for this apartment"
+    ::= { tbApWtEntry 4 }
+
+
+wtIConsumption OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Condominium instant water consumption"
+    ::= { water 3 }
+
+wtIConsuptionLimit OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Condominium instant water consuption limit"
+    ::= { water 4 }
+
+wtAConsumption OBJECT-TYPE
+    SYNTAX Counter32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Condominium accumulated water consumption"
+    ::= { water 5 }
+
+wtAConsumptionLimit OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Condominium accumulated water consumption limit"
+    ::= { water 6 }
+
+-----------------------------------
+--- ELECTRICITY
+-----------------------------------
+
+elApCount OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of apartment consuming electricity"
+    ::= { electricity 1 }
+
+tbApElectricity OBJECT-TYPE
+    SYNTAX SEQUENCE OF TbApElEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about apartment electricity consumption"
+    ::= { electricity 2 }
+
+TbApElEntry ::=
+    SEQUENCE {
+        tbApElEntryIndex        Integer32
+        tbApElEntryNumber       Integer32
+        tbApElEntryConsumption  Integer32
+        tbApElEntryLimit        Integer32
+    }
+
+tbApElEntry OBJECT-TYPE
+    SYNTAX TbApElEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about a single apartment electricity consumption"
+    INDEX { tbApElEntryIndex }
+    ::= { tbApElectricity 1 }
+
+tbApElEntryIndex OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Table index"
+    ::= { tbApElEntry 1 }
+
+tbApElEntryNumber OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of apartment related to this consumption"
+    ::= { tbApElEntry 2 }
+
+tbApElEntryConsumption OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Electricity consumption of this apartment"
+    ::= { tbApElEntry 3 }
+
+ tbApElEntryLimit OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS madatory
+    DESCRIPTION
+        "Electricity consumption limit for this apartment"
+    ::= { tbApElEntry 4 }
+
+elBulbCounter OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Number of light bulbs in the condominium"
+    ::= { electricity 3 }
+
+tbBulbElectricity OBJECT-TYPE
+    SYNTAX SEQUENCE OF TbBulbEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about every light bulb in the condominium"
+    ::= { electricity 4 }
+
+TbBulbEntry ::=
+    SEQUENCE {
+        tbBulbEntryIndex  Integer32,
+        tbBulbEntrySector DisplayString,
+        tbBulbEntryNumber Integer32,
+        tbBulbEntryStatus Integer32
+    }
+
+tbBulbEntry OBJECT-TYPE
+    SYNTAX TbBulbEntry
+    ACCESS not-accessible
+    STATUS mandatory
+    DESCRIPTION
+        "Information about a single ligth bulb"
+    INDEX { tbBulbEntryIndex }
+    ::= { tbBulbElectricity 1 }
+
+tbBulbEntryIndex OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Table index"
+    ::= { tbBulbEntry 1 }
+
+tbBulbEntrySector OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Location of this light bulb"
+    ::= { tbBulbEntry 2 }
+
+tbBulbEntryNumber OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Light bulb id in the sector"
+    ::= { tbBulbEntry 3 }
+
+tbBulbEntryStatus OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Status if bulb is on/off"
+    ::= { tbBulbEntry 4 }
+
+elConsumption OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Condominium electricity consumption"
+    ::= { electricity 5 }
+
+elConsumptionLimit OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Condominium electricity consumption limit"
+    ::= { electricity 6 }
