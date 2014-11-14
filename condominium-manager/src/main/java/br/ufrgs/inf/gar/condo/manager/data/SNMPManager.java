@@ -1,4 +1,4 @@
-package br.ufrgs.inf.gar.condominium.manager.data;
+package br.ufrgs.inf.gar.condo.manager.data;
 
 import java.io.IOException;
 import java.rmi.UnexpectedException;
@@ -108,15 +108,19 @@ public class SNMPManager {
 	}
 
 	public static Iterator<TableEvent> walk(String...columnsOids) throws IOException {
-		DefaultPDUFactory localfactory=new DefaultPDUFactory();
-		TableUtils tableRet=new TableUtils(snmp,localfactory);
-		tableRet.setMaxNumColumnsPerPDU(30);
 		List<OID> list = new ArrayList<OID>();
 		for (String oid : columnsOids) {
 			list.add(new OID(oid));
 		}
 		OID[] oids = new OID[list.size()];
 		oids = list.toArray(oids);
-		return tableRet.getTable(getTarget(),oids,null,null).iterator();
+		return walk(oids);
+	}
+	
+	public static Iterator<TableEvent> walk(OID...columnsOids) throws IOException {
+		DefaultPDUFactory localfactory=new DefaultPDUFactory();
+		TableUtils tableRet=new TableUtils(snmp,localfactory);
+		tableRet.setMaxNumColumnsPerPDU(30);
+		return tableRet.getTable(getTarget(),columnsOids,null,null).iterator();
 	}
 }

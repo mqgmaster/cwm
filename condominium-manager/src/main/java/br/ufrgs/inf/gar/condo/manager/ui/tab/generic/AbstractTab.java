@@ -1,4 +1,4 @@
-package br.ufrgs.inf.gar.condominium.manager.ui.tab.generic;
+package br.ufrgs.inf.gar.condo.manager.ui.tab.generic;
 
 import java.io.Serializable;
 

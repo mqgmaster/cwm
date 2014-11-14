@@ -1,10 +1,10 @@
-package br.ufrgs.inf.gar.condominium.manager.ui.tab.home;
+package br.ufrgs.inf.gar.condo.manager.ui.tab.home;
 
 import java.io.IOException;
 
-import br.ufrgs.inf.gar.condominium.manager.data.DataService;
-import br.ufrgs.inf.gar.condominium.manager.data.SNMPManager;
-import br.ufrgs.inf.gar.condominium.manager.ui.tab.generic.AbstractTab;
+import br.ufrgs.inf.gar.condo.manager.data.DaoService;
+import br.ufrgs.inf.gar.condo.manager.data.SNMPManager;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.generic.AbstractTab;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -25,7 +25,6 @@ public class HomeTab extends AbstractTab<HomeLayout> {
 	            try {
 	            	layout.getResponseLabel().setValue(
 	            			SNMPManager.get(layout.getOidField().getValue()));
-	            	DataService.test();
 				} catch (IOException e) {
 					layout.getResponseLabel().setValue("error?");
 					e.printStackTrace();

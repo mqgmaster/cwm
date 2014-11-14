@@ -6,7 +6,7 @@
 	<artifactId>condominium-manager</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>Condominium Web Manager</name>
+	<name>Condo Web Manager</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

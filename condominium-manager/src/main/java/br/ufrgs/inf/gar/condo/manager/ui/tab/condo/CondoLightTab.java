@@ -1,10 +1,10 @@
-package br.ufrgs.inf.gar.condominium.manager.ui.tab.condominium;
+package br.ufrgs.inf.gar.condo.manager.ui.tab.condo;
 
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import br.ufrgs.inf.gar.condominium.manager.ui.tab.generic.AbstractTab;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.generic.AbstractTab;
 
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.Axis;
@@ -22,13 +22,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
-public class CondominiumLightTab extends AbstractTab<CondominiumLightLayout> {
+public class CondoLightTab extends AbstractTab<CondoLightLayout> {
 
 	private static final String CHART_SIZE = "300px";
 	private static final String CHART_TITLE = "Consumo de Eletricidade em Tempo Real";
 
-	public CondominiumLightTab() {
-		super(CondominiumLightLayout.class);
+	public CondoLightTab() {
+		super(CondoLightLayout.class);
 		
 		final Random random = new Random();
 

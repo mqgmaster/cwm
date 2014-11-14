@@ -1,10 +1,10 @@
-package br.ufrgs.inf.gar.condominium.manager.ui.tab.apartment;
+package br.ufrgs.inf.gar.condo.manager.ui.tab.apartment;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import br.ufrgs.inf.gar.condominium.manager.ui.tab.generic.AbstractTab;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.generic.AbstractTab;
 
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.ChartType;

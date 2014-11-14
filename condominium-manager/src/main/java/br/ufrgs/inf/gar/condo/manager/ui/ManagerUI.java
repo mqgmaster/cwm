@@ -1,14 +1,15 @@
-package br.ufrgs.inf.gar.condominium.manager.ui;
+package br.ufrgs.inf.gar.condo.manager.ui;
 
 import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
 
-import br.ufrgs.inf.gar.condominium.manager.data.SNMPManager;
-import br.ufrgs.inf.gar.condominium.manager.ui.tab.apartment.AptStatsTab;
-import br.ufrgs.inf.gar.condominium.manager.ui.tab.condominium.CondominiumLightTab;
-import br.ufrgs.inf.gar.condominium.manager.ui.tab.home.HomeTab;
-import br.ufrgs.inf.gar.condominium.manager.ui.tab.service.TabService;
+import br.ufrgs.inf.gar.condo.manager.data.SNMPManager;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.apartment.AptStatsTab;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.condo.CondoInfoTab;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.condo.CondoLightTab;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.home.HomeTab;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.service.TabService;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
@@ -27,7 +28,7 @@ public class ManagerUI extends UI {
 	
 	public static final String AGENT_ADDRESS = "udp:10.0.0.102/161";
 
-	private static final String BROWSER_TITLE = "Condominium Web Manager";
+	private static final String BROWSER_TITLE = "CWM";
 	
 	/**
 	* Porta 161 é usada para gets and sets
@@ -38,7 +39,7 @@ public class ManagerUI extends UI {
 	
     @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(productionMode = false, ui = ManagerUI.class, 
-    	widgetset = "br.ufrgs.inf.gar.snmp.condominium.manager.AppWidgetSet")
+    	widgetset = "br.ufrgs.inf.gar.condo.manager.AppWidgetSet")
     public static class Servlet extends VaadinServlet {
     }
 
@@ -61,7 +62,8 @@ public class ManagerUI extends UI {
         
         layout.getCondominiumButton().addClickListener(new Button.ClickListener() {
 	        public void buttonClick(ClickEvent event) {
-	        	tabService.openExclusiveTab(new CondominiumLightTab());
+	        	tabService.openExclusiveTab(new CondoInfoTab());
+	        	tabService.openTab(new CondoLightTab());
 	        }
 	    });
         

@@ -1,8 +1,8 @@
-package br.ufrgs.inf.gar.condominium.manager.ui.tab.service;
+package br.ufrgs.inf.gar.condo.manager.ui.tab.service;
 
 import java.io.Serializable;
 
-import br.ufrgs.inf.gar.condominium.manager.ui.tab.generic.AbstractTab;
+import br.ufrgs.inf.gar.condo.manager.ui.tab.generic.AbstractTab;
 
 import com.vaadin.ui.TabSheet;
 

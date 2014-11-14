@@ -6,13 +6,13 @@ import java.util.Random;
 
 import org.hibernate.Session;
 
+import br.ufrgs.inf.gar.condominium.domain.Apartment;
+import br.ufrgs.inf.gar.condominium.domain.Condominium;
+import br.ufrgs.inf.gar.condominium.domain.Employee;
+import br.ufrgs.inf.gar.condominium.domain.Garage;
+import br.ufrgs.inf.gar.condominium.domain.Lamp;
+import br.ufrgs.inf.gar.condominium.domain.Sector;
 import br.ufrgs.inf.gar.condominium.simulator.persistence.SessionFactoryService;
-import br.ufrgs.inf.gar.snmp.condominium.domain.Apartment;
-import br.ufrgs.inf.gar.snmp.condominium.domain.Condominium;
-import br.ufrgs.inf.gar.snmp.condominium.domain.Employee;
-import br.ufrgs.inf.gar.snmp.condominium.domain.Garage;
-import br.ufrgs.inf.gar.snmp.condominium.domain.Lamp;
-import br.ufrgs.inf.gar.snmp.condominium.domain.Sector;
 
 /**
  * Condominium Simulator
