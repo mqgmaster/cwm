@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 
 import br.ufrgs.inf.gar.cwm.data.SNMPManager;
+import br.ufrgs.inf.gar.cwm.data.Simulator;
 import br.ufrgs.inf.gar.cwm.ui.tab.apartment.AptStatsTab;
 import br.ufrgs.inf.gar.cwm.ui.tab.condo.CondoInfoTab;
 import br.ufrgs.inf.gar.cwm.ui.tab.condo.CondoLightTab;
@@ -68,6 +69,7 @@ public class ManagerUI extends UI {
 	    });
         
         try {
+        	Simulator.start();
 			SNMPManager.start(AGENT_ADDRESS);
 		} catch (IOException e) {
 			e.printStackTrace();

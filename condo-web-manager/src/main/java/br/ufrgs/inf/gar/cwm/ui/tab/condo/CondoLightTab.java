@@ -1,9 +1,10 @@
 package br.ufrgs.inf.gar.cwm.ui.tab.condo;
 
-import java.util.Random;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import br.ufrgs.inf.gar.cwm.data.DaoService;
 import br.ufrgs.inf.gar.cwm.ui.tab.generic.AbstractTab;
 
 import com.vaadin.addon.charts.Chart;
@@ -30,8 +31,6 @@ public class CondoLightTab extends AbstractTab<CondoLightLayout> {
 	public CondoLightTab() {
 		super(CondoLightLayout.class);
 		
-		final Random random = new Random();
-
 		final Chart chart = new Chart();
 		chart.setHeight(CHART_SIZE);
 
@@ -53,17 +52,30 @@ public class CondoLightTab extends AbstractTab<CondoLightLayout> {
 		final DataSeries series = new DataSeries();
 		series.setPlotOptions(new PlotOptionsSpline());
 		series.setName("Random data");
-		for (int i = -19; i <= 0; i++) {
+		float consum;
+		try {
+			consum = DaoService.getCondominium().getLightConsumption();
 			series.add(new DataSeriesItem(
-					System.currentTimeMillis() + i * 1000, random.nextDouble()));
+					System.currentTimeMillis(), consum));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		
 		runWhileAttached(chart, new Runnable() {
 
 			@Override
 			public void run() {
-				final long x = System.currentTimeMillis();
-				final double y = random.nextDouble();
-				series.add(new DataSeriesItem(x, y), true, true);
+				float consum;
+				float oldConsum;
+				try {
+					oldConsum = series.get(series.size() - 1).getY().floatValue();
+					consum = DaoService.getCondominium().getLightConsumption();
+					series.add(new DataSeriesItem(
+							System.currentTimeMillis(), consum - oldConsum));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
 			}
 		}, 5000, 5000);
 

@@ -2,7 +2,6 @@ package br.ufrgs.inf.gar.cwm.ui.tab.home;
 
 import java.io.IOException;
 
-import br.ufrgs.inf.gar.cwm.data.DaoService;
 import br.ufrgs.inf.gar.cwm.data.SNMPManager;
 import br.ufrgs.inf.gar.cwm.ui.tab.generic.AbstractTab;
 

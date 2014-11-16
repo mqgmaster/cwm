@@ -16,8 +16,6 @@ import br.ufrgs.inf.gar.condo.domain.Lamp;
 
 public class DaoService {
 	
-	private static final Simulator SIMULATOR = new Simulator();
-	
 	public static Condominium getCondominium2() throws IOException {
 		return new Condominium(
 				SNMPManager.get(MIB.CondoOID.NAME),
@@ -27,7 +25,7 @@ public class DaoService {
 	}
 	
 	public static Condominium getCondominium() throws IOException {
-		return SIMULATOR.getCondo();
+		return Simulator.CONDO.get();
 	}
 	
 	public static List<Apartment> getAllApartments2() throws IOException {
@@ -49,18 +47,18 @@ public class DaoService {
 	}
 	
 	public static List<Apartment> getAllApartments() throws IOException {
-		return SIMULATOR.getApts();
+		return Simulator.APTS.get();
 	}
 	
 	public static List<Employee> getAllEmployees() {
-		return SIMULATOR.getEmps();
+		return Simulator.EMPS.get();
 	}
 	
 	public static List<Garage> getAllGarages() {
-		return SIMULATOR.getGars();
+		return Simulator.GARS.get();
 	}
 	
 	public static List<Lamp> getAllLamps() {
-		return SIMULATOR.getLamps();
+		return Simulator.LAMPS.get();
 	}
 }
