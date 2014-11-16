@@ -1,8 +1,9 @@
-package br.ufrgs.inf.gar.cwm.data;
+﻿package br.ufrgs.inf.gar.cwm.data;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 import br.ufrgs.inf.gar.condo.domain.Apartment;
 import br.ufrgs.inf.gar.condo.domain.Condominium;
@@ -11,95 +12,128 @@ import br.ufrgs.inf.gar.condo.domain.Garage;
 import br.ufrgs.inf.gar.condo.domain.Lamp;
 import br.ufrgs.inf.gar.condo.domain.Sector;
 
+/**
+ * Condominium Simulator
+ * 
+ * Cria um condominio na base de dados e se mantem ativo atualizando
+ * o consumo de luz e agua, alem do numero de pessoas presentes nos locais.
+ *
+ */
 public class Simulator {
 	
-	private Condominium condo;
-	private Sector sectorGarage;
-	private Sector sectorFirstFloor;
-	private Sector sectorSecondFloor;
-	private final List<Apartment> apts = new ArrayList<>();
-	private final List<Employee> emps = new ArrayList<>();
-	private final List<Garage> gars = new ArrayList<>();
-	private final List<Lamp> lamps = new ArrayList<>();
-	final Random random = new Random();
+	private final static long INTERVAL_ONE = 5000;
+	private final static long INTERVAL_TWO = 8000;
+	public static final AtomicReference<Condominium> CONDO = new AtomicReference<>();
+	public static final AtomicReference<Sector> SECTOR_GARAGE = new AtomicReference<>();
+	public static final AtomicReference<Sector> SECTOR_FIRST_FLOOR = new AtomicReference<>();
+	public static final AtomicReference<Sector> SECTOR_SECOND_FLOOR = new AtomicReference<>();
+	public static final AtomicReference<List<Apartment>> APTS = new AtomicReference<>(new ArrayList<>());
+	public static final AtomicReference<List<Employee>> EMPS = new AtomicReference<>(new ArrayList<>());
+	public static final AtomicReference<List<Garage>> GARS = new AtomicReference<>(new ArrayList<>());
+	public static final AtomicReference<List<Lamp>> LAMPS = new AtomicReference<>(new ArrayList<>());
 	
-	private int generateNumPeople(Random random) {
+    public static void start() {
+        System.out.println( "test started" );
+        
+        createData();
+        startUpdater();
+    }
+
+	private static void startUpdater() {
+        final Thread threadOne = new Thread() {
+			public void run() {
+				final Random random = new Random();
+				try {
+					while (true) {
+			            //acumulado de 5 segundos, devido ao interalo da thread
+			            CONDO.get().setLightConsumption(generateLightConsumption(random));  //ex: 0.449
+			            CONDO.get().setWaterConsumption(generateWaterConsumption(random));  //ex: 0.008
+			            if (random.nextInt(10) == 1) 
+			            	 CONDO.get().setNumUnknownPeople(random.nextInt(10));
+			            else  CONDO.get().setNumUnknownPeople(0);
+
+			            for (Apartment apt : APTS.get()) {
+				            apt.setLightConsumption(generateLightConsumption(random)); 
+				            apt.setWaterConsumption(generateWaterConsumption(random));
+			            }
+						Thread.sleep(INTERVAL_ONE);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					System.out.println("thread stopped");
+					e.printStackTrace();
+				}
+			}
+		};
+		threadOne.start();
+		
+		final Thread thread = new Thread() {
+			public void run() {
+				final Random random = new Random();
+				try {
+					while (true) {
+			            for (Apartment apt : APTS.get()) {
+				            apt.setNumPeople(generateNumPeople(random));
+			            }
+			            
+			            for (Employee employee : EMPS.get()) {
+				            employee.setWorking(!employee.isWorking());
+			            }
+			            
+			            for (Garage garage : GARS.get()) {
+				            garage.setOccupied(!garage.isOccupied());
+			            }
+						Thread.sleep(INTERVAL_TWO);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					System.out.println("thread stopped");
+					e.printStackTrace();
+				}
+			}
+		};
+		thread.start();
+	}
+	
+	private static int generateNumPeople(Random random) {
 		return random.nextInt(4);
 	}
 
-	private float generateLightConsumption(Random random) {
+	private static float generateLightConsumption(Random random) {
 		return random.nextFloat();
 	};
 	
-	private float generateWaterConsumption(Random random) {
+	private static float generateWaterConsumption(Random random) {
 		return random.nextFloat() / 100;
 	};
 
-	public Simulator() {
-		condo = new Condominium("Floresta", "Bento Gonçalves 133", "Silveira");
+	private static void createData() {
+		CONDO.set(new Condominium("Floresta", "Bento GonÃ§alves 133", "Silveira"));
+        SECTOR_GARAGE.set(new Sector("Garagem", CONDO.get()));
+        SECTOR_FIRST_FLOOR.set(new Sector("Primeiro andar", CONDO.get()));
+        SECTOR_SECOND_FLOOR.set(new Sector("Segundo andar", CONDO.get()));
         
-        sectorGarage = new Sector("Garagem", condo);
-        sectorFirstFloor = new Sector("Primeiro andar", condo);
-        sectorSecondFloor = new Sector("Segundo andar", condo);
+        APTS.get().add(new Apartment(101, "Silva", 2, SECTOR_FIRST_FLOOR.get()));
+        APTS.get().add(new Apartment(102, "Silva", 2, SECTOR_FIRST_FLOOR.get()));
+        APTS.get().add(new Apartment(103, "Bento", 3, SECTOR_FIRST_FLOOR.get()));
+        APTS.get().add(new Apartment(104, "Bento", 3, SECTOR_FIRST_FLOOR.get()));
+        APTS.get().add(new Apartment(201, "Silva", 2, SECTOR_SECOND_FLOOR.get()));
+        APTS.get().add(new Apartment(202, "Silva", 2, SECTOR_SECOND_FLOOR.get()));
+        APTS.get().add(new Apartment(203, "Bento", 2, SECTOR_SECOND_FLOOR.get()));
+        APTS.get().add(new Apartment(204, "Bento", 2, SECTOR_SECOND_FLOOR.get()));
         
-        apts.add(new Apartment(101, "Silva", 2, sectorFirstFloor));
-        apts.add(new Apartment(102, "Silva", 2, sectorFirstFloor));
-        apts.add(new Apartment(103, "Bento", 3, sectorFirstFloor));
-        apts.add(new Apartment(104, "Bento", 3, sectorFirstFloor));
-        apts.add(new Apartment(201, "Silva", 2, sectorSecondFloor));
-        apts.add(new Apartment(202, "Silva", 2, sectorSecondFloor));
-        apts.add(new Apartment(203, "Bento", 2, sectorSecondFloor));
-        apts.add(new Apartment(204, "Bento", 2, sectorSecondFloor));
+        EMPS.get().add(new Employee("Juarez", "Porteiro", 1000, 40, CONDO.get()));
+        EMPS.get().add(new Employee("Roberto", "Faxineiro", 1000, 40, CONDO.get()));
+        EMPS.get().add(new Employee("Ronaldo", "Porteiro", 1000, 40, CONDO.get()));
         
-        emps.add(new Employee("Juarez", "Porteiro", 1000, 40, condo));
-        emps.add(new Employee("Roberto", "Faxineiro", 1000, 40, condo));
-        emps.add(new Employee("Ronaldo", "Porteiro", 1000, 40, condo));
+        GARS.get().add(new Garage(1, APTS.get().get(0), SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(2, APTS.get().get(1), SECTOR_GARAGE.get()));
         
-        gars.add(new Garage(1, apts.get(0), sectorGarage));
-        gars.add(new Garage(2, apts.get(1), sectorGarage));
-        
-        lamps.add(new Lamp(sectorGarage));
-        lamps.add(new Lamp(sectorGarage));
-        lamps.add(new Lamp(sectorFirstFloor));
-        lamps.add(new Lamp(sectorSecondFloor));
-        
-        condo.setLightConsumption(generateLightConsumption(random));  //ex: 0.449
-        condo.setWaterConsumption(generateWaterConsumption(random));  //ex: 0.008
-        if (random.nextInt(10) == 1) 
-        	condo.setNumUnknownPeople(random.nextInt(10));
-        else condo.setNumUnknownPeople(0);
-
-        for (Apartment apt : apts) {
-            apt.setLightConsumption(generateLightConsumption(random)); 
-            apt.setWaterConsumption(generateWaterConsumption(random));
-            apt.setNumPeople(generateNumPeople(random));
-        }
-
-        for (Employee employee : emps) {
-            employee.setWorking(!employee.isWorking());
-        }
-        for (Garage garage : gars) {
-            garage.setOccupied(!garage.isOccupied());
-        }
-	}
-
-	public List<Apartment> getApts() {
-		return apts;
-	}
-
-	public List<Employee> getEmps() {
-		return emps;
-	}
-
-	public Condominium getCondo() {
-		return condo;
-	}
-
-	public List<Garage> getGars() {
-		return gars;
-	}
-
-	public List<Lamp> getLamps() {
-		return lamps;
+        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
+        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
+        LAMPS.get().add(new Lamp(SECTOR_FIRST_FLOOR.get()));
+        LAMPS.get().add(new Lamp(SECTOR_SECOND_FLOOR.get()));
 	}
 }
