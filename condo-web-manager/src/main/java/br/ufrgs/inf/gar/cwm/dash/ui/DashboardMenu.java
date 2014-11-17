@@ -48,7 +48,11 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings({ "serial", "unchecked" })
 public final class DashboardMenu extends CustomComponent {
 
-    public static final String ID = "dashboard-menu";
+    private static final String APP_TITLE_STRONG = "Condo <strong>WebManager</strong>";
+	private static final String SIGN_OUT = "Sign Out";
+	private static final String PREFERENCES = "Preferences";
+	private static final String EDIT_PROFILE = "Edit Profile";
+	public static final String ID = "dashboard-menu";
     public static final String REPORTS_BADGE_ID = "dashboard-menu-reports-badge";
     public static final String NOTIFICATIONS_BADGE_ID = "dashboard-menu-notifications-badge";
     private static final String STYLE_VISIBLE = "valo-menu-visible";
@@ -86,7 +90,7 @@ public final class DashboardMenu extends CustomComponent {
     }
 
     private Component buildTitle() {
-        Label logo = new Label("Condo <strong>WebManager</strong>",
+        Label logo = new Label(APP_TITLE_STRONG,
                 ContentMode.HTML);
         logo.setSizeUndefined();
         HorizontalLayout logoWrapper = new HorizontalLayout(logo);
@@ -107,20 +111,20 @@ public final class DashboardMenu extends CustomComponent {
         settingsItem = settings.addItem("", new ThemeResource(
                 "img/profile-pic-300px.jpg"), null);
         updateUserName(null);
-        settingsItem.addItem("Edit Profile", new Command() {
+        settingsItem.addItem(EDIT_PROFILE, new Command() {
             @Override
             public void menuSelected(final MenuItem selectedItem) {
                 ProfilePreferencesWindow.open(user, false);
             }
         });
-        settingsItem.addItem("Preferences", new Command() {
+        settingsItem.addItem(PREFERENCES, new Command() {
             @Override
             public void menuSelected(final MenuItem selectedItem) {
                 ProfilePreferencesWindow.open(user, true);
             }
         });
         settingsItem.addSeparator();
-        settingsItem.addItem("Sign Out", new Command() {
+        settingsItem.addItem(SIGN_OUT, new Command() {
             @Override
             public void menuSelected(final MenuItem selectedItem) {
                 DashboardEventBus.post(new UserLoggedOutEvent());
@@ -155,7 +159,7 @@ public final class DashboardMenu extends CustomComponent {
         for (final DashboardViewType view : DashboardViewType.values()) {
             Component menuItemComponent = new ValoMenuItemButton(view);
 
-            if (view == DashboardViewType.REPORTS) {
+       /*     if (view == DashboardViewType.REPORTS) {
                 // Add drop target to reports button
                 DragAndDropWrapper reports = new DragAndDropWrapper(
                         menuItemComponent);
@@ -181,25 +185,27 @@ public final class DashboardMenu extends CustomComponent {
 
                 });
                 menuItemComponent = reports;
-            }
-
-            if (view == DashboardViewType.DASHBOARD) {
-                notificationsBadge = new Label();
-                notificationsBadge.setId(NOTIFICATIONS_BADGE_ID);
-                menuItemComponent = buildBadgeWrapper(menuItemComponent,
-                        notificationsBadge);
-            }
+            } 
             if (view == DashboardViewType.REPORTS) {
                 reportsBadge = new Label();
                 reportsBadge.setId(REPORTS_BADGE_ID);
                 menuItemComponent = buildBadgeWrapper(menuItemComponent,
                         reportsBadge);
+                
+                menuItemsLayout.addComponent(menuItemComponent);
+            } 
+            */
+            
+            if (view == DashboardViewType.DASHBOARD) {
+                notificationsBadge = new Label();
+                notificationsBadge.setId(NOTIFICATIONS_BADGE_ID);
+                menuItemComponent = buildBadgeWrapper(menuItemComponent,
+                        notificationsBadge);
+                
+                menuItemsLayout.addComponent(menuItemComponent);
             }
-
-            menuItemsLayout.addComponent(menuItemComponent);
         }
         return menuItemsLayout;
-
     }
 
     private Component buildBadgeWrapper(final Component menuItemButton,

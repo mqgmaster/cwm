@@ -57,8 +57,8 @@ public class SparklineChart extends VerticalLayout {
         addComponent(buildSparkline(values, color));
 
         List<Integer> vals = Arrays.asList(ArrayUtils.toObject(values));
-        Label highLow = new Label("High <b>" + java.util.Collections.max(vals)
-                + "</b> &nbsp;&nbsp;&nbsp; Low <b>"
+        Label highLow = new Label("Maximo <b>" + java.util.Collections.max(vals)
+                + "</b> &nbsp;&nbsp;&nbsp; Mínimo <b>"
                 + java.util.Collections.min(vals) + "</b>", ContentMode.HTML);
         highLow.addStyleName(ValoTheme.LABEL_TINY);
         highLow.addStyleName(ValoTheme.LABEL_LIGHT);

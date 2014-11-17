@@ -12,8 +12,10 @@ import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.UserLoginRequestedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
 import br.ufrgs.inf.gar.cwm.dash.ui.LoginView;
 import br.ufrgs.inf.gar.cwm.dash.ui.MainView;
+import br.ufrgs.inf.gar.cwm.data.Simulate;
 
 import com.google.common.eventbus.Subscribe;
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
@@ -26,6 +28,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
+@Push
 @Theme("dashboard")
 @Widgetset("br.ufrgs.inf.gar.cwm.CondoWebManagerWidgetSet")
 @Title("Condo WebManager")
@@ -38,7 +41,7 @@ public final class DashboardUI extends UI {
     @Override
     protected void init(final VaadinRequest request) {
         setLocale(Locale.US);
-
+        Simulate.start();
         DashboardEventBus.register(this);
         Responsive.makeResponsive(this);
 

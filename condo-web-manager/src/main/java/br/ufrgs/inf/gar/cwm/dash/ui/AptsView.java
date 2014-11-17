@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
-import br.ufrgs.inf.gar.cwm.dash.component.CondoInfoForm;
-import br.ufrgs.inf.gar.cwm.dash.component.CondoLightChart;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.component.TopGrossingAptsChart;
 import br.ufrgs.inf.gar.cwm.dash.component.TopSixCondosChart;
@@ -31,11 +29,9 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
@@ -46,10 +42,10 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public final class DashboardView extends Panel implements View,
+public final class AptsView extends Panel implements View,
         DashboardEditListener {
 
-    private static final String HEADER = "Condomínio";
+    private static final String HEADER = "Apartamentos";
 	private static final String NOTIFICATIONS = "Notificações";
 	private static final String VIEW_ALL_NOTIFICATIONS = "Ver mais notificações";
 	public static final String EDIT_ID = "dashboard-edit";
@@ -61,7 +57,7 @@ public final class DashboardView extends Panel implements View,
     private final VerticalLayout root;
     private Window notificationsWindow;
 
-    public DashboardView() {
+    public AptsView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
         setSizeFull();
         DashboardEventBus.register(this);
@@ -75,8 +71,6 @@ public final class DashboardView extends Panel implements View,
 
         root.addComponent(buildHeader());
 
-        root.addComponent(buildSparklines());
-
         Component content = buildContent();
         root.addComponent(content);
         root.setExpandRatio(content, 1);
@@ -89,31 +83,6 @@ public final class DashboardView extends Panel implements View,
                 DashboardEventBus.post(new CloseOpenWindowsEvent());
             }
         });
-    }
-
-    private Component buildSparklines() {
-        CssLayout sparks = new CssLayout();
-        sparks.addStyleName("sparks");
-        sparks.setWidth("100%");
-        Responsive.makeResponsive(sparks);
-
-        SparklineChart s = new SparklineChart("Consumo de Água / Mês", "L", "",
-                DummyDataGenerator.chartColors[0], 12, 4000, 5000);
-        sparks.addComponent(s);
-
-        s = new SparklineChart("Consumo de Luz / Mês", "kWh", "",
-                DummyDataGenerator.chartColors[2], 12, 3000, 4000);
-        sparks.addComponent(s);
-
-        s = new SparklineChart("Problemas Reportados / Mês", "", "",
-                DummyDataGenerator.chartColors[3], 12, 0, 30);
-        sparks.addComponent(s);
-
-        s = new SparklineChart("Balanço Financeiro", "", "R$",
-                DummyDataGenerator.chartColors[5], 12, 5000, 10000);
-        sparks.addComponent(s);
-
-        return sparks;
     }
 
     private Component buildHeader() {
@@ -153,10 +122,7 @@ public final class DashboardView extends Panel implements View,
         dashboardPanels.addStyleName("dashboard-panels");
         Responsive.makeResponsive(dashboardPanels);
 
-        dashboardPanels.addComponent(buildCondoLightChart());
-        dashboardPanels.addComponent(buildCondoInfo());
         dashboardPanels.addComponent(buildTop10TitlesByRevenue());
-        dashboardPanels.addComponent(buildPopularMovies());
 
         return dashboardPanels;
     }
@@ -175,32 +141,6 @@ public final class DashboardView extends Panel implements View,
 
     private Component buildPopularMovies() {
         return createContentWrapper(new TopSixCondosChart());
-    }
-    
-    private Component buildCondoLightChart() {
-    	CondoLightChart chart = new CondoLightChart();
-    	chart.setSizeFull();
-    	chart.setCaption("Consumo de Luz em Tempo Real");
-        return createContentWrapper(chart);
-    }
-    
-    private Component buildCondoInfo() {
-    	VerticalLayout details = new VerticalLayout();
-    	details.setCaption("Detalhes");
-        details.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-        details.addComponent(new TextField("d Name"));
-        details.addComponent(new TextField("First sdf"));
-        details.addComponent(new TextField("sdf dfsgad"));
-        details.addComponent(new TextField("sdf Name"));
-        details.addComponent(new TextField("sf Name"));
-        details.addComponent(new TextField("sdf adfg"));
-        details.addComponent(new TextField("sdf fgh"));
-        details.addComponent(new TextField("sdf sfgh"));
-        details.addComponent(new TextField("dfg Name"));
-        details.addComponent(new TextField("sdfgh Name"));
-        details.setHeight("800px");
-        Component panel = createContentWrapper(details);
-        return panel;
     }
 
     private Component createContentWrapper(final Component content) {
