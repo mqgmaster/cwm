@@ -14,11 +14,11 @@
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
  
-        <mapping class="br.ufrgs.inf.gar.condominium.domain.Condominium" />
-        <mapping class="br.ufrgs.inf.gar.condominium.domain.Apartment" />
-        <mapping class="br.ufrgs.inf.gar.condominium.domain.Employee" />
-        <mapping class="br.ufrgs.inf.gar.condominium.domain.Garage" />
-        <mapping class="br.ufrgs.inf.gar.condominium.domain.Lamp" />
-        <mapping class="br.ufrgs.inf.gar.condominium.domain.Sector" />
+        <mapping class="br.ufrgs.inf.gar.condo.domain.Condominium" />
+        <mapping class="br.ufrgs.inf.gar.condo.domain.Apartment" />
+        <mapping class="br.ufrgs.inf.gar.condo.domain.Employee" />
+        <mapping class="br.ufrgs.inf.gar.condo.domain.Garage" />
+        <mapping class="br.ufrgs.inf.gar.condo.domain.Lamp" />
+        <mapping class="br.ufrgs.inf.gar.condo.domain.Sector" />
     </session-factory>
 </hibernate-configuration>
