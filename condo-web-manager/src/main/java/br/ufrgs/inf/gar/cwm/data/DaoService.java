@@ -25,7 +25,7 @@ public class DaoService {
 	}
 	
 	public static Condominium getCondominium() throws IOException {
-		return Simulator.CONDO.get();
+		return Simulate.CONDO.get();
 	}
 	
 	public static List<Apartment> getAllApartments2() throws IOException {
@@ -47,18 +47,18 @@ public class DaoService {
 	}
 	
 	public static List<Apartment> getAllApartments() throws IOException {
-		return Simulator.APTS.get();
+		return Simulate.APTS.get();
 	}
 	
 	public static List<Employee> getAllEmployees() {
-		return Simulator.EMPS.get();
+		return Simulate.EMPS.get();
 	}
 	
 	public static List<Garage> getAllGarages() {
-		return Simulator.GARS.get();
+		return Simulate.GARS.get();
 	}
 	
 	public static List<Lamp> getAllLamps() {
-		return Simulator.LAMPS.get();
+		return Simulate.LAMPS.get();
 	}
 }

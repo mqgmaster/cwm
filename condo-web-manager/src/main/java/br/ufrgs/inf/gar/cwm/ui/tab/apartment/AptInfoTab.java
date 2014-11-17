@@ -20,7 +20,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
-public class AptStatsTab extends AbstractTab<AptStatsLayout> {
+public class AptInfoTab extends AbstractTab<AptInfoLayout> {
 	
 	private static final String CHART_NAME = "Consumo por Apartamento";
 	private static final String COLOR = "Cor";
@@ -46,8 +46,8 @@ public class AptStatsTab extends AbstractTab<AptStatsLayout> {
 			16.0,
 			10.0};
 	
-	public AptStatsTab() {
-		super(AptStatsLayout.class);
+	public AptInfoTab() {
+		super(AptInfoLayout.class);
 		
         ContainerDataSeries container = createContainer();
         Component table = createTable(container.getVaadinContainer());

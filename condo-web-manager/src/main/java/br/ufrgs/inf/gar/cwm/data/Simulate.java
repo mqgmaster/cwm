@@ -1,4 +1,4 @@
-﻿package br.ufrgs.inf.gar.cwm.data;
+package br.ufrgs.inf.gar.cwm.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ import br.ufrgs.inf.gar.condo.domain.Sector;
  * 
  * Cria um condominio na base de dados e se mantem ativo atualizando
  * o consumo de luz e agua, alem do numero de pessoas presentes nos locais.
- *
  */
-public class Simulator {
+public class Simulate {
+
 	
 	private final static long INTERVAL_ONE = 5000;
 	private final static long INTERVAL_TWO = 8000;

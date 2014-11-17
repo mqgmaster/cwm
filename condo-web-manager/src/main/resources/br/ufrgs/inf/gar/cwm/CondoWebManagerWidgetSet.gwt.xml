@@ -8,7 +8,6 @@
 
     <!-- Inherit DefaultWidgetSet -->
     <inherits name="com.vaadin.DefaultWidgetSet" /> 
-    <inherits name="com.vaadin.addon.charts.Widgetset" />
 
     <!--
      Uncomment the following to compile the widgetset for one browser only.
@@ -28,8 +27,12 @@
      See https://vaadin.com/wiki/-/wiki/Main/Using%20SuperDevMode for more
      information and instructions.
     -->
-    <!-- <set-configuration-property name="devModeRedirectEnabled" value="true" /> -->
-
+    <set-configuration-property name="devModeRedirectEnabled" value="true" />
+    
+	<generate-with class="br.ufrgs.inf.gar.cwm.dash.OptimizedConnectorBundleLoaderFactory">
+		<when-type-assignable
+			class="com.vaadin.client.metadata.ConnectorBundleLoader" />
+	</generate-with>
 
     <inherits name="com.vaadin.addon.timeline.gwt.TimelineWidgetSet" />
 

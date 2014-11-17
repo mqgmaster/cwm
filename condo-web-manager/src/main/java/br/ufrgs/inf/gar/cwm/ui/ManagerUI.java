@@ -5,8 +5,7 @@ import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 
 import br.ufrgs.inf.gar.cwm.data.SNMPManager;
-import br.ufrgs.inf.gar.cwm.data.Simulator;
-import br.ufrgs.inf.gar.cwm.ui.tab.apartment.AptStatsTab;
+import br.ufrgs.inf.gar.cwm.ui.tab.apartment.AptInfoTab;
 import br.ufrgs.inf.gar.cwm.ui.tab.condo.CondoInfoTab;
 import br.ufrgs.inf.gar.cwm.ui.tab.condo.CondoLightTab;
 import br.ufrgs.inf.gar.cwm.ui.tab.home.HomeTab;
@@ -22,6 +21,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
+/*
 @Push
 @Theme("mytheme")
 @SuppressWarnings("serial")
@@ -35,10 +35,11 @@ public class ManagerUI extends UI {
 	* Porta 161 é usada para gets and sets
 	* Porta 162 é usada para traps
 	*/
-	private final ManagerLayout layout = new ManagerLayout();
-	private final TabService tabService = new TabService(layout.getTabs());
+
+	//private final ManagerLayout layout = new ManagerLayout();
+	//private final TabService tabService = new TabService(layout.getTabs());
 	
-    @WebServlet(value = "/*", asyncSupported = true)
+   /* @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(productionMode = false, ui = ManagerUI.class, 
     	widgetset = "br.ufrgs.inf.gar.cwm.AppWidgetSet")
     public static class Servlet extends VaadinServlet {
@@ -51,7 +52,7 @@ public class ManagerUI extends UI {
         tabService.openTab(new HomeTab());
         layout.getAptosButton().addClickListener(new Button.ClickListener() {
 	        public void buttonClick(ClickEvent event) {
-	        	tabService.openExclusiveTab(new AptStatsTab());
+	        	tabService.openExclusiveTab(new AptInfoTab());
 	        }
 	    });
         
@@ -76,3 +77,4 @@ public class ManagerUI extends UI {
 		}
     }
 }
+*/
