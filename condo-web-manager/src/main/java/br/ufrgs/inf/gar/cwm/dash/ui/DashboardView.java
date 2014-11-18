@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
-import br.ufrgs.inf.gar.cwm.dash.component.CondoInfoForm;
 import br.ufrgs.inf.gar.cwm.dash.component.CondoLightChart;
+import br.ufrgs.inf.gar.cwm.dash.component.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.component.TopGrossingAptsChart;
 import br.ufrgs.inf.gar.cwm.dash.component.TopSixCondosChart;
@@ -31,16 +31,14 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -155,7 +153,7 @@ public final class DashboardView extends Panel implements View,
 
         dashboardPanels.addComponent(buildCondoLightChart());
         dashboardPanels.addComponent(buildCondoInfo());
-        dashboardPanels.addComponent(buildTop10TitlesByRevenue());
+        dashboardPanels.addComponent(buildEmployeeTable());
         dashboardPanels.addComponent(buildPopularMovies());
 
         return dashboardPanels;
@@ -175,6 +173,11 @@ public final class DashboardView extends Panel implements View,
 
     private Component buildPopularMovies() {
         return createContentWrapper(new TopSixCondosChart());
+    }
+    
+    private Component buildEmployeeTable() {
+    	EmployeeTable table = new EmployeeTable();
+        return createContentWrapper(table);
     }
     
     private Component buildCondoLightChart() {

@@ -12,7 +12,7 @@ import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.UserLoginRequestedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
 import br.ufrgs.inf.gar.cwm.dash.ui.LoginView;
 import br.ufrgs.inf.gar.cwm.dash.ui.MainView;
-import br.ufrgs.inf.gar.cwm.data.Simulate;
+import br.ufrgs.inf.gar.cwm.data.Simulator;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Push;
@@ -41,7 +41,7 @@ public final class DashboardUI extends UI {
     @Override
     protected void init(final VaadinRequest request) {
         setLocale(Locale.US);
-        Simulate.start();
+        Simulator.start();
         DashboardEventBus.register(this);
         Responsive.makeResponsive(this);
 

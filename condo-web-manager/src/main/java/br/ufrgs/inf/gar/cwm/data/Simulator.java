@@ -18,7 +18,7 @@ import br.ufrgs.inf.gar.condo.domain.Sector;
  * Cria um condominio na base de dados e se mantem ativo atualizando
  * o consumo de luz e agua, alem do numero de pessoas presentes nos locais.
  */
-public class Simulate {
+public class Simulator {
 
 	
 	private final static long INTERVAL_ONE = 5000;
@@ -110,7 +110,7 @@ public class Simulate {
 	};
 
 	private static void createData() {
-		CONDO.set(new Condominium("Floresta", "Bento GonÃ§alves 133", "Silveira"));
+		CONDO.set(new Condominium("Floresta", "Bento Gonçalves 133", "Silveira"));
         SECTOR_GARAGE.set(new Sector("Garagem", CONDO.get()));
         SECTOR_FIRST_FLOOR.set(new Sector("Primeiro andar", CONDO.get()));
         SECTOR_SECOND_FLOOR.set(new Sector("Segundo andar", CONDO.get()));
