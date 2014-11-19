@@ -13,10 +13,6 @@ import br.ufrgs.inf.gar.condo.domain.Lamp;
 import br.ufrgs.inf.gar.condo.domain.Sector;
 
 /**
- * Condominium Simulator
- * 
- * Cria um condominio na base de dados e se mantem ativo atualizando
- * o consumo de luz e agua, alem do numero de pessoas presentes nos locais.
  */
 public class Simulator {
 
@@ -33,7 +29,7 @@ public class Simulator {
 	public static final AtomicReference<List<Lamp>> LAMPS = new AtomicReference<>(new ArrayList<>());
 	
     public static void start() {
-        System.out.println( "test started" );
+        System.out.println( "Simulator started" );
         
         createData();
         startUpdater();
@@ -111,9 +107,13 @@ public class Simulator {
 
 	private static void createData() {
 		CONDO.set(new Condominium("Floresta", "Bento Gonçalves 133", "Silveira"));
+		CONDO.get().setId(1);
         SECTOR_GARAGE.set(new Sector("Garagem", CONDO.get()));
+        SECTOR_GARAGE.get().setId(1);
         SECTOR_FIRST_FLOOR.set(new Sector("Primeiro andar", CONDO.get()));
+        SECTOR_FIRST_FLOOR.get().setId(2);
         SECTOR_SECOND_FLOOR.set(new Sector("Segundo andar", CONDO.get()));
+        SECTOR_SECOND_FLOOR.get().setId(3);
         
         APTS.get().add(new Apartment(101, "Silva", 2, SECTOR_FIRST_FLOOR.get()));
         APTS.get().add(new Apartment(102, "Silva", 2, SECTOR_FIRST_FLOOR.get()));
@@ -123,17 +123,29 @@ public class Simulator {
         APTS.get().add(new Apartment(202, "Silva", 2, SECTOR_SECOND_FLOOR.get()));
         APTS.get().add(new Apartment(203, "Bento", 2, SECTOR_SECOND_FLOOR.get()));
         APTS.get().add(new Apartment(204, "Bento", 2, SECTOR_SECOND_FLOOR.get()));
+        for (int i = 0; i < APTS.get().size(); i++) {
+			APTS.get().get(i).setId(i);
+		}
         
         EMPS.get().add(new Employee("Juarez", "Porteiro", 1000, 40, CONDO.get()));
         EMPS.get().add(new Employee("Roberto", "Faxineiro", 1000, 40, CONDO.get()));
         EMPS.get().add(new Employee("Ronaldo", "Porteiro", 1000, 40, CONDO.get()));
+        for (int i = 0; i < EMPS.get().size(); i++) {
+        	EMPS.get().get(i).setId(i);
+		}
         
         GARS.get().add(new Garage(1, APTS.get().get(0), SECTOR_GARAGE.get()));
         GARS.get().add(new Garage(2, APTS.get().get(1), SECTOR_GARAGE.get()));
+        for (int i = 0; i < GARS.get().size(); i++) {
+        	GARS.get().get(i).setId(i);
+		}
         
         LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
         LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
         LAMPS.get().add(new Lamp(SECTOR_FIRST_FLOOR.get()));
         LAMPS.get().add(new Lamp(SECTOR_SECOND_FLOOR.get()));
+        for (int i = 0; i < LAMPS.get().size(); i++) {
+        	LAMPS.get().get(i).setId(i);
+		}
 	}
 }

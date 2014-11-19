@@ -1,28 +1,20 @@
 package br.ufrgs.inf.gar.cwm.dash.ui;
 
-import java.util.Collection;
-
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
 import br.ufrgs.inf.gar.cwm.dash.component.ProfilePreferencesWindow;
-import br.ufrgs.inf.gar.cwm.dash.domain.Transaction;
 import br.ufrgs.inf.gar.cwm.dash.domain.User;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.PostViewChangeEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.ProfileUpdatedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.ReportsCountUpdatedEvent;
-import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.TransactionReportEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.UserLoggedOutEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -30,14 +22,11 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.DragAndDropWrapper;
-import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -45,13 +34,13 @@ import com.vaadin.ui.themes.ValoTheme;
  * A responsive menu component providing user information and the controls for
  * primary navigation between the views.
  */
-@SuppressWarnings({ "serial", "unchecked" })
+@SuppressWarnings({ "serial" })
 public final class DashboardMenu extends CustomComponent {
 
     private static final String APP_TITLE_STRONG = "Condo <strong>WebManager</strong>";
-	private static final String SIGN_OUT = "Sign Out";
-	private static final String PREFERENCES = "Preferences";
-	private static final String EDIT_PROFILE = "Edit Profile";
+	private static final String SIGN_OUT = "Sair";
+	private static final String PREFERENCES = "Preferências";
+	private static final String EDIT_PROFILE = "Perfil";
 	public static final String ID = "dashboard-menu";
     public static final String REPORTS_BADGE_ID = "dashboard-menu-reports-badge";
     public static final String NOTIFICATIONS_BADGE_ID = "dashboard-menu-notifications-badge";
@@ -251,7 +240,7 @@ public final class DashboardMenu extends CustomComponent {
     @Subscribe
     public void updateUserName(final ProfileUpdatedEvent event) {
         User user = getCurrentUser();
-        settingsItem.setText(user.getFirstName() + " " + user.getLastName());
+        settingsItem.setText(user.getName());
     }
 
     public final class ValoMenuItemButton extends Button {

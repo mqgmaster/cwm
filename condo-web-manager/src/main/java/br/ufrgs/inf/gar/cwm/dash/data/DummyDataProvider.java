@@ -1,17 +1,8 @@
 package br.ufrgs.inf.gar.cwm.dash.data;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -23,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
 import br.ufrgs.inf.gar.cwm.dash.domain.Apt;
 import br.ufrgs.inf.gar.cwm.dash.domain.AptRevenue;
+import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
 import br.ufrgs.inf.gar.cwm.dash.domain.Transaction;
 import br.ufrgs.inf.gar.cwm.dash.domain.User;
 
@@ -36,19 +27,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.util.CurrentInstance;
 
 /**
  * A dummy implementation for the backend API.
  */
 public class DummyDataProvider implements DataProvider {
 
-    /* List of countries and cities for them */
     private static Multimap<String, String> countryToCities;
     private static Date lastDataUpdate;
     private static Collection<Apt> movies;
@@ -89,97 +73,6 @@ public class DummyDataProvider implements DataProvider {
         return Collections.unmodifiableCollection(movies);
     }
 
-    /**
-     * Initialize the list of movies playing in theaters currently. Uses the
-     * Rotten Tomatoes API to get the list. The result is cached to a local file
-     * for 24h (daily limit of API calls is 10,000).
-     * 
-     * @return
-     */
-    private static Collection<Apt> loadMoviesData2() {
-
-        File cache;
-
-        VaadinRequest vaadinRequest = CurrentInstance.get(VaadinRequest.class);
-        if (vaadinRequest == null) {
-            // PANIC!!!
-            cache = new File("movies.txt");
-        } else {
-            File baseDirectory = vaadinRequest.getService().getBaseDirectory();
-            cache = new File(baseDirectory + "/movies.txt");
-        }
-
-        JsonObject json = null;
-        try {
-            // TODO check for internet connection also, and use the cache
-            // anyway
-            // if no connection is available
-            if (cache.exists()
-                    && System.currentTimeMillis() < cache.lastModified() + 1000
-                            * 60 * 60 * 24) {
-                json = readJsonFromFile(cache);
-            } else {
-                // TODO: Get an API key from
-                // http://developer.rottentomatoes.com
-                String apiKey = "xxxxxxxxxxxxxxxxxxxxxxxx";
-                json = readJsonFromUrl("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?page_limit=30&apikey="
-                        + apiKey);
-                // Store in cache
-                FileWriter fileWriter = new FileWriter(cache);
-                fileWriter.write(json.toString());
-                fileWriter.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Collection<Apt> result = new ArrayList<Apt>();
-        if (json != null) {
-            JsonArray moviesJson;
-
-            moviesJson = json.getAsJsonArray("movies");
-            for (int i = 0; i < moviesJson.size(); i++) {
-                JsonObject movieJson = moviesJson.get(i).getAsJsonObject();
-                JsonObject posters = movieJson.get("posters").getAsJsonObject();
-                if (!posters.get("profile").getAsString()
-                        .contains("poster_default")) {
-                    Apt movie = new Apt();
-                    movie.setId(i);
-                    movie.setTitle(movieJson.get("title").getAsString());
-                    movie.setDuration(movieJson.get("runtime").getAsInt());
-                    movie.setSynopsis(movieJson.get("synopsis").getAsString());
-                    movie.setThumbUrl(posters.get("profile").getAsString()
-                            .replace("_tmb", "_320"));
-                    movie.setPosterUrl(posters.get("detailed").getAsString()
-                            .replace("_tmb", "_640"));
-
-                    try {
-                        JsonObject releaseDates = movieJson
-                                .get("release_dates").getAsJsonObject();
-                        String datestr = releaseDates.get("theater")
-                                .getAsString();
-                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                        movie.setReleaseDate(df.parse(datestr));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        movie.setScore(movieJson.get("ratings")
-                                .getAsJsonObject().get("critics_score")
-                                .getAsInt());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    result.add(movie);
-
-                }
-            }
-        }
-        return result;
-    }
-
     private static Collection<Apt> loadMoviesData() {
 
         Collection<Apt> result = new ArrayList<Apt>();
@@ -197,39 +90,6 @@ public class DummyDataProvider implements DataProvider {
             result.add(movie);
 		}
         return result;
-    }
-    /* JSON utility method */
-    private static String readAll(Reader rd) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        int cp;
-        while ((cp = rd.read()) != -1) {
-            sb.append((char) cp);
-        }
-        return sb.toString();
-    }
-
-    /* JSON utility method */
-    private static JsonObject readJsonFromUrl(String url) throws IOException {
-        InputStream is = new URL(url).openStream();
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is,
-                    Charset.forName("UTF-8")));
-            String jsonText = readAll(rd);
-            JsonElement jelement = new JsonParser().parse(jsonText);
-            JsonObject jobject = jelement.getAsJsonObject();
-            return jobject;
-        } finally {
-            is.close();
-        }
-    }
-
-    /* JSON utility method */
-    private static JsonObject readJsonFromFile(File path) throws IOException {
-        BufferedReader rd = new BufferedReader(new FileReader(path));
-        String jsonText = readAll(rd);
-        JsonElement jelement = new JsonParser().parse(jsonText);
-        JsonObject jobject = jelement.getAsJsonObject();
-        return jobject;
     }
 
     /**
@@ -397,16 +257,10 @@ public class DummyDataProvider implements DataProvider {
     @Override
     public User authenticate(String userName, String password) {
         User user = new User();
-        user.setFirstName("Mauricio");
-        user.setLastName("Q.G.");
+        user.setName("Mauricio Q.G.");
         user.setRole("admin");
-        String email = user.getFirstName().toLowerCase() + "."
-                + user.getLastName().toLowerCase() + "@"
-                + DummyDataGenerator.randomCompanyName().toLowerCase() + ".com";
+        String email = "mauricio@cwm.com";
         user.setEmail(email.replaceAll(" ", ""));
-        user.setLocation(DummyDataGenerator.randomWord(5, true));
-        user.setBio("Quis aute iure reprehenderit in voluptate velit esse."
-                + "Cras mattis iudicium purus sit amet fermentum.");
         return user;
     }
 

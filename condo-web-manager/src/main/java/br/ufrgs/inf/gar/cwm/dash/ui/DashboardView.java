@@ -6,9 +6,10 @@ import java.util.Iterator;
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
 import br.ufrgs.inf.gar.cwm.dash.component.CondoLightChart;
 import br.ufrgs.inf.gar.cwm.dash.component.EmployeeTable;
+import br.ufrgs.inf.gar.cwm.dash.component.GarageTable;
+import br.ufrgs.inf.gar.cwm.dash.component.LampTable;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.component.TopGrossingAptsChart;
-import br.ufrgs.inf.gar.cwm.dash.component.TopSixCondosChart;
 import br.ufrgs.inf.gar.cwm.dash.component.TopTenAptsTable;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
 import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
@@ -152,9 +153,9 @@ public final class DashboardView extends Panel implements View,
         Responsive.makeResponsive(dashboardPanels);
 
         dashboardPanels.addComponent(buildCondoLightChart());
-        dashboardPanels.addComponent(buildCondoInfo());
+        dashboardPanels.addComponent(buildGarageTable());
         dashboardPanels.addComponent(buildEmployeeTable());
-        dashboardPanels.addComponent(buildPopularMovies());
+        dashboardPanels.addComponent(buildLampTable());
 
         return dashboardPanels;
     }
@@ -171,13 +172,16 @@ public final class DashboardView extends Panel implements View,
         return contentWrapper;
     }
 
-    private Component buildPopularMovies() {
-        return createContentWrapper(new TopSixCondosChart());
+    private Component buildLampTable() {
+        return createContentWrapper(new LampTable());
+    }
+    
+    private Component buildGarageTable() {
+        return createContentWrapper(new GarageTable());
     }
     
     private Component buildEmployeeTable() {
-    	EmployeeTable table = new EmployeeTable();
-        return createContentWrapper(table);
+        return createContentWrapper(new EmployeeTable());
     }
     
     private Component buildCondoLightChart() {
@@ -243,17 +247,10 @@ public final class DashboardView extends Panel implements View,
         });
         max.setStyleName("icon-only");
         MenuItem root = tools.addItem("", FontAwesome.COG, null);
-        root.addItem("Configure", new Command() {
+        root.addItem("Configurar", new Command() {
             @Override
             public void menuSelected(final MenuItem selectedItem) {
-                Notification.show("Not implemented");
-            }
-        });
-        root.addSeparator();
-        root.addItem("Close", new Command() {
-            @Override
-            public void menuSelected(final MenuItem selectedItem) {
-                Notification.show("Not implemented");
+                Notification.show(":)");
             }
         });
 
@@ -307,7 +304,7 @@ public final class DashboardView extends Panel implements View,
                 new ClickListener() {
                     @Override
                     public void buttonClick(final ClickEvent event) {
-                        Notification.show("Not implemented");
+                        Notification.show(":)");
                     }
                 });
         showAll.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
@@ -391,7 +388,7 @@ public final class DashboardView extends Panel implements View,
             String description = NOTIFICATIONS;
             if (count > 0) {
                 addStyleName(STYLE_UNREAD);
-                description += " (" + count + " unread)";
+                description += " (" + count + " não lida)";
             } else {
                 removeStyleName(STYLE_UNREAD);
             }

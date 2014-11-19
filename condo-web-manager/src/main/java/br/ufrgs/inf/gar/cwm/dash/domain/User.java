@@ -2,16 +2,11 @@ package br.ufrgs.inf.gar.cwm.dash.domain;
 
 public final class User {
     private String role;
-    private String firstName;
-    private String lastName;
-    private String title;
+    private String name;
+    private String apartment;
     private boolean male;
     private String email;
-    private String location;
     private String phone;
-    private Integer newsletterSubscription;
-    private String website;
-    private String bio;
 
     public String getEmail() {
         return email;
@@ -19,14 +14,6 @@ public final class User {
 
     public void setEmail(final String email) {
         this.email = email;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(final String location) {
-        this.location = location;
     }
 
     public String getPhone() {
@@ -37,44 +24,12 @@ public final class User {
         this.phone = phone;
     }
 
-    public Integer getNewsletterSubscription() {
-        return newsletterSubscription;
-    }
-
-    public void setNewsletterSubscription(final Integer newsletterSubscription) {
-        this.newsletterSubscription = newsletterSubscription;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(final String website) {
-        this.website = website;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(final String bio) {
-        this.bio = bio;
-    }
-
     public boolean isMale() {
         return male;
     }
 
     public void setMale(final boolean male) {
         this.male = male;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
     }
 
     public String getRole() {
@@ -85,20 +40,19 @@ public final class User {
         this.role = role;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
+    public void setName(final String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
+	public String getApartment() {
+		return apartment;
+	}
 
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
-
+	public void setApartment(String apartment) {
+		this.apartment = apartment;
+	}
 }

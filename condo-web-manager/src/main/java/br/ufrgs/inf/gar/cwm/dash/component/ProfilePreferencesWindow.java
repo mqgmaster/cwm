@@ -13,14 +13,12 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.server.UserError;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -30,7 +28,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -50,26 +47,16 @@ public class ProfilePreferencesWindow extends Window {
      * explicitly set, calling fieldGroup.setItemDataSource(user) synchronizes
      * the fields with the user object.
      */
-    @PropertyId("firstName")
-    private TextField firstNameField;
-    @PropertyId("lastName")
-    private TextField lastNameField;
-    @PropertyId("title")
-    private ComboBox titleField;
+    @PropertyId("name")
+    private TextField name;
+    @PropertyId("apartment")
+    private TextField apartment;
     @PropertyId("male")
     private OptionGroup sexField;
     @PropertyId("email")
     private TextField emailField;
-    @PropertyId("location")
-    private TextField locationField;
     @PropertyId("phone")
     private TextField phoneField;
-    @PropertyId("newsletterSubscription")
-    private OptionalSelect<Integer> newsletterField;
-    @PropertyId("website")
-    private TextField websiteField;
-    @PropertyId("bio")
-    private TextArea bioField;
 
     private ProfilePreferencesWindow(final User user,
             final boolean preferencesTabOpen) {
@@ -112,13 +99,13 @@ public class ProfilePreferencesWindow extends Window {
 
     private Component buildPreferencesTab() {
         VerticalLayout root = new VerticalLayout();
-        root.setCaption("Preferences");
+        root.setCaption("Preferências");
         root.setIcon(FontAwesome.COGS);
         root.setSpacing(true);
         root.setMargin(true);
         root.setSizeFull();
 
-        Label message = new Label("Not implemented in this demo");
+        Label message = new Label(":)");
         message.setSizeUndefined();
         message.addStyleName(ValoTheme.LABEL_LIGHT);
         root.addComponent(message);
@@ -129,7 +116,7 @@ public class ProfilePreferencesWindow extends Window {
 
     private Component buildProfileTab() {
         HorizontalLayout root = new HorizontalLayout();
-        root.setCaption("Profile");
+        root.setCaption("Perfil");
         root.setIcon(FontAwesome.USER);
         root.setWidth(100.0f, Unit.PERCENTAGE);
         root.setSpacing(true);
@@ -144,15 +131,6 @@ public class ProfilePreferencesWindow extends Window {
         profilePic.setWidth(100.0f, Unit.PIXELS);
         pic.addComponent(profilePic);
 
-        Button upload = new Button("Change…", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Notification.show("Not implemented in this demo");
-            }
-        });
-        upload.addStyleName(ValoTheme.BUTTON_TINY);
-        pic.addComponent(upload);
-
         root.addComponent(pic);
 
         FormLayout details = new FormLayout();
@@ -160,28 +138,21 @@ public class ProfilePreferencesWindow extends Window {
         root.addComponent(details);
         root.setExpandRatio(details, 1);
 
-        firstNameField = new TextField("First Name");
-        details.addComponent(firstNameField);
-        lastNameField = new TextField("Last Name");
-        details.addComponent(lastNameField);
+        name = new TextField("Nome");
+        details.addComponent(name);
+        
+        apartment = new TextField("Apartamento");
+        details.addComponent(apartment);
 
-        titleField = new ComboBox("Title");
-        titleField.setInputPrompt("Please specify");
-        titleField.addItem("Mr.");
-        titleField.addItem("Mrs.");
-        titleField.addItem("Ms.");
-        titleField.setNewItemsAllowed(true);
-        details.addComponent(titleField);
-
-        sexField = new OptionGroup("Sex");
+        sexField = new OptionGroup("Sexo");
         sexField.addItem(Boolean.FALSE);
-        sexField.setItemCaption(Boolean.FALSE, "Female");
+        sexField.setItemCaption(Boolean.FALSE, "Feminino");
         sexField.addItem(Boolean.TRUE);
-        sexField.setItemCaption(Boolean.TRUE, "Male");
+        sexField.setItemCaption(Boolean.TRUE, "Masculino");
         sexField.addStyleName("horizontal");
         details.addComponent(sexField);
 
-        Label section = new Label("Contact Info");
+        Label section = new Label("Contato");
         section.addStyleName(ValoTheme.LABEL_H4);
         section.addStyleName(ValoTheme.LABEL_COLORED);
         details.addComponent(section);
@@ -192,40 +163,10 @@ public class ProfilePreferencesWindow extends Window {
         emailField.setNullRepresentation("");
         details.addComponent(emailField);
 
-        locationField = new TextField("Location");
-        locationField.setWidth("100%");
-        locationField.setNullRepresentation("");
-        locationField.setComponentError(new UserError(
-                "This address doesn't exist"));
-        details.addComponent(locationField);
-
-        phoneField = new TextField("Phone");
+        phoneField = new TextField("Telefone");
         phoneField.setWidth("100%");
         phoneField.setNullRepresentation("");
         details.addComponent(phoneField);
-
-        newsletterField = new OptionalSelect<Integer>();
-        newsletterField.addOption(0, "Daily");
-        newsletterField.addOption(1, "Weekly");
-        newsletterField.addOption(2, "Monthly");
-        details.addComponent(newsletterField);
-
-        section = new Label("Additional Info");
-        section.addStyleName(ValoTheme.LABEL_H4);
-        section.addStyleName(ValoTheme.LABEL_COLORED);
-        details.addComponent(section);
-
-        websiteField = new TextField("Website");
-        websiteField.setInputPrompt("http://");
-        websiteField.setWidth("100%");
-        websiteField.setNullRepresentation("");
-        details.addComponent(websiteField);
-
-        bioField = new TextArea("Bio");
-        bioField.setWidth("100%");
-        bioField.setRows(4);
-        bioField.setNullRepresentation("");
-        details.addComponent(bioField);
 
         return root;
     }
@@ -246,7 +187,7 @@ public class ProfilePreferencesWindow extends Window {
                     // not in this demo.
 
                     Notification success = new Notification(
-                            "Profile updated successfully");
+                            "Perfil atualizado com sucesso");
                     success.setDelayMsec(2000);
                     success.setStyleName("bar success small");
                     success.setPosition(Position.BOTTOM_CENTER);

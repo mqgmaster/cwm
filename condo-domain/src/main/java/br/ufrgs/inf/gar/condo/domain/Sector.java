@@ -47,6 +47,10 @@ public class Sector implements Serializable {
 		return id;
 	}
 	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	public boolean equals(Object another) {
         if ( !(another instanceof Sector) ) return false;
  
