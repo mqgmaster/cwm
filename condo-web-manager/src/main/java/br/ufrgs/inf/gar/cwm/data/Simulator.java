@@ -16,7 +16,7 @@ import br.ufrgs.inf.gar.condo.domain.Sector;
  */
 public class Simulator {
 
-	
+	private static boolean started = false;
 	private final static long INTERVAL_ONE = 5000;
 	private final static long INTERVAL_TWO = 8000;
 	public static final AtomicReference<Condominium> CONDO = new AtomicReference<>();
@@ -30,7 +30,9 @@ public class Simulator {
 	
     public static void start() {
         System.out.println( "Simulator started" );
-        
+        if (!started) {
+        	started = true;
+        }
         createData();
         startUpdater();
     }
