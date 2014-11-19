@@ -3,6 +3,7 @@ package br.ufrgs.inf.gar.cwm.dash.component;
 import br.ufrgs.inf.gar.condo.domain.Employee;
 import br.ufrgs.inf.gar.cwm.data.DaoService;
 
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
@@ -10,6 +11,24 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public final class EmployeeTable extends Table {
 
+	@Override
+    protected String formatPropertyValue(final Object rowId,
+            final Object colId, final Property<?> property) {
+        String result = super.formatPropertyValue(rowId, colId, property);
+        if (colId.equals("working")) {
+            if (property != null && property.getValue() != null) {
+                if((Boolean) property.getValue()) {
+                	result = "Trabalhando";
+                } else {
+                	result = "Não presente";
+                }
+            } else {
+                result = "?";
+            }
+        }
+        return result;
+    }
+	
     public EmployeeTable() {
         setCaption("Empregados");
 
@@ -18,17 +37,13 @@ public final class EmployeeTable extends Table {
         addStyleName(ValoTheme.TABLE_NO_VERTICAL_LINES);
         addStyleName(ValoTheme.TABLE_SMALL);
         setSortEnabled(false);
-        setRowHeaderMode(RowHeaderMode.INDEX);
-      //  setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
         setSizeFull();
 
-        //Collections.sort(employees);
-
-        setContainerDataSource(new BeanItemContainer<Employee>(
-        		Employee.class, DaoService.getAllEmployees()));
-
-    //   setVisibleColumns(new Object[]{"name", "role", "working"});
-     //  setColumnHeaders("Nome", "Área", "Ativo");
+        BeanItemContainer<Employee> container = new BeanItemContainer<>(
+        		Employee.class, DaoService.getAllEmployees());
+        setContainerDataSource(container);
+        setVisibleColumns(new Object[]{"name", "role", "monthWage", "weekWorkload", "working"});
+        setColumnHeaders("Nome", "Cargo", "Salário", "Carga Horária", "Status");
     }
 
 }

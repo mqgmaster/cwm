@@ -1,7 +1,5 @@
 package br.ufrgs.inf.gar.condo.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +11,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table
-public class Garage implements Serializable {
+public class Garage extends AbstractEntity<Integer, Garage> {
 
 	@Id
 	@GeneratedValue
@@ -44,18 +42,7 @@ public class Garage implements Serializable {
         this.sector = sector;
     }
     
-    public boolean equals(Object another) {
-        if ( !(another instanceof Garage) ) return false;
- 
-        final Garage apt = (Garage) another;
-         
-        return this.id.equals(apt.getId());
-    }
-     
-    public int hashCode() {
-        return id.hashCode();
-    }
-
+    @Override
 	public Integer getId() {
 		return id;
 	}
@@ -72,7 +59,7 @@ public class Garage implements Serializable {
 		this.number = number;
 	}
 
-	public Boolean isOccupied() {
+	public boolean isOccupied() {
 		return isOccupied;
 	}
 

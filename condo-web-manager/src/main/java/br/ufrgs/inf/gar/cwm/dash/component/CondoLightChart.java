@@ -42,10 +42,9 @@ public class CondoLightChart extends Chart {
 
 		final DataSeries series = new DataSeries();
 		series.setPlotOptions(new PlotOptionsSpline());
-		series.setName("Random data");
 		float consum;
 		try {
-			consum = DaoService.getCondominium().getLightConsumption();
+			consum = DaoService.getCondominium().getInstantElectricUsageFloat();
 			series.add(new DataSeriesItem(
 					System.currentTimeMillis(), consum));
 		} catch (IOException e) {
@@ -58,9 +57,15 @@ public class CondoLightChart extends Chart {
 			public void run() {
 				float consum;
 				try {
-					consum = DaoService.getCondominium().getLightConsumption();
-					series.add(new DataSeriesItem(
-							System.currentTimeMillis(), consum));
+					consum = DaoService.getCondominium().getInstantElectricUsageFloat();
+					if (series.size() > 29) {
+						series.add(new DataSeriesItem(
+								System.currentTimeMillis(), consum), true, true);
+					} else {
+						series.add(new DataSeriesItem(
+								System.currentTimeMillis(), consum));
+					}
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

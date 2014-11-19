@@ -11,6 +11,7 @@ import br.ufrgs.inf.gar.cwm.dash.component.LampTable;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.component.TopGrossingAptsChart;
 import br.ufrgs.inf.gar.cwm.dash.component.TopTenAptsTable;
+import br.ufrgs.inf.gar.cwm.dash.component.WaterSparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
 import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
@@ -96,21 +97,21 @@ public final class DashboardView extends Panel implements View,
         sparks.setWidth("100%");
         Responsive.makeResponsive(sparks);
 
-        SparklineChart s = new SparklineChart("Consumo de Água / Mês", "L", "",
-                DummyDataGenerator.chartColors[0], 12, 4000, 5000);
+        WaterSparklineChart s = new WaterSparklineChart("Consumo de Água / Mês", "L", "",
+                DummyDataGenerator.chartColors[0]);
         sparks.addComponent(s);
 
-        s = new SparklineChart("Consumo de Luz / Mês", "kWh", "",
+        SparklineChart s2 = new SparklineChart("Consumo de Luz / Mês", "kWh", "",
                 DummyDataGenerator.chartColors[2], 12, 3000, 4000);
-        sparks.addComponent(s);
+        sparks.addComponent(s2);
 
-        s = new SparklineChart("Problemas Reportados / Mês", "", "",
+        s2 = new SparklineChart("Problemas Reportados / Mês", "", "",
                 DummyDataGenerator.chartColors[3], 12, 0, 30);
-        sparks.addComponent(s);
+        sparks.addComponent(s2);
 
-        s = new SparklineChart("Balanço Financeiro", "", "R$",
+        s2 = new SparklineChart("Balanço Financeiro", "", "R$",
                 DummyDataGenerator.chartColors[5], 12, 5000, 10000);
-        sparks.addComponent(s);
+        sparks.addComponent(s2);
 
         return sparks;
     }

@@ -52,8 +52,12 @@ public class Simulator {
 						session.beginTransaction();
 			            Condominium condo = (Condominium) session.get(Condominium.class, condominiumId);
 			            //acumulado de 5 segundos, devido ao interalo da thread
-			            condo.setLightConsumption(generateLightConsumption(random));  //ex: 0.449
-			            condo.setWaterConsumption(generateWaterConsumption(random));  //ex: 0.008
+			            condo.setInstantElectricUsage(generateInstantElectricUsage(random));  //ex: 0.449
+			            condo.setTotalElectricUsage(
+			            		condo.getTotalElectricUsageFloat() + condo.getInstantElectricUsageFloat());
+			            condo.setInstantWaterUsage(generateInstantWaterUsage(random));  //ex: 0.008
+			            condo.setTotalWaterUsage(
+			            		condo.getTotalWaterUsageFloat() + condo.getInstantWaterUsageFloat());
 			            if (random.nextInt(10) == 1) 
 			            	condo.setNumUnknownPeople(random.nextInt(10));
 			            else condo.setNumUnknownPeople(0);
@@ -64,8 +68,12 @@ public class Simulator {
 			            session.beginTransaction();	
 			            for (Integer aptId : APTS) {
 				            Apartment apt = (Apartment) session.get(Apartment.class, aptId);
-				            apt.setLightConsumption(generateLightConsumption(random)); 
-				            apt.setWaterConsumption(generateWaterConsumption(random));
+				            apt.setInstantElectricUsage(generateInstantElectricUsage(random));  
+				            apt.setTotalElectricUsage(
+				            		apt.getTotalElectricUsageFloat() + apt.getInstantElectricUsageFloat());
+				            apt.setInstantWaterUsage(generateInstantWaterUsage(random));  
+				            apt.setTotalWaterUsage(
+				            		apt.getTotalWaterUsageFloat() + apt.getInstantWaterUsageFloat());
 				            session.save(apt);
 			            }
 			            session.getTransaction().commit();
@@ -130,11 +138,11 @@ public class Simulator {
 		return random.nextInt(4);
 	}
 
-	private static float generateLightConsumption(Random random) {
+	private static Float generateInstantElectricUsage(Random random) {
 		return random.nextFloat();
 	};
 	
-	private static float generateWaterConsumption(Random random) {
+	private static Float generateInstantWaterUsage(Random random) {
 		return random.nextFloat() / 100;
 	};
 

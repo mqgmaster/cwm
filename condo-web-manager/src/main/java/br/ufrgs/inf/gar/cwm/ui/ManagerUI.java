@@ -1,25 +1,5 @@
 package br.ufrgs.inf.gar.cwm.ui;
 
-import java.io.IOException;
-
-import javax.servlet.annotation.WebServlet;
-
-import br.ufrgs.inf.gar.cwm.data.SNMPManager;
-import br.ufrgs.inf.gar.cwm.ui.tab.apartment.AptInfoTab;
-import br.ufrgs.inf.gar.cwm.ui.tab.condo.CondoInfoTab;
-import br.ufrgs.inf.gar.cwm.ui.tab.condo.CondoLightTab;
-import br.ufrgs.inf.gar.cwm.ui.tab.home.HomeTab;
-import br.ufrgs.inf.gar.cwm.ui.tab.service.TabService;
-
-import com.vaadin.annotations.Push;
-import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.server.Page;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.UI;
 
 /*
 @Push

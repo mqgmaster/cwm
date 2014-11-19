@@ -44,15 +44,23 @@ public class Simulator {
 				try {
 					while (true) {
 			            //acumulado de 5 segundos, devido ao interalo da thread
-			            CONDO.get().setLightConsumption(generateLightConsumption(random));  //ex: 0.449
-			            CONDO.get().setWaterConsumption(generateWaterConsumption(random));  //ex: 0.008
+			            CONDO.get().setInstantElectricUsage(generateInstantElectricUsage(random));  //ex: 0.449
+			            CONDO.get().setTotalElectricUsage(
+			            		CONDO.get().getTotalElectricUsageFloat() + CONDO.get().getInstantElectricUsageFloat());
+			            CONDO.get().setInstantWaterUsage(generateInstantWaterUsage(random));  //ex: 0.008
+			            CONDO.get().setTotalWaterUsage(
+			            		CONDO.get().getTotalWaterUsageFloat() + CONDO.get().getInstantWaterUsageFloat());
 			            if (random.nextInt(10) == 1) 
 			            	 CONDO.get().setNumUnknownPeople(random.nextInt(10));
 			            else  CONDO.get().setNumUnknownPeople(0);
 
 			            for (Apartment apt : APTS.get()) {
-				            apt.setLightConsumption(generateLightConsumption(random)); 
-				            apt.setWaterConsumption(generateWaterConsumption(random));
+			            	apt.setInstantElectricUsage(generateInstantElectricUsage(random));  
+				            apt.setTotalElectricUsage(
+				            		apt.getTotalElectricUsageFloat() + apt.getInstantElectricUsageFloat());
+				            apt.setInstantWaterUsage(generateInstantWaterUsage(random));  
+				            apt.setTotalWaterUsage(
+				            		apt.getTotalWaterUsageFloat() + apt.getInstantWaterUsageFloat());
 			            }
 						Thread.sleep(INTERVAL_ONE);
 					}
@@ -99,12 +107,12 @@ public class Simulator {
 		return random.nextInt(4);
 	}
 
-	private static float generateLightConsumption(Random random) {
+	private static Float generateInstantElectricUsage(Random random) {
 		return random.nextFloat();
 	};
 	
-	private static float generateWaterConsumption(Random random) {
-		return random.nextFloat() / 100;
+	private static Float generateInstantWaterUsage(Random random) {
+		return random.nextFloat() + 0.5f;
 	};
 
 	private static void createData() {
@@ -138,6 +146,7 @@ public class Simulator {
         
         GARS.get().add(new Garage(1, APTS.get().get(0), SECTOR_GARAGE.get()));
         GARS.get().add(new Garage(2, APTS.get().get(1), SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
         for (int i = 0; i < GARS.get().size(); i++) {
         	GARS.get().get(i).setId(i);
 		}

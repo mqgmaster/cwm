@@ -1,7 +1,5 @@
 package br.ufrgs.inf.gar.condo.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +15,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table
-public class Apartment implements Serializable {
+public class Apartment extends AbstractEntity<Integer, Apartment> {
      
     @Id
     @GeneratedValue
@@ -36,17 +34,23 @@ public class Apartment implements Serializable {
     @Column(name="num_people")
     private Integer numPeople;
     
-    @Column(name="water_consumption")
-    private Float waterConsumption;
+    @Column(name="total_water_usage")
+    private String totalWaterUsage; 		
     
-    @Column(name="water_cons_limit")
-    private Float waterConsLimit;
-     
-    @Column(name="light_consumption")
-    private Float lightConsumption;
+    @Column(name="instant_water_usage")
+    private String instantWaterUsage; 
+    								
+    @Column(name="total_water_limit")
+    private String totalWaterLimit;
     
-    @Column(name="light_cons_limit")
-    private Float lightConsLimit;
+    @Column(name="total_electric_usage")
+    private String totalElectricUsage; 		
+    								     
+    @Column(name="total_electric_limit")
+    private String totalElectricLimit;
+    
+    @Column(name="instant_electric_usage")
+    private String instantElectricUsage;
     
     @ManyToOne
     @JoinColumn(name="sector_id")
@@ -61,25 +65,15 @@ public class Apartment implements Serializable {
         this.numRooms = numRooms;
         this.sector = sector;
         this.numPeople = 0;
-        this.lightConsumption = new Float(0);
-        this.lightConsLimit = new Float(0.8);        
-        this.waterConsumption = new Float(0);
-        this.waterConsLimit = new Float(0.01);
-    }
-     
-    public boolean equals(Object another) {
-        if ( !(another instanceof Apartment) ) return false;
- 
-        final Apartment apt = (Apartment) another;
-         
-        return this.id.equals(apt.getId());
-    }
-     
-    public int hashCode() {
-        return id.hashCode();
+        this.totalWaterUsage = "0.0";
+        this.totalWaterLimit = "0.0";
+        this.instantWaterUsage = "0.0";
+        this.totalElectricUsage = "0.0";
+        this.totalElectricLimit = "0.0";
+        this.instantElectricUsage = "0.0";
     }
 
-	public Integer getId() {
+    public Integer getId() {
 		return id;
 	}
 	
@@ -119,22 +113,6 @@ public class Apartment implements Serializable {
 		this.numPeople = numPeople;
 	}
 
-	public Float getWaterConsumption() {
-		return waterConsumption;
-	}
-
-	public void setWaterConsumption(Float waterConsumption) {
-		this.waterConsumption = waterConsumption;
-	}
-
-	public Float getLightConsumption() {
-		return lightConsumption;
-	}
-
-	public void setLightConsumption(Float lightConsumption) {
-		this.lightConsumption = lightConsumption;
-	}
-
 	public Sector getSector() {
 		return sector;
 	}
@@ -143,19 +121,99 @@ public class Apartment implements Serializable {
 		this.sector = sector;
 	}
 	
-	public Float getWaterConsLimit() {
-		return waterConsLimit;
+	public String getTotalWaterUsage() {
+		return totalWaterUsage;
+	}
+	
+	public Float getTotalWaterUsageFloat() {
+		return Float.valueOf(totalWaterUsage);
 	}
 
-	public void setWaterConsLimit(Float waterConsLimit) {
-		this.waterConsLimit = waterConsLimit;
+	public void setTotalWaterUsage(String totalWaterUsage) {
+		this.totalWaterUsage = totalWaterUsage;
+	}
+	
+	public void setTotalWaterUsage(Float totalWaterUsage) {
+		this.totalWaterUsage = String.valueOf(totalWaterUsage);
 	}
 
-	public Float getLightConsLimit() {
-		return lightConsLimit;
+	public String getInstantWaterUsage() {
+		return instantWaterUsage;
+	}
+	
+	public Float getInstantWaterUsageFloat() {
+		return Float.valueOf(instantWaterUsage);
 	}
 
-	public void setLightConsLimit(Float lightConsLimit) {
-		this.lightConsLimit = lightConsLimit;
+	public void setInstantWaterUsage(String instantWaterUsage) {
+		this.instantWaterUsage = instantWaterUsage;
+	}
+	
+	public void setInstantWaterUsage(Float instantWaterUsage) {
+		this.instantWaterUsage = String.valueOf(instantWaterUsage);
+	}
+
+	public String getTotalWaterLimit() {
+		return totalWaterLimit;
+	}
+	
+	public Float getTotalWaterLimitFloat() {
+		return Float.valueOf(totalWaterLimit);
+	}
+
+	public void setTotalWaterLimit(String totalWaterLimit) {
+		this.totalWaterLimit = totalWaterLimit;
+	}
+	
+	public void setTotalWaterLimit(Float totalWaterLimit) {
+		this.totalWaterLimit = String.valueOf(totalWaterLimit);
+	}
+
+	public String getTotalElectricUsage() {
+		return totalElectricUsage;
+	}
+	
+	public Float getTotalElectricUsageFloat() {
+		return Float.valueOf(totalElectricUsage);
+	}
+
+	public void setTotalElectricUsage(String totalElectricUsage) {
+		this.totalElectricUsage = totalElectricUsage;
+	}
+	
+	public void setTotalElectricUsage(Float totalElectricUsage) {
+		this.totalElectricUsage = String.valueOf(totalElectricUsage);
+	}
+
+	public String getTotalElectricLimit() {
+		return totalElectricLimit;
+	}
+	
+	public Float getTotalElectricLimitFloat() {
+		return Float.valueOf(totalElectricLimit);
+	}
+
+	public void setTotalElectricLimit(String totalElectricLimit) {
+		this.totalElectricLimit = totalElectricLimit;
+	}
+	
+	public void setTotalElectricLimit(Float totalElectricLimit) {
+		this.totalElectricLimit = String.valueOf(totalElectricLimit);
+	}
+
+	public String getInstantElectricUsage() {
+		return instantElectricUsage;
+	}
+
+	public Float getInstantElectricUsageFloat() {
+		return Float.valueOf(instantElectricUsage);
+	}
+
+	public void setInstantElectricUsage(String instantElectricUsage) {
+		this.instantElectricUsage = instantElectricUsage;
+	}
+	
+	public void setInstantElectricUsage(Float instantElectricUsage) {
+		this.instantElectricUsage = String.valueOf(instantElectricUsage);
 	}
 }
