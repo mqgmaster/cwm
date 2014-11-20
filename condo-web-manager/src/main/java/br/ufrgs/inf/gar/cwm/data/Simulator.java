@@ -32,7 +32,9 @@ public class Simulator {
         System.out.println( "Simulator started" );
         if (!started) {
         	started = true;
-        }
+    	} else {
+    		return;
+    	}
         createData();
         startUpdater();
     }
