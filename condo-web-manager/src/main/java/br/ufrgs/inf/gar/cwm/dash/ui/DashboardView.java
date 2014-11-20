@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
-import br.ufrgs.inf.gar.cwm.dash.component.CondoLightChart;
+import br.ufrgs.inf.gar.cwm.dash.component.CondoConsumptionChart;
 import br.ufrgs.inf.gar.cwm.dash.component.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.component.GarageTable;
 import br.ufrgs.inf.gar.cwm.dash.component.LampTable;
@@ -17,7 +17,6 @@ import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
-import br.ufrgs.inf.gar.cwm.dash.ui.DashboardEdit.DashboardEditListener;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -46,8 +45,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public final class DashboardView extends Panel implements View,
-        DashboardEditListener {
+public final class DashboardView extends Panel implements View {
 
     private static final String HEADER = "Condomínio";
 	private static final String NOTIFICATIONS = "Notificações";
@@ -97,8 +95,7 @@ public final class DashboardView extends Panel implements View,
         sparks.setWidth("100%");
         Responsive.makeResponsive(sparks);
 
-        WaterSparklineChart s = new WaterSparklineChart("Consumo de Água / Mês", "L", "",
-                DummyDataGenerator.chartColors[0]);
+        WaterSparklineChart s = new WaterSparklineChart();
         sparks.addComponent(s);
 
         SparklineChart s2 = new SparklineChart("Consumo de Luz / Mês", "kWh", "",
@@ -161,18 +158,6 @@ public final class DashboardView extends Panel implements View,
         return dashboardPanels;
     }
 
-    private Component buildTopGrossingMovies() {
-        TopGrossingAptsChart topGrossingMoviesChart = new TopGrossingAptsChart();
-        topGrossingMoviesChart.setSizeFull();
-        return createContentWrapper(topGrossingMoviesChart);
-    }
-
-    private Component buildTop10TitlesByRevenue() {
-        Component contentWrapper = createContentWrapper(new TopTenAptsTable());
-        contentWrapper.addStyleName("top10-revenue");
-        return contentWrapper;
-    }
-
     private Component buildLampTable() {
         return createContentWrapper(new LampTable());
     }
@@ -186,9 +171,8 @@ public final class DashboardView extends Panel implements View,
     }
     
     private Component buildCondoLightChart() {
-    	CondoLightChart chart = new CondoLightChart();
+    	CondoConsumptionChart chart = new CondoConsumptionChart();
     	chart.setSizeFull();
-    	chart.setCaption("Consumo de Luz em Tempo Real");
         return createContentWrapper(chart);
     }
     
@@ -338,11 +322,6 @@ public final class DashboardView extends Panel implements View,
     @Override
     public void enter(final ViewChangeEvent event) {
         notificationsButton.updateNotificationsCount(null);
-    }
-
-    @Override
-    public void dashboardNameEdited(final String name) {
-        titleLabel.setValue(name);
     }
 
     private void toggleMaximized(final Component panel, final boolean maximized) {

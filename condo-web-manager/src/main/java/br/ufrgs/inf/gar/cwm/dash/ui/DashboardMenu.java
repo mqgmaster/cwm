@@ -148,48 +148,16 @@ public final class DashboardMenu extends CustomComponent {
         for (final DashboardViewType view : DashboardViewType.values()) {
             Component menuItemComponent = new ValoMenuItemButton(view);
 
-       /*     if (view == DashboardViewType.REPORTS) {
-                // Add drop target to reports button
-                DragAndDropWrapper reports = new DragAndDropWrapper(
-                        menuItemComponent);
-                reports.setDragStartMode(DragStartMode.NONE);
-                reports.setDropHandler(new DropHandler() {
-
-                    @Override
-                    public void drop(final DragAndDropEvent event) {
-                        UI.getCurrent()
-                                .getNavigator()
-                                .navigateTo(
-                                        DashboardViewType.REPORTS.getViewName());
-                        Table table = (Table) event.getTransferable()
-                                .getSourceComponent();
-                        DashboardEventBus.post(new TransactionReportEvent(
-                                (Collection<Transaction>) table.getValue()));
-                    }
-
-                    @Override
-                    public AcceptCriterion getAcceptCriterion() {
-                        return AcceptItem.ALL;
-                    }
-
-                });
-                menuItemComponent = reports;
-            } 
-            if (view == DashboardViewType.REPORTS) {
-                reportsBadge = new Label();
-                reportsBadge.setId(REPORTS_BADGE_ID);
-                menuItemComponent = buildBadgeWrapper(menuItemComponent,
-                        reportsBadge);
-                
-                menuItemsLayout.addComponent(menuItemComponent);
-            } 
-            */
-            
             if (view == DashboardViewType.DASHBOARD) {
                 notificationsBadge = new Label();
                 notificationsBadge.setId(NOTIFICATIONS_BADGE_ID);
                 menuItemComponent = buildBadgeWrapper(menuItemComponent,
                         notificationsBadge);
+                
+                menuItemsLayout.addComponent(menuItemComponent);
+            }
+            
+            if (view == DashboardViewType.APARTMENTS) {
                 
                 menuItemsLayout.addComponent(menuItemComponent);
             }

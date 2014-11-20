@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
 import br.ufrgs.inf.gar.cwm.data.DaoService;
 
 import com.vaadin.addon.charts.Chart;
@@ -33,29 +34,30 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public class WaterSparklineChart extends VerticalLayout {
 	
-	private Label current;
-	private String unit;
+	private static final String TITLE = "Consumo de Água semanal";
+	private final Label current = new Label();
+	private final Label highLow = new Label();
+	private static final String UNIT = "L";
+	private final Color color = DummyDataGenerator.chartColors[0];
 
-    public WaterSparklineChart(final String name, final String unit,
-            final String prefix, final Color color) {
-    	this.unit = unit;
+    public WaterSparklineChart() {
         setSizeUndefined();
         addStyleName("spark");
         setDefaultComponentAlignment(Alignment.TOP_CENTER);
         
-        String totalWaterUsage = null;
+        Float totalWaterUsage = null;
 		try {
-			totalWaterUsage = DaoService.getCondominium().getTotalWaterUsage();
+			totalWaterUsage = DaoService.getCondominium().getTotalWaterUsageFloat();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         
-		current = new Label(prefix + totalWaterUsage.substring(0, 4) + unit);
+		setCurrentUsage(0f);
 		current.setSizeUndefined();
         current.addStyleName(ValoTheme.LABEL_HUGE);
         addComponent(current);
 
-        Label title = new Label(name);
+        Label title = new Label(TITLE);
         title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_SMALL);
         title.addStyleName(ValoTheme.LABEL_LIGHT);
@@ -63,9 +65,8 @@ public class WaterSparklineChart extends VerticalLayout {
 
         addComponent(buildSparkline(totalWaterUsage, color));
 
-        Label highLow = new Label("Maximo <b>" + 0
-                + "</b> &nbsp;&nbsp;&nbsp; Mínimo <b>"
-                + 0 + "</b>", ContentMode.HTML);
+        highLow.setContentMode(ContentMode.HTML);
+        setMaxMinUsage(0f, 0f);
         highLow.addStyleName(ValoTheme.LABEL_TINY);
         highLow.addStyleName(ValoTheme.LABEL_LIGHT);
         highLow.setSizeUndefined();
@@ -73,7 +74,26 @@ public class WaterSparklineChart extends VerticalLayout {
 
     }
 
-    private Component buildSparkline(final String totalWaterUsage, final Color color) {
+	private void setMaxMinUsage(final Float max, final Float min) {
+		highLow.setValue("Máximo <b>" + getStandardFloatString(max)
+                + "</b> &nbsp;&nbsp;&nbsp; Mínimo <b>"
+                + getStandardFloatString(min) + "</b>");
+	}
+	
+	private String getStandardFloatString(final Float value) {
+		String val = value.toString();
+		if(val.toString().length() > 3) {
+			return val.toString().substring(0, 4);
+		} else {
+			return val.toString();
+		}
+	}
+
+	private void setCurrentUsage(Float totalWaterUsage) {
+		current.setValue(getStandardFloatString(totalWaterUsage) + UNIT);
+	}
+
+    private Component buildSparkline(final Float totalWaterUsage, final Color color) {
         Chart spark = new Chart();
         spark.getConfiguration().setTitle("");
         spark.getConfiguration().getChart().setType(ChartType.SPLINE);
@@ -82,7 +102,6 @@ public class WaterSparklineChart extends VerticalLayout {
 
         DataSeries series = new DataSeries();
         series.add(new DataSeriesItem("", 0f));
-        series.add(new DataSeriesItem("", Float.valueOf(totalWaterUsage.substring(0, 4))));
         
         spark.getConfiguration().setSeries(series);
         spark.getConfiguration().getTooltip().setEnabled(false);
@@ -122,19 +141,47 @@ public class WaterSparklineChart extends VerticalLayout {
 
         runWhileAttached(this, new Runnable() {
 
+        	Float weekConsum;
+			Float initWeek = -1f;
+			Float endWeek;
+			Float max = 0f;
+			Float min = 0f;
+        	
 			@Override
 			public void run() {
-				Float consum;
 				try {
-					consum = DaoService.getCondominium().getTotalWaterUsageFloat();
-					series.add(new DataSeriesItem("", consum));
-					current.setValue(consum.toString().substring(0, 4) + unit);
+					if (initWeek != -1f) {
+						endWeek = DaoService.getCondominium().getTotalWaterUsageFloat();
+						
+						weekConsum = endWeek - initWeek;
+						if (series.size() > 4) {
+							series.add(new DataSeriesItem("", weekConsum), true, true);
+						} else {
+							series.add(new DataSeriesItem("", weekConsum));
+						}
+						setCurrentUsage(weekConsum);
+						
+						initWeek = -1f;
+						
+						max = series.get(0).getY().floatValue();
+						min = series.get(0).getY().floatValue();
+						
+						for (DataSeriesItem item : series.getData()) {
+							if (item.getY().floatValue() > max) {
+								max = item.getY().floatValue();
+							} else if (item.getY().floatValue() < min) {
+								min = item.getY().floatValue();
+							}
+						}
+						setMaxMinUsage(max, min);
+					} else {
+						initWeek = DaoService.getCondominium().getTotalWaterUsageFloat();
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
 			}
-		}, 20000, 20000);
+		}, 20000, 5000);
 
         return spark;
     }
@@ -149,8 +196,6 @@ public class WaterSparklineChart extends VerticalLayout {
 						UI.getCurrent().access(task);
 						Thread.sleep(interval);
 					}
-				} catch (InterruptedException e) {
-				} catch (com.vaadin.ui.UIDetachedException e) {
 				} catch (Exception e) {
 					Logger.getLogger(getClass().getName())
 							.log(Level.WARNING,

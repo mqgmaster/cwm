@@ -22,9 +22,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
-public class CondoLightChart extends Chart {
+public class CondoConsumptionChart extends Chart {
 
-	public CondoLightChart() {
+	private static final String TITLE_CHART = "Consumo em Tempo Real";
+
+	public CondoConsumptionChart() {
+		setCaption(TITLE_CHART);
 		final Configuration configuration = new Configuration();
 		configuration.getChart().setType(ChartType.SPLINE);
 		configuration.getTitle().setText(null);
@@ -86,7 +89,7 @@ public class CondoLightChart extends Chart {
 					Thread.sleep(initialPause);
 					while (true) {
 						UI.getCurrent().access(task);
-						System.out.println("thread running");
+						System.out.println("condo_consum_chart_running");
 						Thread.sleep(interval);
 					}
 				} catch (InterruptedException e) {

@@ -114,7 +114,7 @@ public class Simulator {
 	};
 	
 	private static Float generateInstantWaterUsage(Random random) {
-		return random.nextFloat() + 0.5f;
+		return random.nextFloat();
 	};
 
 	private static void createData() {

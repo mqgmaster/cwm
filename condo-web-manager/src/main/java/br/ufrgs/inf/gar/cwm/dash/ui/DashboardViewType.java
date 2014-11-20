@@ -6,11 +6,7 @@ import com.vaadin.server.Resource;
 
 public enum DashboardViewType {
 	DASHBOARD("condominio", DashboardView.class, FontAwesome.TABLE, true), 
-    SALES("apartmentos", ConsumView.class, FontAwesome.HOME, false), 
-    TRANSACTIONS("financas", TransactionsView.class, FontAwesome.BAR_CHART_O, false), 
-    REPORTS("problemas", ReportsView.class, FontAwesome.FILE_TEXT_O, true), 
-    SCHEDULE("calendario", ScheduleView.class, FontAwesome.CALENDAR_O, false),
-	TEST("test", AptsView.class, FontAwesome.CALENDAR_O, false);
+    APARTMENTS("apartmentos", AptsView.class, FontAwesome.HOME, false);
 
     private final String viewName;
     private final Class<? extends View> viewClass;
