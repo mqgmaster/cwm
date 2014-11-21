@@ -74,7 +74,7 @@ public class CondoConsumptionChart extends Chart {
 				}
 				
 			}
-		}, 5000, 5000);
+		}, 2000, 2000);
 
 		configuration.setSeries(series);
 
@@ -89,7 +89,7 @@ public class CondoConsumptionChart extends Chart {
 					Thread.sleep(initialPause);
 					while (true) {
 						UI.getCurrent().access(task);
-						System.out.println("condo_consum_chart_running");
+						System.out.println("condo_consum_real_time");
 						Thread.sleep(interval);
 					}
 				} catch (InterruptedException e) {

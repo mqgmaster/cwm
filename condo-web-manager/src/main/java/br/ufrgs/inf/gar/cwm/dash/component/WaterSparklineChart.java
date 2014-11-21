@@ -141,19 +141,20 @@ public class WaterSparklineChart extends VerticalLayout {
 
         runWhileAttached(this, new Runnable() {
 
-        	Float weekConsum;
-			Float initWeek = -1f;
-			Float endWeek;
-			Float max = 0f;
-			Float min = 0f;
+        	float weekConsum;
+        	float initWeek = totalWaterUsage;
+        	float endWeek = -2f;
+        	float max = 0f;
+        	float min = 0f;
         	
 			@Override
 			public void run() {
 				try {
-					if (initWeek != -1f) {
+					if (endWeek == -1f) {
 						endWeek = DaoService.getCondominium().getTotalWaterUsageFloat();
 						
 						weekConsum = endWeek - initWeek;
+						System.out.println(endWeek + " - " + initWeek);
 						if (series.size() > 4) {
 							series.add(new DataSeriesItem("", weekConsum), true, true);
 						} else {
@@ -161,7 +162,8 @@ public class WaterSparklineChart extends VerticalLayout {
 						}
 						setCurrentUsage(weekConsum);
 						
-						initWeek = -1f;
+						initWeek = endWeek;
+						endWeek = -2f;
 						
 						max = series.get(0).getY().floatValue();
 						min = series.get(0).getY().floatValue();
@@ -175,13 +177,13 @@ public class WaterSparklineChart extends VerticalLayout {
 						}
 						setMaxMinUsage(max, min);
 					} else {
-						initWeek = DaoService.getCondominium().getTotalWaterUsageFloat();
+						endWeek = -1f;
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-		}, 20000, 5000);
+		}, 4000, 2000);
 
         return spark;
     }
