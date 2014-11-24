@@ -2,7 +2,13 @@ package br.ufrgs.inf.gar.cwm.dash.ui;
 
 import java.util.Iterator;
 
-import br.ufrgs.inf.gar.cwm.dash.component.TopTenAptsTable;
+import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.CondoConsumptionChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.WaterSparklineChart;
+import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
 
@@ -22,20 +28,22 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public final class AptsView extends Panel implements View {
+public final class ApartmentsView extends Panel implements View {
 
-    private static final String HEADER = "Apartamentos";
+    private static final String HEADER = "Apartmentos";
     public static final String TITLE_ID = "dashboard-title";
 
     private Label titleLabel;
     private CssLayout dashboardPanels;
     private final VerticalLayout root;
+    private HorizontalLayout header;
 
-    public AptsView() {
+    public ApartmentsView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
         setSizeFull();
         DashboardEventBus.register(this);
@@ -49,12 +57,12 @@ public final class AptsView extends Panel implements View {
 
         root.addComponent(buildHeader());
 
+        root.addComponent(buildSparklines());
+
         Component content = buildContent();
         root.addComponent(content);
         root.setExpandRatio(content, 1);
 
-        // All the open sub-windows should be closed whenever the root layout
-        // gets clicked.
         root.addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(final LayoutClickEvent event) {
@@ -63,8 +71,32 @@ public final class AptsView extends Panel implements View {
         });
     }
 
+    private Component buildSparklines() {
+        CssLayout sparks = new CssLayout();
+        sparks.addStyleName("sparks");
+        sparks.setWidth("100%");
+        Responsive.makeResponsive(sparks);
+
+        WaterSparklineChart s = new WaterSparklineChart();
+        sparks.addComponent(s);
+
+        SparklineChart s2 = new SparklineChart("Consumo de Luz / Mês", "kWh", "",
+                DummyDataGenerator.chartColors[2], 12, 3000, 4000);
+        sparks.addComponent(s2);
+
+        s2 = new SparklineChart("Problemas Reportados / Mês", "", "",
+                DummyDataGenerator.chartColors[3], 12, 0, 30);
+        sparks.addComponent(s2);
+
+        s2 = new SparklineChart("Balanço Financeiro", "", "R$",
+                DummyDataGenerator.chartColors[5], 12, 5000, 10000);
+        sparks.addComponent(s2);
+
+        return sparks;
+    }
+
     private Component buildHeader() {
-        HorizontalLayout header = new HorizontalLayout();
+        header = new HorizontalLayout();
         header.addStyleName("viewheader");
         header.setSpacing(true);
 
@@ -83,15 +115,55 @@ public final class AptsView extends Panel implements View {
         dashboardPanels.addStyleName("dashboard-panels");
         Responsive.makeResponsive(dashboardPanels);
 
-        dashboardPanels.addComponent(buildTop10TitlesByRevenue());
+        dashboardPanels.addComponent(buildCondoLightChart());
+        dashboardPanels.addComponent(buildGarageTable());
+        dashboardPanels.addComponent(buildEmployeeTable());
+        dashboardPanels.addComponent(buildLampTable());
 
         return dashboardPanels;
     }
 
-    private Component buildTop10TitlesByRevenue() {
-        Component contentWrapper = createContentWrapper(new TopTenAptsTable());
-        contentWrapper.addStyleName("top10-revenue");
-        return contentWrapper;
+    private Component buildLampTable() {
+        Component c = createContentWrapper(new LampTable());
+        c.addStyleName("dashboard-panel-slot-table");
+        return c;
+    }
+    
+    private Component buildGarageTable() {
+    	Component c = createContentWrapper(new GarageTable());
+        c.addStyleName("dashboard-panel-slot-table");
+        return c;
+    }
+    
+    private Component buildEmployeeTable() {
+    	Component c = createContentWrapper(new EmployeeTable());
+        c.addStyleName("dashboard-panel-slot-table");
+        return c;
+    }
+    
+    private Component buildCondoLightChart() {
+    	CondoConsumptionChart chart = new CondoConsumptionChart();
+    	chart.setSizeFull();
+        return createContentWrapper(chart);
+    }
+    
+    private Component buildCondoInfo() {
+    	VerticalLayout details = new VerticalLayout();
+    	details.setCaption("Detalhes");
+        details.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
+        details.addComponent(new TextField("d Name"));
+        details.addComponent(new TextField("First sdf"));
+        details.addComponent(new TextField("sdf dfsgad"));
+        details.addComponent(new TextField("sdf Name"));
+        details.addComponent(new TextField("sf Name"));
+        details.addComponent(new TextField("sdf adfg"));
+        details.addComponent(new TextField("sdf fgh"));
+        details.addComponent(new TextField("sdf sfgh"));
+        details.addComponent(new TextField("dfg Name"));
+        details.addComponent(new TextField("sdfgh Name"));
+        details.setHeight("800px");
+        Component panel = createContentWrapper(details);
+        return panel;
     }
 
     private Component createContentWrapper(final Component content) {
@@ -131,17 +203,10 @@ public final class AptsView extends Panel implements View {
         });
         max.setStyleName("icon-only");
         MenuItem root = tools.addItem("", FontAwesome.COG, null);
-        root.addItem("Configure", new Command() {
+        root.addItem("Configurar", new Command() {
             @Override
             public void menuSelected(final MenuItem selectedItem) {
-                Notification.show("Not implemented");
-            }
-        });
-        root.addSeparator();
-        root.addItem("Close", new Command() {
-            @Override
-            public void menuSelected(final MenuItem selectedItem) {
-                Notification.show("Not implemented");
+                Notification.show(":)");
             }
         });
 
@@ -152,6 +217,10 @@ public final class AptsView extends Panel implements View {
         card.addComponents(toolbar, content);
         slot.addComponent(card);
         return slot;
+    }
+
+    @Override
+    public void enter(final ViewChangeEvent event) {
     }
 
     private void toggleMaximized(final Component panel, final boolean maximized) {
@@ -171,10 +240,6 @@ public final class AptsView extends Panel implements View {
         } else {
             panel.removeStyleName("max");
         }
+        header.setVisible(true);
     }
-
-	@Override
-	public void enter(ViewChangeEvent event) {
-	}
-
 }

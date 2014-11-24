@@ -6,7 +6,7 @@ import com.vaadin.server.Resource;
 
 public enum DashboardViewType {
 	DASHBOARD("condominio", DashboardView.class, FontAwesome.TABLE, true), 
-    APARTMENTS("apartmentos", AptsView.class, FontAwesome.HOME, false);
+    APARTMENTS("apartmentos", ApartmentsView.class, FontAwesome.HOME, false);
 
     private final String viewName;
     private final Class<? extends View> viewClass;
@@ -48,5 +48,4 @@ public enum DashboardViewType {
         }
         return result;
     }
-
 }

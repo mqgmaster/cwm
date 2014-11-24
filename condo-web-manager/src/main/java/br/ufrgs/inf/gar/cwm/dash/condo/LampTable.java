@@ -1,7 +1,7 @@
-package br.ufrgs.inf.gar.cwm.dash.component;
+package br.ufrgs.inf.gar.cwm.dash.condo;
 
 import br.ufrgs.inf.gar.condo.domain.Lamp;
-import br.ufrgs.inf.gar.cwm.data.DaoService;
+import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;

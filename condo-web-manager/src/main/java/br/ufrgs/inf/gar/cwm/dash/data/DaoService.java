@@ -1,4 +1,4 @@
-package br.ufrgs.inf.gar.cwm.data;
+package br.ufrgs.inf.gar.cwm.dash.data;
 
 import java.io.IOException;
 import java.util.ArrayList;

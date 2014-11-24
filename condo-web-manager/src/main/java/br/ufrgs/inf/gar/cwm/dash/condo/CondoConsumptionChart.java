@@ -1,10 +1,10 @@
-package br.ufrgs.inf.gar.cwm.dash.component;
+package br.ufrgs.inf.gar.cwm.dash.condo;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import br.ufrgs.inf.gar.cwm.data.DaoService;
+import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.Axis;

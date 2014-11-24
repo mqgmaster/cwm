@@ -1,4 +1,4 @@
-package br.ufrgs.inf.gar.cwm.data;
+package br.ufrgs.inf.gar.cwm.dash.data;
 
 import org.snmp4j.smi.OID;
 

@@ -4,14 +4,12 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
-import br.ufrgs.inf.gar.cwm.dash.component.CondoConsumptionChart;
-import br.ufrgs.inf.gar.cwm.dash.component.EmployeeTable;
-import br.ufrgs.inf.gar.cwm.dash.component.GarageTable;
-import br.ufrgs.inf.gar.cwm.dash.component.LampTable;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
-import br.ufrgs.inf.gar.cwm.dash.component.TopGrossingAptsChart;
-import br.ufrgs.inf.gar.cwm.dash.component.TopTenAptsTable;
-import br.ufrgs.inf.gar.cwm.dash.component.WaterSparklineChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.CondoConsumptionChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.WaterSparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
 import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
@@ -50,7 +48,6 @@ public final class DashboardView extends Panel implements View {
     private static final String HEADER = "Condomínio";
 	private static final String NOTIFICATIONS = "Notificações";
 	private static final String VIEW_ALL_NOTIFICATIONS = "Ver mais notificações";
-	public static final String EDIT_ID = "dashboard-edit";
     public static final String TITLE_ID = "dashboard-title";
 
     private Label titleLabel;
@@ -58,6 +55,7 @@ public final class DashboardView extends Panel implements View {
     private CssLayout dashboardPanels;
     private final VerticalLayout root;
     private Window notificationsWindow;
+    private HorizontalLayout header;
 
     public DashboardView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -79,8 +77,6 @@ public final class DashboardView extends Panel implements View {
         root.addComponent(content);
         root.setExpandRatio(content, 1);
 
-        // All the open sub-windows should be closed whenever the root layout
-        // gets clicked.
         root.addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(final LayoutClickEvent event) {
@@ -114,7 +110,7 @@ public final class DashboardView extends Panel implements View {
     }
 
     private Component buildHeader() {
-        HorizontalLayout header = new HorizontalLayout();
+        header = new HorizontalLayout();
         header.addStyleName("viewheader");
         header.setSpacing(true);
 
@@ -159,15 +155,21 @@ public final class DashboardView extends Panel implements View {
     }
 
     private Component buildLampTable() {
-        return createContentWrapper(new LampTable());
+        Component c = createContentWrapper(new LampTable());
+        c.addStyleName("dashboard-panel-slot-table");
+        return c;
     }
     
     private Component buildGarageTable() {
-        return createContentWrapper(new GarageTable());
+    	Component c = createContentWrapper(new GarageTable());
+        c.addStyleName("dashboard-panel-slot-table");
+        return c;
     }
     
     private Component buildEmployeeTable() {
-        return createContentWrapper(new EmployeeTable());
+    	Component c = createContentWrapper(new EmployeeTable());
+        c.addStyleName("dashboard-panel-slot-table");
+        return c;
     }
     
     private Component buildCondoLightChart() {
@@ -341,6 +343,7 @@ public final class DashboardView extends Panel implements View {
         } else {
             panel.removeStyleName("max");
         }
+        header.setVisible(true);
     }
 
     public static final class NotificationsButton extends Button {

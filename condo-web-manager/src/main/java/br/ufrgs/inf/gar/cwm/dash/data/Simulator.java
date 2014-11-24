@@ -1,4 +1,4 @@
-package br.ufrgs.inf.gar.cwm.data;
+package br.ufrgs.inf.gar.cwm.dash.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,10 +149,23 @@ public class Simulator {
         GARS.get().add(new Garage(1, APTS.get().get(0), SECTOR_GARAGE.get()));
         GARS.get().add(new Garage(2, APTS.get().get(1), SECTOR_GARAGE.get()));
         GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
         for (int i = 0; i < GARS.get().size(); i++) {
         	GARS.get().get(i).setId(i);
 		}
         
+        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
+        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
+        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
+        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
+        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
+        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
         LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
         LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
         LAMPS.get().add(new Lamp(SECTOR_FIRST_FLOOR.get()));

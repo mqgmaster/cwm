@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import br.ufrgs.inf.gar.cwm.dash.data.DataProvider;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataProvider;
+import br.ufrgs.inf.gar.cwm.dash.data.Simulator;
 import br.ufrgs.inf.gar.cwm.dash.domain.User;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.BrowserResizeEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
@@ -12,7 +13,6 @@ import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.UserLoginRequestedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
 import br.ufrgs.inf.gar.cwm.dash.ui.LoginView;
 import br.ufrgs.inf.gar.cwm.dash.ui.MainView;
-import br.ufrgs.inf.gar.cwm.data.Simulator;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Push;
@@ -34,6 +34,13 @@ import com.vaadin.ui.Window;
 @Title("Condo WebManager")
 @SuppressWarnings("serial")
 public final class DashboardUI extends UI {
+	
+	public static final String AGENT_ADDRESS = "udp:10.0.0.102/161";
+
+	/**
+	* Porta 161 é usada para gets and sets
+	* Porta 162 é usada para traps
+	*/
 
     private final DataProvider dataProvider = new DummyDataProvider();
     private final DashboardEventBus dashboardEventbus = new DashboardEventBus();
@@ -41,6 +48,12 @@ public final class DashboardUI extends UI {
     @Override
     protected void init(final VaadinRequest request) {
         setLocale(Locale.US);
+        
+      //  try {
+			//SNMPManager.start(AGENT_ADDRESS);
+		//} catch (IOException e) {
+	//		e.printStackTrace();
+	//	}
         Simulator.start();
         DashboardEventBus.register(this);
         Responsive.makeResponsive(this);
