@@ -9,6 +9,7 @@ import br.ufrgs.inf.gar.cwm.dash.condo.CondoConsumptionChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.RefresherThread;
 import br.ufrgs.inf.gar.cwm.dash.condo.WaterSparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
 import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
@@ -49,6 +50,7 @@ public final class DashboardView extends Panel implements View {
 	private static final String NOTIFICATIONS = "Notificações";
 	private static final String VIEW_ALL_NOTIFICATIONS = "Ver mais notificações";
     public static final String TITLE_ID = "dashboard-title";
+    private final RefresherThread refresher = new RefresherThread();
 
     private Label titleLabel;
     private NotificationsButton notificationsButton;
@@ -167,7 +169,9 @@ public final class DashboardView extends Panel implements View {
     }
     
     private Component buildEmployeeTable() {
-    	Component c = createContentWrapper(new EmployeeTable());
+    	EmployeeTable table = new EmployeeTable();
+    	refresher.addComponent(table);
+    	Component c = createContentWrapper(table);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
     }

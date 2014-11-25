@@ -140,7 +140,10 @@ public class Simulator {
 		}
         
         EMPS.get().add(new Employee("Juarez", "Porteiro", 1000, 40, CONDO.get()));
-        EMPS.get().add(new Employee("Roberto", "Faxineiro", 1000, 40, CONDO.get()));
+        EMPS.get().add(new Employee("Roberto", "Porteiro", 1000, 40, CONDO.get()));
+        EMPS.get().add(new Employee("Souza", "Faxineiro", 1000, 40, CONDO.get()));
+        EMPS.get().add(new Employee("Silva", "Faxineiro", 1000, 40, CONDO.get()));
+        EMPS.get().add(new Employee("Carlos", "Faxineiro", 1000, 40, CONDO.get()));
         EMPS.get().add(new Employee("Ronaldo", "Porteiro", 1000, 40, CONDO.get()));
         for (int i = 0; i < EMPS.get().size(); i++) {
         	EMPS.get().get(i).setId(i);
@@ -149,21 +152,12 @@ public class Simulator {
         GARS.get().add(new Garage(1, APTS.get().get(0), SECTOR_GARAGE.get()));
         GARS.get().add(new Garage(2, APTS.get().get(1), SECTOR_GARAGE.get()));
         GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
-        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
-        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
-        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
-        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
-        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
-        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
-        GARS.get().add(new Garage(3, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(4, null, SECTOR_GARAGE.get()));
+        GARS.get().add(new Garage(5, null, SECTOR_GARAGE.get()));
         for (int i = 0; i < GARS.get().size(); i++) {
         	GARS.get().get(i).setId(i);
 		}
         
-        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
-        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
-        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
-        LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
         LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
         LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));
         LAMPS.get().add(new Lamp(SECTOR_GARAGE.get()));

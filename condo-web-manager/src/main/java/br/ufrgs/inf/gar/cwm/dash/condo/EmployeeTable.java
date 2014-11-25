@@ -6,15 +6,15 @@ import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TableFieldFactory;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public final class EmployeeTable extends Table {
+public final class EmployeeTable extends Table implements RefresherComponent {
 
 	@Override
     protected String formatPropertyValue(final Object rowId,
@@ -51,16 +51,29 @@ public final class EmployeeTable extends Table {
         setVisibleColumns(new Object[]{"name", "role", "monthWage", "weekWorkload", "working"});
         setColumnHeaders("Nome", "Cargo", "Salário", "Carga Horária", "Status");
         
-        this.setTableFieldFactory(new TableFieldFactory() {
-			@Override
-			public Field<?> createField(Container container, Object itemId,
-					Object propertyId, Component uiContext) {
-				TextField field = new TextField((String) propertyId);
-                if ("working".equals(propertyId)) {
-                    field.setImmediate(true);
-                }
-                return field;
-			}
-		});
+        this.setTableFieldFactory(new FieldFactory());
     }
+    
+    class FieldFactory extends DefaultFieldFactory {
+        @Override
+        public Field<?> createField(Container container, Object itemId,
+                Object propertyId, Component uiContext) {
+            String prop = (String) propertyId;
+            if ("working".equals(prop)) { // propertyId of the column you wish to change
+                AbstractField<?> f = (AbstractField<?>) super.createField(container, itemId, propertyId, uiContext); 
+                // casting to AbstractField to set the field to immediate mode
+                f.setImmediate(true);
+                return f;
+            }
+            return super.createField(container, itemId, propertyId, uiContext);
+        }
+    }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void run() {
+		BeanItemContainer<Employee> container = (BeanItemContainer<Employee>) this.getContainerDataSource();
+		container.removeAllItems();
+		container.addAll(DaoService.getAllEmployees());
+	}
 }

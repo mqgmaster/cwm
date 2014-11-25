@@ -24,7 +24,7 @@ public class MIB {
 			public static final OID OWNER_NAME = new OID(".1.3.6.1.2.1.4.20.1.3");
 			public static final OID NUM_ROOMS = new OID(".1.3.6.1.2.1.4.20.1.4");
 			public static final OID NUM_PEOPLE = new OID(".1.3.6.1.2.1.4.20.1.5");
-			//public static final OID CONDO_ID = new OID(".1.3.6.1.2.1.4.20.1.5");
+			public static final OID SECTOR_ID = new OID(".1.3.6.1.2.1.4.20.1.5");
 		}
 		
 		static class WaterTable {
@@ -69,9 +69,9 @@ public class MIB {
 		public static final OID SECTOR_ID = new OID(".1.3.6.1.2.1.4.20.1.2");
 	}
 	
-	//static class SectorOID {
-	//	public static final OID ID = new OID(".1.3.6.1.2.1.4.20.1.1");
-	//	public static final OID NAME = new OID(".1.3.6.1.2.1.4.20.1.2");
-	//	public static final OID CONDO_ID = new OID(".1.3.6.1.2.1.4.20.1.2");
-	//}
+	static class SectorTableOID {
+		public static final OID ID = new OID(".1.3.6.1.2.1.4.20.1.1");
+		public static final OID NAME = new OID(".1.3.6.1.2.1.4.20.1.2");
+		//public static final OID CONDO_ID = new OID(".1.3.6.1.2.1.4.20.1.2");
+	}
 }

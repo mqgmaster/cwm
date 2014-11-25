@@ -29,7 +29,11 @@ import org.snmp4j.util.TableUtils;
 */
 public class SNMPManager {
 	
-	private static final String COMMUNITY = "public";
+	private static final int WALK_MAX_COLUMNS = 30;
+	private static final int MAX_RETRIES = 2;
+	private static final int RESPONSE_TIME_OUT = 1500;
+	private static final OctetString COMMUNITY = new OctetString("public");
+	private static final int SNMP_VERSION = SnmpConstants.version2c;
 	private static Snmp snmp;
 	private static String ipAddress = null;
 	
@@ -60,13 +64,19 @@ public class SNMPManager {
 	* @return Valor associado ao objeto gerenciado.
 	* @throws IOException
 	*/
-	public static String get(OID oid) throws IOException {
-		ResponseEvent event = get(new OID[] { oid });
-		return event.getResponse().get(0).getVariable().toString();
+	public static VariableBinding[] get(OID...oids) throws IOException {
+		ResponseEvent event = snmpGet(oids);
+		return event.getResponse().toArray();
 	}
 	
-	public static String get(String oid) throws IOException {
-		return get(new OID(oid));
+	public static VariableBinding[] get(String...oids) throws IOException {
+		List<OID> list = new ArrayList<OID>();
+		for (String oid : oids) {
+			list.add(new OID(oid));
+		}
+		OID[] oidsVector = new OID[list.size()];
+		oidsVector = list.toArray(oidsVector);
+		return get(oidsVector);
 	}
 	
 	/**
@@ -77,7 +87,7 @@ public class SNMPManager {
 	* @return {@link ResponseEvent}
 	* @throws IOException
 	*/
-	private static ResponseEvent get(OID oids[]) throws IOException {
+	private static ResponseEvent snmpGet(OID...oids) throws IOException {
 		PDU pdu = new PDU();
 		for (OID oid : oids) {
 			pdu.add(new VariableBinding(oid));
@@ -99,11 +109,11 @@ public class SNMPManager {
 	private static Target getTarget() {
 		Address targetAddress = GenericAddress.parse(ipAddress);
 		CommunityTarget target = new CommunityTarget();
-		target.setCommunity(new OctetString(COMMUNITY));
+		target.setCommunity(COMMUNITY);
 		target.setAddress(targetAddress);
-		target.setRetries(2);
-		target.setTimeout(1500);
-		target.setVersion(SnmpConstants.version2c);
+		target.setRetries(MAX_RETRIES);
+		target.setTimeout(RESPONSE_TIME_OUT);
+		target.setVersion(SNMP_VERSION);
 		return target;
 	}
 
@@ -120,7 +130,7 @@ public class SNMPManager {
 	public static Iterator<TableEvent> walk(OID...columnsOids) throws IOException {
 		DefaultPDUFactory localfactory=new DefaultPDUFactory();
 		TableUtils tableRet=new TableUtils(snmp,localfactory);
-		tableRet.setMaxNumColumnsPerPDU(30);
+		tableRet.setMaxNumColumnsPerPDU(WALK_MAX_COLUMNS);
 		return tableRet.getTable(getTarget(),columnsOids,null,null).iterator();
 	}
 }
