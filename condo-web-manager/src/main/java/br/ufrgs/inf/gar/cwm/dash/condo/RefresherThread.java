@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.common.collect.ImmutableList;
-
 @SuppressWarnings("serial")
 public class RefresherThread implements Serializable {
 	
@@ -21,8 +19,10 @@ public class RefresherThread implements Serializable {
 				try {
 					Thread.sleep(INITIAL_PAUSE);
 					while (true) {
-						for (RefresherComponent task : getComponents()) {
-							task.getUI().access(task);
+						synchronized (list) {
+							for (RefresherComponent task : list) {
+								task.getUI().access(task);
+							}
 						}
 						System.out.println("refresher thread");
 						Thread.sleep(INTERVAL);
@@ -42,13 +42,27 @@ public class RefresherThread implements Serializable {
 		thread.start();
 	}
 	
-	public void addComponent(RefresherComponent task) {
-		list.add(task);
+	public void unsubscribe(RefresherComponent component) {
+		synchronized (list) {
+			list.remove(component);
+		}
 	}
 	
-	public ImmutableList<RefresherComponent> getComponents() {
-		ImmutableList.Builder<RefresherComponent> ilist = ImmutableList.builder();
-		ilist.addAll(list);
-		return ilist.build();
+	public void subscribe(RefresherComponent component) {
+		synchronized (list) {
+			list.add(component);
+		}
+	}
+	
+	public boolean isSubscribed(RefresherComponent component) {
+		boolean isSubscribed = false;
+		synchronized (list) {
+			for (RefresherComponent comp : list) {
+				if(comp.getComponentId().equals(component.getComponentId())) {
+					isSubscribed = true;
+				};
+			}
+		}
+		return isSubscribed;
 	}
 }

@@ -17,7 +17,7 @@ import br.ufrgs.inf.gar.condo.domain.Sector;
 
 public class DaoService {
 	
-	//private static Condominium condo;
+	private static Condominium condoCache;
 	private static List<Sector> sectorCache = new ArrayList<>();
 	private static List<Apartment> aptsCache = new ArrayList<>();
 	

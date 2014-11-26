@@ -15,6 +15,8 @@ import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
 public final class EmployeeTable extends Table implements RefresherComponent {
+	
+	private static final String TABLE_TITLE = "Empregados";
 
 	@Override
     protected String formatPropertyValue(final Object rowId,
@@ -35,8 +37,7 @@ public final class EmployeeTable extends Table implements RefresherComponent {
     }
 	
     public EmployeeTable() {
-        setCaption("Empregados");
-
+        setCaption(TABLE_TITLE);
         addStyleName(ValoTheme.TABLE_BORDERLESS);
         addStyleName(ValoTheme.TABLE_NO_STRIPES);
         addStyleName(ValoTheme.TABLE_NO_VERTICAL_LINES);
@@ -54,14 +55,13 @@ public final class EmployeeTable extends Table implements RefresherComponent {
         this.setTableFieldFactory(new FieldFactory());
     }
     
-    class FieldFactory extends DefaultFieldFactory {
+    private class FieldFactory extends DefaultFieldFactory {
         @Override
         public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
             String prop = (String) propertyId;
-            if ("working".equals(prop)) { // propertyId of the column you wish to change
+            if ("working".equals(prop)) { 
                 AbstractField<?> f = (AbstractField<?>) super.createField(container, itemId, propertyId, uiContext); 
-                // casting to AbstractField to set the field to immediate mode
                 f.setImmediate(true);
                 return f;
             }
@@ -75,5 +75,15 @@ public final class EmployeeTable extends Table implements RefresherComponent {
 		BeanItemContainer<Employee> container = (BeanItemContainer<Employee>) this.getContainerDataSource();
 		container.removeAllItems();
 		container.addAll(DaoService.getAllEmployees());
+	}
+	
+	@Override
+	public boolean equals(Object another) {
+		return RefresherComponent.equalsAnother(this, another);
+	}
+
+	@Override
+	public String getComponentId() {
+		return TABLE_TITLE;
 	}
 }

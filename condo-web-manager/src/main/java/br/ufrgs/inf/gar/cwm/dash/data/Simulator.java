@@ -86,11 +86,15 @@ public class Simulator {
 			            }
 			            
 			            for (Employee employee : EMPS.get()) {
-				            employee.setWorking(!employee.isWorking());
+				            employee.setWorking(random.nextBoolean());
 			            }
 			            
 			            for (Garage garage : GARS.get()) {
-				            garage.setOccupied(!garage.isOccupied());
+				            garage.setOccupied(random.nextBoolean());
+			            }
+			            
+			            for (Lamp lamp : LAMPS.get()) {
+			            	lamp.setOn(random.nextBoolean());
 			            }
 						Thread.sleep(INTERVAL_TWO);
 					}

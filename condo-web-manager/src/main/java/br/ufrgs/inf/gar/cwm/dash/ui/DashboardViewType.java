@@ -5,8 +5,8 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 
 public enum DashboardViewType {
-	DASHBOARD("condominio", DashboardView.class, FontAwesome.TABLE, true), 
-    APARTMENTS("apartmentos", ApartmentsView.class, FontAwesome.HOME, false);
+	CONDO("condominio", CondoView.class, FontAwesome.TABLE, true), 
+    APARTS("apartmentos", ApartmentsView.class, FontAwesome.HOME, false);
 
     private final String viewName;
     private final Class<? extends View> viewClass;

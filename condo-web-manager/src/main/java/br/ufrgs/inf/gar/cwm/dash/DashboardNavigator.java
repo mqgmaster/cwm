@@ -16,31 +16,16 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class DashboardNavigator extends Navigator {
 
-    // Provide a Google Analytics tracker id here
-    private static final String TRACKER_ID = null;// "UA-658457-6";
-    //private GoogleAnalyticsTracker tracker;
-
-    private static final DashboardViewType ERROR_VIEW = DashboardViewType.DASHBOARD;
+    private static final DashboardViewType ERROR_VIEW = DashboardViewType.CONDO;
     private ViewProvider errorViewProvider;
 
     public DashboardNavigator(final ComponentContainer container) {
         super(UI.getCurrent(), container);
 
-        if (TRACKER_ID != null) {
-          //  initGATracker(TRACKER_ID);
-        }
         initViewChangeListener();
         initViewProviders();
 
     }
-
-  /*  private void initGATracker(final String trackerId) {
-        tracker = new GoogleAnalyticsTracker(trackerId, "none");
-
-        // GoogleAnalyticsTracker is an extension add-on for UI so it is
-        // initialized by calling .extend(UI)
-        tracker.extend(UI.getCurrent());
-    }*/
 
     private void initViewChangeListener() {
         addViewChangeListener(new ViewChangeListener() {
@@ -60,11 +45,6 @@ public class DashboardNavigator extends Navigator {
                 DashboardEventBus.post(new PostViewChangeEvent(view));
                 DashboardEventBus.post(new BrowserResizeEvent());
                 DashboardEventBus.post(new CloseOpenWindowsEvent());
-
-             //   if (tracker != null) {
-                    // The view change is submitted as a pageview for GA tracker
-             //       tracker.trackPageview("/dashboard/" + event.getViewName());
-             //   }
             }
         });
     }

@@ -3,7 +3,7 @@ package br.ufrgs.inf.gar.cwm.dash.ui;
 import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
-import br.ufrgs.inf.gar.cwm.dash.condo.CondoConsumptionChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.CondoUsageChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
@@ -142,7 +142,7 @@ public final class ApartmentsView extends Panel implements View {
     }
     
     private Component buildCondoLightChart() {
-    	CondoConsumptionChart chart = new CondoConsumptionChart();
+    	CondoUsageChart chart = new CondoUsageChart();
     	chart.setSizeFull();
         return createContentWrapper(chart);
     }

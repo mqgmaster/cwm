@@ -5,10 +5,11 @@ import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
-import br.ufrgs.inf.gar.cwm.dash.condo.CondoConsumptionChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.CondoUsageChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.RefresherComponent;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherThread;
 import br.ufrgs.inf.gar.cwm.dash.condo.WaterSparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
@@ -16,6 +17,7 @@ import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
+import br.ufrgs.inf.gar.cwm.dash.ui.DashboardMenu.ValoMenuItemButton;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -36,7 +38,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -44,12 +45,11 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public final class DashboardView extends Panel implements View {
+public final class CondoView extends Panel implements View {
 
     private static final String HEADER = "Condomínio";
 	private static final String NOTIFICATIONS = "Notificações";
-	private static final String VIEW_ALL_NOTIFICATIONS = "Ver mais notificações";
-    public static final String TITLE_ID = "dashboard-title";
+	private static final String TITLE_ID = "dashboard-title";
     private final RefresherThread refresher = new RefresherThread();
 
     private Label titleLabel;
@@ -59,7 +59,7 @@ public final class DashboardView extends Panel implements View {
     private Window notificationsWindow;
     private HorizontalLayout header;
 
-    public DashboardView() {
+    public CondoView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
         setSizeFull();
         DashboardEventBus.register(this);
@@ -152,32 +152,38 @@ public final class DashboardView extends Panel implements View {
         dashboardPanels.addComponent(buildGarageTable());
         dashboardPanels.addComponent(buildEmployeeTable());
         dashboardPanels.addComponent(buildLampTable());
+        dashboardPanels.addComponent(buildCondoInfo());
 
         return dashboardPanels;
     }
 
     private Component buildLampTable() {
-        Component c = createContentWrapper(new LampTable());
+    	LampTable table = new LampTable();
+    	refresher.subscribe(table);
+        Component c = createContentWrapper(table);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
     }
     
     private Component buildGarageTable() {
-    	Component c = createContentWrapper(new GarageTable());
+    	GarageTable table = new GarageTable();
+    	refresher.subscribe(table);
+    	Component c = createContentWrapper(table);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
     }
     
     private Component buildEmployeeTable() {
     	EmployeeTable table = new EmployeeTable();
-    	refresher.addComponent(table);
+    	refresher.subscribe(table);
     	Component c = createContentWrapper(table);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
     }
     
     private Component buildCondoLightChart() {
-    	CondoConsumptionChart chart = new CondoConsumptionChart();
+    	CondoUsageChart chart = new CondoUsageChart();
+    	refresher.subscribe(chart);
     	chart.setSizeFull();
         return createContentWrapper(chart);
     }
@@ -238,12 +244,40 @@ public final class DashboardView extends Panel implements View {
         });
         max.setStyleName("icon-only");
         MenuItem root = tools.addItem("", FontAwesome.COG, null);
-        root.addItem("Configurar", new Command() {
-            @Override
-            public void menuSelected(final MenuItem selectedItem) {
-                Notification.show(":)");
-            }
-        });
+        if (content instanceof RefresherComponent) {
+        	RefresherComponent component = (RefresherComponent) content;
+        	MenuItem stopRefresher = root.addItem("Pausar", FontAwesome.PAUSE, new Command() {
+                @Override
+                public void menuSelected(final MenuItem selectedItem) {
+            		refresher.unsubscribe(component);
+            		root.getChildren().get(0).setVisible(false);
+            		root.getChildren().get(1).setVisible(true);
+                }
+            });
+    		MenuItem startRefresher = root.addItem("Continuar", FontAwesome.PLAY, new Command() {
+                @Override
+                public void menuSelected(final MenuItem selectedItem) {
+            		refresher.subscribe(component);
+            		root.getChildren().get(0).setVisible(true);
+            		root.getChildren().get(1).setVisible(false);
+                }
+            });
+        	if (refresher.isSubscribed(component)) {
+        		stopRefresher.setVisible(true);
+        		startRefresher.setVisible(false);
+        	} else {
+        		stopRefresher.setVisible(false);
+        		startRefresher.setVisible(true);
+        		
+        	}
+        	root.addSeparator();
+        	root.addItem("Atualizar uma vez", FontAwesome.REFRESH, new Command() {
+                @Override
+                public void menuSelected(final MenuItem selectedItem) {
+            		component.run();
+                }
+            });
+        }
 
         toolbar.addComponents(caption, tools);
         toolbar.setExpandRatio(caption, 1);
@@ -291,17 +325,6 @@ public final class DashboardView extends Panel implements View {
         HorizontalLayout footer = new HorizontalLayout();
         footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
         footer.setWidth("100%");
-        Button showAll = new Button(VIEW_ALL_NOTIFICATIONS,
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(final ClickEvent event) {
-                        Notification.show(":)");
-                    }
-                });
-        showAll.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
-        showAll.addStyleName(ValoTheme.BUTTON_SMALL);
-        footer.addComponent(showAll);
-        footer.setComponentAlignment(showAll, Alignment.TOP_CENTER);
         notificationsLayout.addComponent(footer);
 
         if (notificationsWindow == null) {
