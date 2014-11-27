@@ -17,7 +17,7 @@ import br.ufrgs.inf.gar.condo.domain.Sector;
 public class Simulator {
 
 	private static boolean started = false;
-	private final static long INTERVAL_ONE = 5000;
+	private final static long INTERVAL_ONE = 2000;
 	private final static long INTERVAL_TWO = 8000;
 	public static final AtomicReference<Condominium> CONDO = new AtomicReference<>();
 	public static final AtomicReference<Sector> SECTOR_GARAGE = new AtomicReference<>();

@@ -51,8 +51,8 @@ public class CondoUsageChart extends Chart implements RefresherComponent {
 		float eletric;
 		float water;
 		try {
-			eletric = DaoService.getCondominium().getInstantElectricUsageFloat().shortValue();
-			water = DaoService.getCondominium().getInstantWaterUsageFloat().shortValue();
+			eletric = getInstantEletricUsage();
+			water = getInstantWaterUsage();
 			electricSeries.add(new DataSeriesItem(System.currentTimeMillis(), eletric));
 			waterSeries.add(new DataSeriesItem(System.currentTimeMillis(), water));
 		} catch (IOException e) {
@@ -64,14 +64,30 @@ public class CondoUsageChart extends Chart implements RefresherComponent {
 
 		drawChart(configuration);
 	}
+	
+	private Float getStandardFloat(final String value) {
+		if(value.length() > 3) {
+			return Float.valueOf(value.substring(0, 4));
+		} else {
+			return Float.valueOf(value);
+		}
+	}
+	
+	private Float getInstantEletricUsage() throws IOException {
+		return getStandardFloat(DaoService.getCondominium().getInstantElectricUsage());
+	}
+	
+	private Float getInstantWaterUsage() throws IOException {
+		return getStandardFloat(DaoService.getCondominium().getInstantWaterUsage());
+	}
 
 	@Override
 	public void run() {
 		float eletric;
 		float water;
 		try {
-			eletric = DaoService.getCondominium().getInstantElectricUsageFloat();
-			water = DaoService.getCondominium().getInstantWaterUsageFloat();
+			eletric = getInstantEletricUsage();
+			water = getInstantWaterUsage();
 			if (electricSeries.size() > 29) {
 				electricSeries.add(new DataSeriesItem(
 						System.currentTimeMillis(), eletric), true, true);
