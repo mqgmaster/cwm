@@ -1,22 +1,20 @@
 package br.ufrgs.inf.gar.cwm.dash.condo;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import br.ufrgs.inf.gar.condo.domain.Garage;
 import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public final class GarageTable extends Table implements RefresherComponent {
+public final class PeopleTable extends Table implements RefresherComponent {
 
-	private static final String TABLE_TITLE = "Vagas de Estacionamento";
+	private static final String TABLE_TITLE = "Entrada de pessoas";
 
 	@Override
     protected String formatPropertyValue(final Object rowId,
@@ -45,7 +43,7 @@ public final class GarageTable extends Table implements RefresherComponent {
         return result;
     }
 	
-    public GarageTable() {
+    public PeopleTable() {
         setCaption(TABLE_TITLE);
         addStyleName(ValoTheme.TABLE_BORDERLESS);
         addStyleName(ValoTheme.TABLE_NO_STRIPES);
@@ -58,24 +56,13 @@ public final class GarageTable extends Table implements RefresherComponent {
         		Garage.class, DaoService.getAllGarages());
         container.addNestedContainerProperty("apartment.number");
         setContainerDataSource(container);
-        setVisibleColumns(new Object[]{"number", "apartment.number", "occupied"});
-        setColumnHeaders("Número", "Proprietário", "Situação");
-        
-        this.setTableFieldFactory(new FieldFactory());
+        setVisibleColumns(new Object[]{"date", "apartment.number"});
+        setColumnHeaders("Data", "Apartamento");
     }
     
-    private class FieldFactory extends DefaultFieldFactory {
-        @Override
-        public Field<?> createField(Container container, Object itemId,
-                Object propertyId, Component uiContext) {
-            String prop = (String) propertyId;
-            if ("occupied".equals(prop)) { 
-                AbstractField<?> f = (AbstractField<?>) super.createField(container, itemId, propertyId, uiContext); 
-                f.setImmediate(true);
-                return f;
-            }
-            return super.createField(container, itemId, propertyId, uiContext);
-        }
+    private class People implements Serializable {
+    	private Date date;
+    	private String apartNumber;
     }
     
     @SuppressWarnings("unchecked")
@@ -85,7 +72,7 @@ public final class GarageTable extends Table implements RefresherComponent {
 		container.removeAllItems();
 		container.addAll(DaoService.getAllGarages());
 	}
-
+    
 	@Override
 	public String getComponentId() {
 		return TABLE_TITLE;

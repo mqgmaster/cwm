@@ -24,7 +24,6 @@ public class DashboardNavigator extends Navigator {
 
         initViewChangeListener();
         initViewProviders();
-
     }
 
     private void initViewChangeListener() {

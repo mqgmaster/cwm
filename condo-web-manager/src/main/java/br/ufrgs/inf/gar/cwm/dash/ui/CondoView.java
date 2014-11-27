@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.CondoInfoTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.CondoUsageChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
@@ -17,7 +18,6 @@ import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
-import br.ufrgs.inf.gar.cwm.dash.ui.DashboardMenu.ValoMenuItemButton;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
@@ -152,9 +152,15 @@ public final class CondoView extends Panel implements View {
         dashboardPanels.addComponent(buildGarageTable());
         dashboardPanels.addComponent(buildEmployeeTable());
         dashboardPanels.addComponent(buildLampTable());
-        dashboardPanels.addComponent(buildCondoInfo());
+        dashboardPanels.addComponent(buildCondoTable());
 
         return dashboardPanels;
+    }
+    
+    private Component buildCondoTable() {
+        Component c = createContentWrapper(new CondoInfoTable());
+        c.addStyleName("dashboard-panel-slot-table");
+        return c;
     }
 
     private Component buildLampTable() {

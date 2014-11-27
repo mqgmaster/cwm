@@ -1,7 +1,8 @@
 package br.ufrgs.inf.gar.cwm.dash.condo;
 
-import br.ufrgs.inf.gar.condo.domain.Employee;
-import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
@@ -10,6 +11,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
@@ -27,14 +29,37 @@ public final class CondoInfoTable extends Table implements RefresherComponent {
         setSortEnabled(false);
         setImmediate(true);
         setSizeFull();
+        List<CondoInfo> list = new ArrayList<>();
+        list.add(new CondoInfo("Limite de agua", "1512"));
+        list.add(new CondoInfo("Limite de luz", "1512"));
 
-        BeanItemContainer<Employee> container = new BeanItemContainer<>(
-        		Employee.class, DaoService.getAllEmployees());
+        BeanItemContainer<CondoInfo> container = new BeanItemContainer<>(
+        		CondoInfo.class, list);
         setContainerDataSource(container);
-        setVisibleColumns(new Object[]{"name", "value", "action", "weekWorkload", "working"});
-        setColumnHeaders("Nome", "Cargo", "Salário", "Carga Horária", "Status");
-        
         this.setTableFieldFactory(new FieldFactory());
+    }
+    
+    public class CondoInfo implements Serializable {
+    	private String name;
+    	private TextField value;
+    	
+    	public CondoInfo(String name, String value) {
+    		this.name = name;
+    		this.value = new TextField();
+    		this.value.setValue(value);
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public TextField getValue() {
+			return value;
+		}
+		public void setValue(TextField value) {
+			this.value = value;
+		}
     }
     
     private class FieldFactory extends DefaultFieldFactory {
@@ -42,26 +67,16 @@ public final class CondoInfoTable extends Table implements RefresherComponent {
         public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
             String prop = (String) propertyId;
-            if ("working".equals(prop)) { 
-                AbstractField<?> f = (AbstractField<?>) super.createField(container, itemId, propertyId, uiContext); 
-                f.setImmediate(true);
-                return f;
+            switch (prop) {
+        	default:
+            		return super.createField(container, itemId, propertyId, uiContext);
             }
-            return super.createField(container, itemId, propertyId, uiContext);
         }
     }
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		BeanItemContainer<Employee> container = (BeanItemContainer<Employee>) this.getContainerDataSource();
-		container.removeAllItems();
-		container.addAll(DaoService.getAllEmployees());
-	}
-	
-	@Override
-	public boolean equals(Object another) {
-		return RefresherComponent.equalsAnother(this, another);
 	}
 
 	@Override

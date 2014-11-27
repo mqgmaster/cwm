@@ -114,11 +114,11 @@ public class Simulator {
 	}
 
 	private static Float generateInstantElectricUsage(Random random) {
-		return random.nextFloat();
+		return random.nextFloat() * 20f;
 	};
 	
 	private static Float generateInstantWaterUsage(Random random) {
-		return random.nextFloat();
+		return random.nextFloat() * 13.32f;
 	};
 
 	private static void createData() {

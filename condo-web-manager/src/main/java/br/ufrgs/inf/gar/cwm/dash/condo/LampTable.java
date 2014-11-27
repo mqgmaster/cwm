@@ -85,11 +85,6 @@ public final class LampTable extends Table implements RefresherComponent {
 	}
 	
 	@Override
-	public boolean equals(Object another) {
-		return RefresherComponent.equalsAnother(this, another);
-	}
-
-	@Override
 	public String getComponentId() {
 		return TABLE_TITLE;
 	}
