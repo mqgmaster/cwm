@@ -60,9 +60,9 @@ SNMPD_PIDFILE=$TMPDIR/snmpd.pid
 # Create a minimal snmpd configuration for our purposes
 cat <<EOF >>$SNMPD_CONFFILE
 [snmpd]
-rocommunity public 127.0.0.1
-rwcommunity simple 127.0.0.1
-agentaddress localhost:5555
+rocommunity public
+rwcommunity private
+agentaddress udp:16161
 informsink localhost:5556
 smuxsocket localhost:5557
 master agentx
@@ -78,14 +78,14 @@ touch $TMPDIR/mib_indexes
 $SNMPD_BIN -r -LE warning -C -c$SNMPD_CONFFILE -p$SNMPD_PIDFILE
 
 # Give the user guidance
-echo "* Our snmpd instance is now listening on localhost, port 5555."
+echo "* Our snmpd instance is now listening on udp, port 16161."
 echo "  From a second console, use the net-snmp command line utilities like this:"
 echo ""
 echo "    cd `pwd`"
-echo "    snmpwalk -v 2c -c public -M+. localhost:5555 SIMPLE-MIB::simpleMIB"
-echo "    snmptable -v 2c -c public -M+. -Ci localhost:5555 SIMPLE-MIB::firstTable"
-echo "    snmpget -v 2c -c public -M+. localhost:5555 SIMPLE-MIB::simpleInteger.0"
-echo "    snmpset -v 2c -c simple -M+. localhost:5555 SIMPLE-MIB::simpleInteger.0 i 123"
+echo "    snmpwalk -v 2c -c public -M+. localhost:16161 SIMPLE-MIB::simpleMIB"
+echo "    snmptable -v 2c -c public -M+. -Ci localhost:16161 SIMPLE-MIB::firstTable"
+echo "    snmpget -v 2c -c public -M+. localhost:16161 SIMPLE-MIB::simpleInteger.0"
+echo "    snmpset -v 2c -c private -M+. localhost:16161 SIMPLE-MIB::simpleInteger.0 i 123"
 echo ""
 
 # Workaround to have CTRL-C not generate any visual feedback (we don't do any
@@ -94,4 +94,4 @@ stty -echo
 
 # Now start the simple example agent
 echo "* Starting the simple example agent..."
-python TesteScalar.py -m $TMPDIR/snmpd-agentx.sock -p $TMPDIR/
+python TesteScalar2.py -m $TMPDIR/snmpd-agentx.sock -p $TMPDIR/

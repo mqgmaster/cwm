@@ -14,15 +14,14 @@ IMPORTS
    gerenciaUFRGS
         FROM BASE-MIB;
 
-condominioGerencia OBJECT-IDENTIFIER ::= { gerenciaUFRGS 2 }
+condominioGerencia OBJECT IDENTIFIER ::= { gerenciaUFRGS 1 }
 
-
-apartment     OBJECT-IDENTIFIER ::= { condominioGerencia 1 }
-condominium   OBJECT-IDENTIFIER ::= { condominioGerencia 2 }
-employee      OBJECT-IDENTIFIER ::= { condominioGerencia 3 }
-garage        OBJECT-IDENTIFIER ::= { condominioGerencia 4 }
-water         OBJECT-IDENTIFIER ::= { condominioGerencia 5 }
-electricity   OBJECT-IDENTIFIER ::= { condominioGerencia 6 }
+apartment     OBJECT IDENTIFIER ::= { condominioGerencia 1 }
+condominium   OBJECT IDENTIFIER ::= { condominioGerencia 2 }
+employee      OBJECT IDENTIFIER ::= { condominioGerencia 3 }
+garage        OBJECT IDENTIFIER ::= { condominioGerencia 4 }
+water         OBJECT IDENTIFIER ::= { condominioGerencia 5 }
+electricity   OBJECT IDENTIFIER ::= { condominioGerencia 6 }
 
 
 -----------------------------------
@@ -50,7 +49,8 @@ TbApEntry ::=
         tbApEntryNumber Integer32,
         tbApEntryOwner  DisplayString,
         tbApEntryRooms  Integer32,
-        tbApEntryPeople Integer32
+        tbApEntryPeople Integer32,
+        tbApEntrySector Integer32
     }
 
 tbApEntry OBJECT-TYPE
@@ -72,7 +72,7 @@ tbApEntryIndex OBJECT-TYPE
 
 tbApEntryNumber OBJECT-TYPE
     SYNTAX Integer32
-    ACCESS read-only
+    ACCESS read-write
     STATUS mandatory
     DESCRIPTION
         "The number of this apartment"
@@ -88,7 +88,7 @@ tbApEntryOwner OBJECT-TYPE
 
 tbApEntryRooms OBJECT-TYPE
     SYNTAX Integer32
-    ACCESS read-only
+    ACCESS read-write
     STATUS mandatory
     DESCRIPTION
         "The number of rooms in this apartment"
@@ -96,11 +96,19 @@ tbApEntryRooms OBJECT-TYPE
 
 tbApEntryPeople OBJECT-TYPE
     SYNTAX Integer32
-    ACCESS read-only
+    ACCESS read-write
     STATUS mandatory
     DESCRIPTION
         "Number of people currently inside condominium related to this apartment"
     ::= { tbApEntry 5 }
+
+tbApEntrySector OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Apartment sector"
+    ::= { tbApEntry 6 }
 
 
 -----------------------------------
@@ -165,7 +173,8 @@ TbEpEntry ::=
         tbEpEntryRole     DisplayString,
         tbEpEntryWage     Integer32,
         tbEpEntryWorkLoad Integer32,
-        tbEpEntryWorking  DisplayString
+        tbEpEntryWorking  Integer32,
+        tbEpEntryCondominium Integer32,
     }
 
 tbEpEntry OBJECT-TYPE
@@ -179,7 +188,7 @@ tbEpEntry OBJECT-TYPE
 
 tbEpEntryIndex OBJECT-TYPE
     SYNTAX Integer32
-    ACCESS read-onlye
+    ACCESS read-only
     STATUS mandatory
     DESCRIPTION
         "Table index"
@@ -218,12 +227,20 @@ tbEpEntryWorkLoad OBJECT-TYPE
     ::= { tbEpEntry 5 }
 
 tbEpEntryWorking OBJECT-TYPE
-    SYNTAX DisplayString
+    SYNTAX Integer32
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
         "Information if employee is working at this moment"
     ::= { tbEpEntry 6}
+
+tbEpEntryCondominium OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Condominium id where this employee works"
+    ::= { tbEpEntry 7}
 
 -----------------------------------
 --- GARAGE
@@ -250,7 +267,9 @@ TbGgEntry ::=
         tbGgEntryIndex    Integer32,
         tbGgEntryNumber   Integer32,
         tbGgEntryApNumber Integer32,
-        tbGgEntryOccupied DisplayString
+        tbGgEntryOccupied Integer32,
+        tbGgEntrySector   Integer32
+
     }
 
 tbGgEntry OBJECT-TYPE
@@ -287,12 +306,20 @@ tbGgEntryApNumber OBJECT-TYPE
     ::= { tbGgEntry 3 }
 
 tbGgEntryOccupied OBJECT-TYPE
-    SYNTAX DisplayString
+    SYNTAX Integer32
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
         "Information if spot is occupied"
     ::= { tbGgEntry 4 }
+
+tbGgEntrySector OBJECT-TYPE
+    SYNTAX Integer32
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Sector where the garage is located"
+    ::= { tbGgEntry 5 }
 
 
 -----------------------------------
@@ -319,8 +346,10 @@ TbApWtEntry ::=
     SEQUENCE {
         tbApWtEntryIndex      Integer32
         tbApWtEntryNumber     Integer32
-        tbApWtEntryConsuption Integer32
-        tbApWtEntryLimit      Integer32
+        tbApWtEntryTotalConsuption DisplayString
+        tbApWtEntryTotalLimit      DisplayString
+        tbApWtInstantConsuption     DisplayString
+        tbApWtEntryInstantConsuption DisplayString
     }
 
 tbApWtEntry OBJECT-TYPE
@@ -348,25 +377,41 @@ tbApWtEntryNumber OBJECT-TYPE
         "Number of apartment related to this consumption"
     ::= { tbApWtEntry 2 }
 
-tbApWtEntryConsuption OBJECT-TYPE
-    SYNTAX Integer32
+tbApWtEntryTotalConsuption OBJECT-TYPE
+    SYNTAX DisplayString
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
         "Water consumption of this apartment"
     ::= { tbApWtEntry 3 }
 
-tbApWtEntryLimit OBJECT-TYPE
-    SYNTAX Integer32
+tbApWtEntryTotalLimit OBJECT-TYPE
+    SYNTAX DisplayString
     ACCESS read-write
     STATUS mandatory
     DESCRIPTION
         "Water consumption limit for this apartment"
     ::= { tbApWtEntry 4 }
 
+tbApWtEntryInstantConsuption OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Water consumption of this apartment"
+    ::= { tbApWtEntry 5 }
+
+tbApWtEntryInstantLimit OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Water consumption limit for this apartment"
+    ::= { tbApWtEntry 6 }
+
 
 wtIConsumption OBJECT-TYPE
-    SYNTAX Integer32
+    SYNTAX DisplayString
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
@@ -374,7 +419,7 @@ wtIConsumption OBJECT-TYPE
     ::= { water 3 }
 
 wtIConsuptionLimit OBJECT-TYPE
-    SYNTAX Integer32
+    SYNTAX DisplayString
     ACCESS read-write
     STATUS mandatory
     DESCRIPTION
@@ -382,7 +427,7 @@ wtIConsuptionLimit OBJECT-TYPE
     ::= { water 4 }
 
 wtAConsumption OBJECT-TYPE
-    SYNTAX Counter32
+    SYNTAX DisplayString
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
@@ -390,12 +435,20 @@ wtAConsumption OBJECT-TYPE
     ::= { water 5 }
 
 wtAConsumptionLimit OBJECT-TYPE
-    SYNTAX Integer32
+    SYNTAX DisplayString
     ACCESS read-write
     STATUS mandatory
     DESCRIPTION
         "Condominium accumulated water consumption limit"
     ::= { water 6 }
+
+wtApConsumptionLimit OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Apartment water consumption limit"
+    ::= { water 7 }
 
 -----------------------------------
 --- ELECTRICITY
@@ -421,8 +474,10 @@ TbApElEntry ::=
     SEQUENCE {
         tbApElEntryIndex        Integer32
         tbApElEntryNumber       Integer32
-        tbApElEntryConsumption  Integer32
-        tbApElEntryLimit        Integer32
+        tbApElTotalEntryConsumption  DisplayString
+        tbApElTotalEntryLimit        DisplayString
+        tbApElInstantEntryConsumption DisplayString
+        tbApElInstantEntryLimit DisplayString
     }
 
 tbApElEntry OBJECT-TYPE
@@ -450,21 +505,38 @@ tbApElEntryNumber OBJECT-TYPE
         "Number of apartment related to this consumption"
     ::= { tbApElEntry 2 }
 
-tbApElEntryConsumption OBJECT-TYPE
-    SYNTAX Integer32
-    ACCESS read-only
+tbApElTotalEntryConsumption OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-write
     STATUS mandatory
     DESCRIPTION
         "Electricity consumption of this apartment"
     ::= { tbApElEntry 3 }
 
- tbApElEntryLimit OBJECT-TYPE
-    SYNTAX Integer32
+ tbApElTotalEntryLimit OBJECT-TYPE
+    SYNTAX DisplayString
     ACCESS read-write
-    STATUS madatory
+    STATUS mandatory
     DESCRIPTION
         "Electricity consumption limit for this apartment"
     ::= { tbApElEntry 4 }
+
+tbApElInstantEntryConsumption OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Electricity consumption of this apartment"
+    ::= { tbApElEntry 5 }
+
+ tbApElInstantEntryLimit OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Electricity consumption limit for this apartment"
+    ::= { tbApElEntry 6 }
+
 
 elBulbCounter OBJECT-TYPE
     SYNTAX Integer32
@@ -485,7 +557,7 @@ tbBulbElectricity OBJECT-TYPE
 TbBulbEntry ::=
     SEQUENCE {
         tbBulbEntryIndex  Integer32,
-        tbBulbEntrySector DisplayString,
+        tbBulbEntrySector Integer32,
         tbBulbEntryNumber Integer32,
         tbBulbEntryStatus Integer32
     }
@@ -508,7 +580,7 @@ tbBulbEntryIndex OBJECT-TYPE
     ::= { tbBulbEntry 1 }
 
 tbBulbEntrySector OBJECT-TYPE
-    SYNTAX DisplayString
+    SYNTAX Integer32
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
@@ -532,7 +604,7 @@ tbBulbEntryStatus OBJECT-TYPE
     ::= { tbBulbEntry 4 }
 
 elConsumption OBJECT-TYPE
-    SYNTAX Integer32
+    SYNTAX DisplayString
     ACCESS read-only
     STATUS mandatory
     DESCRIPTION
@@ -540,9 +612,26 @@ elConsumption OBJECT-TYPE
     ::= { electricity 5 }
 
 elConsumptionLimit OBJECT-TYPE
-    SYNTAX Integer32
+    SYNTAX DisplayString
     ACCESS read-write
     STATUS mandatory
     DESCRIPTION
         "Condominium electricity consumption limit"
     ::= { electricity 6 }
+
+elInstantConsumption OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-only
+    STATUS mandatory
+    DESCRIPTION
+        "Condominium instant electricity consumption"
+    ::= { electricity 7 }
+elApConsumptionLimit OBJECT-TYPE
+    SYNTAX DisplayString
+    ACCESS read-write
+    STATUS mandatory
+    DESCRIPTION
+        "Apartment electricity consumption limit"
+    ::= { electricity 8 }
+
+END
