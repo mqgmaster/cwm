@@ -1,6 +1,8 @@
 package br.ufrgs.inf.gar.condo.domain;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,23 +36,21 @@ public class Apartment extends AbstractEntity<Integer, Apartment> {
     @Column(name="num_people")
     private Integer numPeople;
     
-    @Column(name="total_water_usage")
-    private String totalWaterUsage; 		
+    @AttributeOverride(name="value", column= @Column(name="total_water_usage"))
+    @Embedded
+    private UsageValue totalWaterUsage; 		
     
-    @Column(name="instant_water_usage")
-    private String instantWaterUsage; 
+    @AttributeOverride(name="value", column= @Column(name="instant_water_usage"))
+    @Embedded
+    private UsageValue instantWaterUsage; 
     								
-    @Column(name="total_water_limit")
-    private String totalWaterLimit;
-    
-    @Column(name="total_electric_usage")
-    private String totalElectricUsage; 		
+    @AttributeOverride(name="value", column= @Column(name="total_electric_usage"))
+    @Embedded
+    private UsageValue totalElectricUsage; 		
     								     
-    @Column(name="total_electric_limit")
-    private String totalElectricLimit;
-    
-    @Column(name="instant_electric_usage")
-    private String instantElectricUsage;
+    @AttributeOverride(name="value", column= @Column(name="instant_electric_usage"))
+    @Embedded
+    private UsageValue instantElectricUsage;
     
     @ManyToOne
     @JoinColumn(name="sector_id")
@@ -65,12 +65,10 @@ public class Apartment extends AbstractEntity<Integer, Apartment> {
         this.numRooms = numRooms;
         this.sector = sector;
         this.numPeople = 0;
-        this.totalWaterUsage = "0.0";
-        this.totalWaterLimit = "0.0";
-        this.instantWaterUsage = "0.0";
-        this.totalElectricUsage = "0.0";
-        this.totalElectricLimit = "0.0";
-        this.instantElectricUsage = "0.0";
+        this.totalWaterUsage = new UsageValue();
+        this.instantWaterUsage = new UsageValue();
+        this.totalElectricUsage = new UsageValue();
+        this.instantElectricUsage = new UsageValue();
     }
 
     public Integer getId() {
@@ -121,99 +119,35 @@ public class Apartment extends AbstractEntity<Integer, Apartment> {
 		this.sector = sector;
 	}
 	
-	public String getTotalWaterUsage() {
+	public UsageValue getTotalWaterUsage() {
 		return totalWaterUsage;
 	}
 	
-	public Float getTotalWaterUsageFloat() {
-		return Float.valueOf(totalWaterUsage);
-	}
-
-	public void setTotalWaterUsage(String totalWaterUsage) {
+	public void setTotalWaterUsage(UsageValue totalWaterUsage) {
 		this.totalWaterUsage = totalWaterUsage;
 	}
 	
-	public void setTotalWaterUsage(Float totalWaterUsage) {
-		this.totalWaterUsage = String.valueOf(totalWaterUsage);
-	}
-
-	public String getInstantWaterUsage() {
+	public UsageValue getInstantWaterUsage() {
 		return instantWaterUsage;
 	}
 	
-	public Float getInstantWaterUsageFloat() {
-		return Float.valueOf(instantWaterUsage);
-	}
-
-	public void setInstantWaterUsage(String instantWaterUsage) {
+	public void setInstantWaterUsage(UsageValue instantWaterUsage) {
 		this.instantWaterUsage = instantWaterUsage;
 	}
 	
-	public void setInstantWaterUsage(Float instantWaterUsage) {
-		this.instantWaterUsage = String.valueOf(instantWaterUsage);
-	}
-
-	public String getTotalWaterLimit() {
-		return totalWaterLimit;
-	}
-	
-	public Float getTotalWaterLimitFloat() {
-		return Float.valueOf(totalWaterLimit);
-	}
-
-	public void setTotalWaterLimit(String totalWaterLimit) {
-		this.totalWaterLimit = totalWaterLimit;
-	}
-	
-	public void setTotalWaterLimit(Float totalWaterLimit) {
-		this.totalWaterLimit = String.valueOf(totalWaterLimit);
-	}
-
-	public String getTotalElectricUsage() {
+	public UsageValue getTotalElectricUsage() {
 		return totalElectricUsage;
 	}
 	
-	public Float getTotalElectricUsageFloat() {
-		return Float.valueOf(totalElectricUsage);
-	}
-
-	public void setTotalElectricUsage(String totalElectricUsage) {
+	public void setTotalElectricUsage(UsageValue totalElectricUsage) {
 		this.totalElectricUsage = totalElectricUsage;
 	}
 	
-	public void setTotalElectricUsage(Float totalElectricUsage) {
-		this.totalElectricUsage = String.valueOf(totalElectricUsage);
-	}
-
-	public String getTotalElectricLimit() {
-		return totalElectricLimit;
-	}
-	
-	public Float getTotalElectricLimitFloat() {
-		return Float.valueOf(totalElectricLimit);
-	}
-
-	public void setTotalElectricLimit(String totalElectricLimit) {
-		this.totalElectricLimit = totalElectricLimit;
-	}
-	
-	public void setTotalElectricLimit(Float totalElectricLimit) {
-		this.totalElectricLimit = String.valueOf(totalElectricLimit);
-	}
-
-	public String getInstantElectricUsage() {
+	public UsageValue getInstantElectricUsage() {
 		return instantElectricUsage;
 	}
 
-	public Float getInstantElectricUsageFloat() {
-		return Float.valueOf(instantElectricUsage);
-	}
-
-	public void setInstantElectricUsage(String instantElectricUsage) {
+	public void setInstantElectricUsage(UsageValue instantElectricUsage) {
 		this.instantElectricUsage = instantElectricUsage;
-	}
-	
-	public void setInstantElectricUsage(Float instantElectricUsage) {
-		this.instantElectricUsage = String.valueOf(instantElectricUsage);
 	}
 }
