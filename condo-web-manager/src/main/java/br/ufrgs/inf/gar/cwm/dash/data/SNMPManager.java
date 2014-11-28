@@ -2,6 +2,7 @@ package br.ufrgs.inf.gar.cwm.dash.data;
 
 import java.io.IOException;
 import java.rmi.UnexpectedException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.snmp4j.util.TableUtils;
 */
 public class SNMPManager {
 	
+	private static final OctetString COMMUNITY_WRITE = new OctetString("private");
 	private static final int WALK_MAX_COLUMNS = 30;
 	private static final int MAX_RETRIES = 2;
 	private static final int RESPONSE_TIME_OUT = 1500;
@@ -93,9 +95,20 @@ public class SNMPManager {
 			pdu.add(new VariableBinding(oid));
 		}
 		pdu.setType(PDU.GET);
-		ResponseEvent event = snmp.send(pdu, getTarget(), null);
+		ResponseEvent event = snmp.send(pdu, getTargetRead(), null);
 		if(event != null) {
 			return event;
+		}
+		throw new RuntimeException("GET timed out");
+	}
+	
+	public static String set(String oid, String value) throws IOException, ParseException {
+		PDU pdu = new PDU();
+		pdu.add(new VariableBinding(new OID(oid), new OctetString(value)));
+		pdu.setType(PDU.SET);
+		ResponseEvent event = snmp.send(pdu, getTargetWrite(), null);
+		if(event != null) {
+			return event.getResponse().getErrorStatusText();
 		}
 		throw new RuntimeException("GET timed out");
 	}
@@ -106,10 +119,21 @@ public class SNMPManager {
 	* 
 	* @return {@link Target}
 	*/
-	private static Target getTarget() {
+	private static Target getTargetRead() {
 		Address targetAddress = GenericAddress.parse(ipAddress);
 		CommunityTarget target = new CommunityTarget();
 		target.setCommunity(COMMUNITY);
+		target.setAddress(targetAddress);
+		target.setRetries(MAX_RETRIES);
+		target.setTimeout(RESPONSE_TIME_OUT);
+		target.setVersion(SNMP_VERSION);
+		return target;
+	}
+	
+	private static Target getTargetWrite() {
+		Address targetAddress = GenericAddress.parse(ipAddress);
+		CommunityTarget target = new CommunityTarget();
+		target.setCommunity(COMMUNITY_WRITE);
 		target.setAddress(targetAddress);
 		target.setRetries(MAX_RETRIES);
 		target.setTimeout(RESPONSE_TIME_OUT);
@@ -131,6 +155,6 @@ public class SNMPManager {
 		DefaultPDUFactory localfactory=new DefaultPDUFactory();
 		TableUtils tableRet=new TableUtils(snmp,localfactory);
 		tableRet.setMaxNumColumnsPerPDU(WALK_MAX_COLUMNS);
-		return tableRet.getTable(getTarget(),columnsOids,null,null).iterator();
+		return tableRet.getTable(getTargetRead(),columnsOids,null,null).iterator();
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.AdvancedPanel;
 import br.ufrgs.inf.gar.cwm.dash.condo.CondoUsageChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
@@ -152,11 +153,16 @@ public final class CondoView extends Panel implements View {
         dashboardPanels.addComponent(buildEmployeeTable());
         dashboardPanels.addComponent(buildLampTable());
         dashboardPanels.addComponent(buildLimitPanel());
+        dashboardPanels.addComponent(buildAdvancedPanel());
 
         return dashboardPanels;
     }
     
-    private Component buildLimitPanel() {
+    private Component buildAdvancedPanel() {
+		return createContentWrapper(new AdvancedPanel());
+	}
+
+	private Component buildLimitPanel() {
     	LimitPanel panel = new LimitPanel();
     	refresher.subscribe(panel);
         Component c = createContentWrapper(panel);

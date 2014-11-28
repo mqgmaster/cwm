@@ -1,9 +1,11 @@
 package br.ufrgs.inf.gar.cwm.dash;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import br.ufrgs.inf.gar.cwm.dash.data.DataProvider;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataProvider;
+import br.ufrgs.inf.gar.cwm.dash.data.SNMPManager;
 import br.ufrgs.inf.gar.cwm.dash.data.Simulator;
 import br.ufrgs.inf.gar.cwm.dash.domain.User;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.BrowserResizeEvent;
@@ -35,7 +37,7 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public final class DashboardUI extends UI {
 	
-	public static final String AGENT_ADDRESS = "udp:10.0.0.102/161";
+	public static final String AGENT_ADDRESS = "udp:143.54.12.150/161";
 
 	/**
 	* Porta 161 é usada para gets and sets
@@ -49,11 +51,11 @@ public final class DashboardUI extends UI {
     protected void init(final VaadinRequest request) {
         setLocale(Locale.US);
         
-      //  try {
-			//SNMPManager.start(AGENT_ADDRESS);
-		//} catch (IOException e) {
-	//		e.printStackTrace();
-	//	}
+        try {
+			SNMPManager.start(AGENT_ADDRESS);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         Simulator.start();
         DashboardEventBus.register(this);
         Responsive.makeResponsive(this);

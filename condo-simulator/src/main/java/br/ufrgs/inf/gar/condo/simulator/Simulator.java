@@ -108,7 +108,7 @@ public class Simulator {
 			            session.beginTransaction();
 			            for (Integer employeeId : EMPS) {
 				            Employee employee = (Employee) session.get(Employee.class, employeeId);
-				            employee.setWorking(!employee.isWorking());
+				            employee.setWorking(random.nextBoolean());
 				            session.save(employee);
 			            }
 			            session.getTransaction().commit();
@@ -116,7 +116,7 @@ public class Simulator {
 			            session.beginTransaction();
 			            for (Integer garageId : GARS) {
 				            Garage garage = (Garage) session.get(Garage.class, garageId);
-				            garage.setOccupied(!garage.isOccupied());
+				            garage.setOccupied(random.nextBoolean());
 				            session.save(garage);
 			            }
 			            session.getTransaction().commit();
@@ -139,11 +139,11 @@ public class Simulator {
 	}
 
 	private static Float generateInstantElectricUsage(Random random) {
-		return random.nextFloat();
+		return random.nextFloat() * 20f;
 	};
 	
 	private static Float generateInstantWaterUsage(Random random) {
-		return random.nextFloat() / 100;
+		return random.nextFloat() * 13.32f;
 	};
 
 	private static void createData() {
