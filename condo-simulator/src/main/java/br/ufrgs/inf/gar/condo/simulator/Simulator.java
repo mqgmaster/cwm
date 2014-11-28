@@ -52,12 +52,10 @@ public class Simulator {
 						session.beginTransaction();
 			            Condominium condo = (Condominium) session.get(Condominium.class, condominiumId);
 			            //acumulado de 5 segundos, devido ao interalo da thread
-			            condo.setInstantElectricUsage(generateInstantElectricUsage(random));  //ex: 0.449
-			            condo.setTotalElectricUsage(
-			            		condo.getTotalElectricUsageFloat() + condo.getInstantElectricUsageFloat());
-			            condo.setInstantWaterUsage(generateInstantWaterUsage(random));  //ex: 0.008
-			            condo.setTotalWaterUsage(
-			            		condo.getTotalWaterUsageFloat() + condo.getInstantWaterUsageFloat());
+			            condo.getInstantElectricUsage().set(generateInstantElectricUsage(random));  //ex: 0.449
+			            condo.getTotalElectricUsage().add(condo.getInstantElectricUsage().toFloat());
+			            condo.getInstantWaterUsage().set(generateInstantWaterUsage(random));  //ex: 0.008
+			            condo.getTotalWaterUsage().add(condo.getInstantWaterUsage().toFloat());
 			            if (random.nextInt(10) == 1) 
 			            	condo.setNumUnknownPeople(random.nextInt(10));
 			            else condo.setNumUnknownPeople(0);
@@ -68,12 +66,10 @@ public class Simulator {
 			            session.beginTransaction();	
 			            for (Integer aptId : APTS) {
 				            Apartment apt = (Apartment) session.get(Apartment.class, aptId);
-				            apt.setInstantElectricUsage(generateInstantElectricUsage(random));  
-				            apt.setTotalElectricUsage(
-				            		apt.getTotalElectricUsageFloat() + apt.getInstantElectricUsageFloat());
-				            apt.setInstantWaterUsage(generateInstantWaterUsage(random));  
-				            apt.setTotalWaterUsage(
-				            		apt.getTotalWaterUsageFloat() + apt.getInstantWaterUsageFloat());
+				            apt.getInstantElectricUsage().set(generateInstantElectricUsage(random));  
+				            apt.getTotalElectricUsage().add(apt.getInstantElectricUsage().toFloat());
+				            apt.getInstantWaterUsage().set(generateInstantWaterUsage(random));  
+				            apt.getTotalWaterUsage().add(apt.getInstantWaterUsage().toFloat());
 				            session.save(apt);
 			            }
 			            session.getTransaction().commit();
