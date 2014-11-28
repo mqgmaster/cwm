@@ -5,11 +5,11 @@ import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
-import br.ufrgs.inf.gar.cwm.dash.condo.CondoInfoTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.CondoUsageChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.LimitPanel;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherComponent;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherThread;
 import br.ufrgs.inf.gar.cwm.dash.condo.WaterSparklineChart;
@@ -39,7 +39,6 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -152,13 +151,15 @@ public final class CondoView extends Panel implements View {
         dashboardPanels.addComponent(buildGarageTable());
         dashboardPanels.addComponent(buildEmployeeTable());
         dashboardPanels.addComponent(buildLampTable());
-        dashboardPanels.addComponent(buildCondoTable());
+        dashboardPanels.addComponent(buildLimitPanel());
 
         return dashboardPanels;
     }
     
-    private Component buildCondoTable() {
-        Component c = createContentWrapper(new CondoInfoTable());
+    private Component buildLimitPanel() {
+    	LimitPanel panel = new LimitPanel();
+    	refresher.subscribe(panel);
+        Component c = createContentWrapper(panel);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
     }
@@ -194,25 +195,6 @@ public final class CondoView extends Panel implements View {
         return createContentWrapper(chart);
     }
     
-    private Component buildCondoInfo() {
-    	VerticalLayout details = new VerticalLayout();
-    	details.setCaption("Detalhes");
-        details.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-        details.addComponent(new TextField("d Name"));
-        details.addComponent(new TextField("First sdf"));
-        details.addComponent(new TextField("sdf dfsgad"));
-        details.addComponent(new TextField("sdf Name"));
-        details.addComponent(new TextField("sf Name"));
-        details.addComponent(new TextField("sdf adfg"));
-        details.addComponent(new TextField("sdf fgh"));
-        details.addComponent(new TextField("sdf sfgh"));
-        details.addComponent(new TextField("dfg Name"));
-        details.addComponent(new TextField("sdfgh Name"));
-        details.setHeight("800px");
-        Component panel = createContentWrapper(details);
-        return panel;
-    }
-
     private Component createContentWrapper(final Component content) {
         final CssLayout slot = new CssLayout();
         slot.setWidth("100%");

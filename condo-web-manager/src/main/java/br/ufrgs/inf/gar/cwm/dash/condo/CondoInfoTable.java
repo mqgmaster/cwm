@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
@@ -66,11 +65,7 @@ public final class CondoInfoTable extends Table implements RefresherComponent {
         @Override
         public Field<?> createField(Container container, Object itemId,
                 Object propertyId, Component uiContext) {
-            String prop = (String) propertyId;
-            switch (prop) {
-        	default:
-            		return super.createField(container, itemId, propertyId, uiContext);
-            }
+    		return super.createField(container, itemId, propertyId, uiContext);
         }
     }
 

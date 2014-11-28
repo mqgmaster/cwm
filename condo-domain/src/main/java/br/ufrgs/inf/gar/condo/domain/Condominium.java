@@ -30,7 +30,7 @@ public class Condominium extends AbstractEntity<Integer, Condominium> {
     private String managerName;
     
     @Column(name="total_water_usage")
-    private String totalWaterUsage; 		//litros de agua consumidos pelo condominio, retirando
+    private String totalWaterUsage; 	//litros de agua consumidos pelo condominio, retirando
     									//o consumo de cada apartamento
     @Column(name="instant_water_usage")
     private String instantWaterUsage; 
@@ -58,10 +58,10 @@ public class Condominium extends AbstractEntity<Integer, Condominium> {
         this.address = address;
         this.managerName = managerName;
         this.totalWaterUsage = "0.0";
-        this.totalWaterLimit = "0.0";
+        this.totalWaterLimit = "10.0";
         this.instantWaterUsage = "0.0";
         this.totalElectricUsage = "0.0";
-        this.totalElectricLimit = "0.0";
+        this.totalElectricLimit = "10.0";
         this.instantElectricUsage = "0.0";
         this.numUnknownPeople = 0;
     }

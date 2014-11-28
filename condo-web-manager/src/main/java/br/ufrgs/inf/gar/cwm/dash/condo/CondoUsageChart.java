@@ -29,7 +29,6 @@ public class CondoUsageChart extends Chart implements RefresherComponent {
 	private static final String WATER_SERIES_NAME = "Água";
 	private final DataSeries electricSeries = new DataSeries();
 	private final DataSeries waterSeries = new DataSeries();
-	//private String monthValues[] = new String[] {"Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"};
 	private int monthCounter = 1;
 	private int dayCounter = 1;
 	private final DateFormat df = new SimpleDateFormat("yyyy,MM,dd");
