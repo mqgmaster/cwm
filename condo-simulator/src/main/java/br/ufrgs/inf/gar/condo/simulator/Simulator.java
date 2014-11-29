@@ -52,8 +52,10 @@ public class Simulator {
 						session.beginTransaction();
 			            Condominium condo = (Condominium) session.get(Condominium.class, condominiumId);
 			            //acumulado de 5 segundos, devido ao interalo da thread
-			            condo.setLightConsumption(generateLightConsumption(random));  //ex: 0.449
-			            condo.setWaterConsumption(generateWaterConsumption(random));  //ex: 0.008
+			            condo.getInstantElectricUsage().set(generateInstantElectricUsage(random));  //ex: 0.449
+			            condo.getTotalElectricUsage().add(condo.getInstantElectricUsage().toFloat());
+			            condo.getInstantWaterUsage().set(generateInstantWaterUsage(random));  //ex: 0.008
+			            condo.getTotalWaterUsage().add(condo.getInstantWaterUsage().toFloat());
 			            if (random.nextInt(10) == 1) 
 			            	condo.setNumUnknownPeople(random.nextInt(10));
 			            else condo.setNumUnknownPeople(0);
@@ -64,8 +66,10 @@ public class Simulator {
 			            session.beginTransaction();	
 			            for (Integer aptId : APTS) {
 				            Apartment apt = (Apartment) session.get(Apartment.class, aptId);
-				            apt.setLightConsumption(generateLightConsumption(random)); 
-				            apt.setWaterConsumption(generateWaterConsumption(random));
+				            apt.getInstantElectricUsage().set(generateInstantElectricUsage(random));  
+				            apt.getTotalElectricUsage().add(apt.getInstantElectricUsage().toFloat());
+				            apt.getInstantWaterUsage().set(generateInstantWaterUsage(random));  
+				            apt.getTotalWaterUsage().add(apt.getInstantWaterUsage().toFloat());
 				            session.save(apt);
 			            }
 			            session.getTransaction().commit();
@@ -100,7 +104,7 @@ public class Simulator {
 			            session.beginTransaction();
 			            for (Integer employeeId : EMPS) {
 				            Employee employee = (Employee) session.get(Employee.class, employeeId);
-				            employee.setWorking(!employee.isWorking());
+				            employee.setWorking(random.nextBoolean());
 				            session.save(employee);
 			            }
 			            session.getTransaction().commit();
@@ -108,7 +112,7 @@ public class Simulator {
 			            session.beginTransaction();
 			            for (Integer garageId : GARS) {
 				            Garage garage = (Garage) session.get(Garage.class, garageId);
-				            garage.setOccupied(!garage.isOccupied());
+				            garage.setOccupied(random.nextBoolean());
 				            session.save(garage);
 			            }
 			            session.getTransaction().commit();
@@ -130,12 +134,12 @@ public class Simulator {
 		return random.nextInt(4);
 	}
 
-	private static float generateLightConsumption(Random random) {
-		return random.nextFloat();
+	private static Float generateInstantElectricUsage(Random random) {
+		return random.nextFloat() * 20f;
 	};
 	
-	private static float generateWaterConsumption(Random random) {
-		return random.nextFloat() / 100;
+	private static Float generateInstantWaterUsage(Random random) {
+		return random.nextFloat() * 13.32f;
 	};
 
 	private static void createData() {

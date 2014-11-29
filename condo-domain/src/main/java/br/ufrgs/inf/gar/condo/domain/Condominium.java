@@ -1,8 +1,8 @@
 package br.ufrgs.inf.gar.condo.domain;
 
-import java.io.Serializable;
-
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table
-public class Condominium implements Serializable {
+public class Condominium extends AbstractEntity<Integer, Condominium> {
      
     @Id
     @GeneratedValue
@@ -31,22 +31,40 @@ public class Condominium implements Serializable {
     @Column(name="manager_name")
     private String managerName;
     
-    @Column(name="water_consumption")
-    private Float waterConsumption; //litros de agua consumidos pelo condominio, retirando
-    								//o consumo de cada apartamento
+    @AttributeOverride(name="value", column= @Column(name="total_water_usage"))
+    @Embedded
+    private UsageValue totalWaterUsage; 	//litros de agua consumidos pelo condominio, retirando
+    									//o consumo de cada apartamento
+    @AttributeOverride(name="value", column= @Column(name="instant_water_usage"))
+    @Embedded
+    private UsageValue instantWaterUsage; 
     
-    @Column(name="water_cons_limit")
-    private Float waterConsLimit;
+    @AttributeOverride(name="value", column= @Column(name="instant_water_limit"))
+    @Embedded
+    private UsageValue instantWaterLimit;
     
-    @Column(name="light_consumption")
-    private Float lightConsumption; //watts consumidos pelo condominio, retirando
-    								//o consumo de cada apartamento
+    @AttributeOverride(name="value", column= @Column(name="total_electric_usage"))
+    @Embedded
+    private UsageValue totalElectricUsage; 		//watts consumidos pelo condominio, retirando
+    								     	//o consumo de cada apartamento
+    @AttributeOverride(name="value", column= @Column(name="instant_electric_limit"))
+    @Embedded
+    private UsageValue instantElectricLimit;
     
-    @Column(name="light_cons_limit")
-    private Float lightConsLimit;
+    @AttributeOverride(name="value", column= @Column(name="instant_electric_usage"))
+    @Embedded
+    private UsageValue instantElectricUsage;
+    
+    @AttributeOverride(name="value", column= @Column(name="apt_instant_electric_limit"))
+    @Embedded
+    private UsageValue aptInstantElectricLimit;
+    
+    @AttributeOverride(name="value", column= @Column(name="apt_instant_water_limit"))
+    @Embedded
+    private UsageValue aptInstantWaterLimit;
     
     @Column(name="num_unknown_people")
-    private Integer numUnknownPeople; 	//numero total de pessoas não identificadas no condominio (ladrão?).
+    private Integer numUnknownPeople; 		//numero total de pessoas não identificadas no condominio (ladrão?).
     
     public Condominium() {
     }
@@ -55,10 +73,14 @@ public class Condominium implements Serializable {
         this.name = name;
         this.address = address;
         this.managerName = managerName;
-        this.waterConsumption = new Float(0);
-        this.waterConsLimit = new Float(0.01);
-        this.lightConsumption = new Float(0);
-        this.lightConsLimit = new Float(0.8);
+        this.totalWaterUsage = new UsageValue();
+        this.instantWaterLimit = new UsageValue();
+        this.instantWaterUsage = new UsageValue();
+        this.totalElectricUsage = new UsageValue();
+        this.instantElectricLimit = new UsageValue();
+        this.instantElectricUsage = new UsageValue();
+        this.aptInstantElectricLimit = new UsageValue();
+        this.aptInstantWaterLimit = new UsageValue();
         this.numUnknownPeople = 0;
     }
      
@@ -70,20 +92,12 @@ public class Condominium implements Serializable {
         this.name = name;
     }
 
-    public boolean equals(Object another) {
-        if ( !(another instanceof Condominium) ) return false;
- 
-        final Condominium cat = (Condominium) another;
-         
-        return this.id.equals(cat.getId()); 
-    }
-     
-    public int hashCode() {
-        return id.hashCode();
-    }
-
 	public Integer getId() {
 		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getAddress() {
@@ -102,22 +116,6 @@ public class Condominium implements Serializable {
 		this.managerName = managerName;
 	}
 
-	public Float getWaterConsumption() {
-		return waterConsumption;
-	}
-
-	public void setWaterConsumption(Float waterConsumption) {
-		this.waterConsumption = waterConsumption;
-	}
-
-	public Float getLightConsumption() {
-		return lightConsumption;
-	}
-
-	public void setLightConsumption(Float lightConsumption) {
-		this.lightConsumption = lightConsumption;
-	}
-
 	public Integer getNumUnknownPeople() {
 		return numUnknownPeople;
 	}
@@ -126,19 +124,67 @@ public class Condominium implements Serializable {
 		this.numUnknownPeople = numUnknownPeople;
 	}
 
-	public Float getWaterConsLimit() {
-		return waterConsLimit;
+	public UsageValue getTotalWaterUsage() {
+		return totalWaterUsage;
+	}
+	
+	public void setTotalWaterUsage(UsageValue totalWaterUsage) {
+		this.totalWaterUsage = totalWaterUsage;
+	}
+	
+	public UsageValue getInstantWaterUsage() {
+		return instantWaterUsage;
+	}
+	
+	public void setInstantWaterUsage(UsageValue instantWaterUsage) {
+		this.instantWaterUsage = instantWaterUsage;
+	}
+	
+	public UsageValue getInstantWaterLimit() {
+		return instantWaterLimit;
+	}
+	
+	public void setInstantWaterLimit(UsageValue instantWaterLimit) {
+		this.instantWaterLimit = instantWaterLimit;
+	}
+	
+	public UsageValue getTotalElectricUsage() {
+		return totalElectricUsage;
+	}
+	
+	public void setTotalElectricUsage(UsageValue totalElectricUsage) {
+		this.totalElectricUsage = totalElectricUsage;
+	}
+	
+	public UsageValue getInstantElectricLimit() {
+		return instantElectricLimit;
+	}
+	
+	public void setInstantElectricLimit(UsageValue instantElectricLimit) {
+		this.instantElectricLimit = instantElectricLimit;
+	}
+	
+	public UsageValue getInstantElectricUsage() {
+		return instantElectricUsage;
 	}
 
-	public void setWaterConsLimit(Float waterConsLimit) {
-		this.waterConsLimit = waterConsLimit;
+	public void setInstantElectricUsage(UsageValue instantElectricUsage) {
+		this.instantElectricUsage = instantElectricUsage;
 	}
-
-	public Float getLightConsLimit() {
-		return lightConsLimit;
+	
+	public UsageValue getAptInstantElectricLimit() {
+		return aptInstantElectricLimit;
 	}
-
-	public void setLightConsLimit(Float lightConsLimit) {
-		this.lightConsLimit = lightConsLimit;
+	
+	public void setAptInstantElectricLimit(UsageValue aptInstantElectricLimit) {
+		this.aptInstantElectricLimit = aptInstantElectricLimit;
+	}
+	
+	public UsageValue getAptInstantWaterLimit() {
+		return aptInstantWaterLimit;
+	}
+	
+	public void setAptInstantWaterLimit(UsageValue aptInstantWaterLimit) {
+		this.aptInstantWaterLimit = aptInstantWaterLimit;
 	}
 }

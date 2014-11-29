@@ -1,7 +1,5 @@
 package br.ufrgs.inf.gar.condo.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +11,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table
-public class Lamp implements Serializable {
+public class Lamp extends AbstractEntity<Integer, Lamp> {
 
 	@Id
 	@GeneratedValue
@@ -35,23 +33,15 @@ public class Lamp implements Serializable {
         this.isOn = false;
     }
     
-    public boolean equals(Object another) {
-        if ( !(another instanceof Lamp) ) return false;
- 
-        final Lamp apt = (Lamp) another;
-         
-        return this.id.equals(apt.getId());
-    }
-     
-    public int hashCode() {
-        return id.hashCode();
-    }
-
 	public Integer getId() {
 		return id;
 	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-	public Boolean isOn() {
+	public boolean isOn() {
 		return isOn;
 	}
 
