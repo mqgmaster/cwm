@@ -344,12 +344,12 @@ tbApWater OBJECT-TYPE
 
 TbApWtEntry ::=
     SEQUENCE {
-        tbApWtEntryIndex      Integer32
-        tbApWtEntryNumber     Integer32
-        tbApWtEntryTotalConsuption DisplayString
-        tbApWtEntryTotalLimit      DisplayString
-        tbApWtInstantConsuption     DisplayString
-        tbApWtEntryInstantConsuption DisplayString
+        tbApWtEntryIndex      Integer32,
+        tbApWtEntryNumber     Integer32,
+        tbApWtEntryTotalConsuption DisplayString,
+        tbApWtEntryTotalLimit      DisplayString,
+        tbApWtInstantConsuption     DisplayString,
+        tbApWtEntryInstantConsuption DisplayString,
     }
 
 tbApWtEntry OBJECT-TYPE
@@ -472,11 +472,11 @@ tbApElectricity OBJECT-TYPE
 
 TbApElEntry ::=
     SEQUENCE {
-        tbApElEntryIndex        Integer32
-        tbApElEntryNumber       Integer32
-        tbApElTotalEntryConsumption  DisplayString
-        tbApElTotalEntryLimit        DisplayString
-        tbApElInstantEntryConsumption DisplayString
+        tbApElEntryIndex        Integer32,
+        tbApElEntryNumber       Integer32,
+        tbApElTotalEntryConsumption  DisplayString,
+        tbApElTotalEntryLimit        DisplayString,
+        tbApElInstantEntryConsumption DisplayString,
         tbApElInstantEntryLimit DisplayString
     }
 
