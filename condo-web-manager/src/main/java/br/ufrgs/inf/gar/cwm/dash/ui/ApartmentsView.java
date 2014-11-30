@@ -2,13 +2,10 @@ package br.ufrgs.inf.gar.cwm.dash.ui;
 
 import java.util.Iterator;
 
-import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
-import br.ufrgs.inf.gar.cwm.dash.condo.CondoUsageChart;
-import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
-import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
-import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
-import br.ufrgs.inf.gar.cwm.dash.condo.WaterSparklineChart;
-import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
+import br.ufrgs.inf.gar.cwm.dash.apt.ApartmentTable;
+import br.ufrgs.inf.gar.cwm.dash.apt.AptElectricUsageChart;
+import br.ufrgs.inf.gar.cwm.dash.apt.AptWaterUsageChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.RefresherThread;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
 
@@ -28,7 +25,6 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -42,6 +38,7 @@ public final class ApartmentsView extends Panel implements View {
     private CssLayout dashboardPanels;
     private final VerticalLayout root;
     private HorizontalLayout header;
+    private final RefresherThread refresher = new RefresherThread(2000, 2000);
 
     public ApartmentsView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -57,8 +54,6 @@ public final class ApartmentsView extends Panel implements View {
 
         root.addComponent(buildHeader());
 
-        root.addComponent(buildSparklines());
-
         Component content = buildContent();
         root.addComponent(content);
         root.setExpandRatio(content, 1);
@@ -69,30 +64,6 @@ public final class ApartmentsView extends Panel implements View {
                 DashboardEventBus.post(new CloseOpenWindowsEvent());
             }
         });
-    }
-
-    private Component buildSparklines() {
-        CssLayout sparks = new CssLayout();
-        sparks.addStyleName("sparks");
-        sparks.setWidth("100%");
-        Responsive.makeResponsive(sparks);
-
-        WaterSparklineChart s = new WaterSparklineChart();
-        sparks.addComponent(s);
-
-        SparklineChart s2 = new SparklineChart("Consumo de Luz / Mês", "kWh", "",
-                DummyDataGenerator.chartColors[2], 12, 3000, 4000);
-        sparks.addComponent(s2);
-
-        s2 = new SparklineChart("Problemas Reportados / Mês", "", "",
-                DummyDataGenerator.chartColors[3], 12, 0, 30);
-        sparks.addComponent(s2);
-
-        s2 = new SparklineChart("Balanço Financeiro", "", "R$",
-                DummyDataGenerator.chartColors[5], 12, 5000, 10000);
-        sparks.addComponent(s2);
-
-        return sparks;
     }
 
     private Component buildHeader() {
@@ -115,57 +86,35 @@ public final class ApartmentsView extends Panel implements View {
         dashboardPanels.addStyleName("dashboard-panels");
         Responsive.makeResponsive(dashboardPanels);
 
-        dashboardPanels.addComponent(buildCondoLightChart());
-        dashboardPanels.addComponent(buildGarageTable());
-        dashboardPanels.addComponent(buildEmployeeTable());
-        dashboardPanels.addComponent(buildLampTable());
+        dashboardPanels.addComponent(buildAptElectricUsageChart());
+        dashboardPanels.addComponent(buildApartmentTable());
+        dashboardPanels.addComponent(buildAptWaterUsageChart());
 
         return dashboardPanels;
     }
 
-    private Component buildLampTable() {
-        Component c = createContentWrapper(new LampTable());
+    private Component buildApartmentTable() {
+    	ApartmentTable table = new ApartmentTable();
+    	refresher.subscribe(table);
+        Component c = createContentWrapper(table);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
     }
     
-    private Component buildGarageTable() {
-    	Component c = createContentWrapper(new GarageTable());
-        c.addStyleName("dashboard-panel-slot-table");
-        return c;
-    }
-    
-    private Component buildEmployeeTable() {
-    	Component c = createContentWrapper(new EmployeeTable());
-        c.addStyleName("dashboard-panel-slot-table");
-        return c;
-    }
-    
-    private Component buildCondoLightChart() {
-    	CondoUsageChart chart = new CondoUsageChart();
+    private Component buildAptElectricUsageChart() {
+    	AptElectricUsageChart chart = new AptElectricUsageChart();
+    	refresher.subscribe(chart);
     	chart.setSizeFull();
         return createContentWrapper(chart);
     }
     
-    private Component buildCondoInfo() {
-    	VerticalLayout details = new VerticalLayout();
-    	details.setCaption("Detalhes");
-        details.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-        details.addComponent(new TextField("d Name"));
-        details.addComponent(new TextField("First sdf"));
-        details.addComponent(new TextField("sdf dfsgad"));
-        details.addComponent(new TextField("sdf Name"));
-        details.addComponent(new TextField("sf Name"));
-        details.addComponent(new TextField("sdf adfg"));
-        details.addComponent(new TextField("sdf fgh"));
-        details.addComponent(new TextField("sdf sfgh"));
-        details.addComponent(new TextField("dfg Name"));
-        details.addComponent(new TextField("sdfgh Name"));
-        details.setHeight("800px");
-        Component panel = createContentWrapper(details);
-        return panel;
+    private Component buildAptWaterUsageChart() {
+    	AptWaterUsageChart chart = new AptWaterUsageChart();
+    	refresher.subscribe(chart);
+    	chart.setSizeFull();
+        return createContentWrapper(chart);
     }
-
+    
     private Component createContentWrapper(final Component content) {
         final CssLayout slot = new CssLayout();
         slot.setWidth("100%");

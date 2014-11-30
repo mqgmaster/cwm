@@ -43,7 +43,7 @@ public class DashboardSessionInitListener implements SessionInitListener {
 
             @Override
             public void modifyBootstrapFragment(
-                    final BootstrapFragmentResponse response) {
+        		final BootstrapFragmentResponse response) {
             }
         });
     }

@@ -95,7 +95,7 @@ public class SparklineChart extends VerticalLayout {
         opts.setAllowPointSelect(false);
         opts.setColor(color);
         opts.setDataLabels(new Labels(false));
-        opts.setLineWidth(1);
+        opts.setLineWidth(2);
         opts.setShadow(false);
         opts.setDashStyle(DashStyle.SOLID);
         opts.setMarker(new Marker(false));

@@ -5,7 +5,7 @@
  * @param {value} $var - the value to search for
  * @param {bool} $recursive (false) - should any contained lists be checked for the value
  * 
- * @return {bool}��true if the value is found from the list, false otherwise
+ * @return {bool} true if the value is found from the list, false otherwise
  * 
  * @group lists
  */
@@ -258,7 +258,7 @@
  * 
  * @param {color} $color ($v-background-color) - The base color for the gradient color stops
  * @param {list} $gradient ($v-gradient) - Valo-specific gradient value. See the documentation for $v-gradient.
- * @param {color}��$fallback (null) - A fallback color for browser which do not support linear gradients (IE8 and IE9 in particular). If null, the base $color is used instead.
+ * @param {color} $fallback (null) - A fallback color for browser which do not support linear gradients (IE8 and IE9 in particular). If null, the base $color is used instead.
  * @param {string} $direction (to bottom) - the direction of the linear gradient. The color stops are by default so that a lighter shade is at the start and a darker shade is at the end.
  */
 
@@ -267,7 +267,7 @@
  *
  * @group style
  *
- * @param {list}��$border ($v-border) - CSS border value which can contain any of the color keywords
+ * @param {list} $border ($v-border) - CSS border value which can contain any of the color keywords
  * @param {color} $color ($v-background-color) - the base color to which the color keywords are applied to
  * @param {color} $context (null) - context/surrounding color where the border is expected to appear. The color of the final border is the darker of the two parameters passed to this function.
  * @param {number} $strength (1) - adjustment for the border contrast
@@ -280,7 +280,7 @@
  * 
  * @param {string} $to-align (()) - The selector to match the elements which you wish to align vertically. The targeted elements should be inline or inline-block elements.
  * @param {string} $align (middle) - The vertical-align value, e.g. top, middle, bottom
- * @param {string}��$pseudo-element (after) - Which pseudo element to use for the vertical align guide
+ * @param {string} $pseudo-element (after) - Which pseudo element to use for the vertical align guide
  * 
  * @group util
  */
@@ -547,7 +547,7 @@
  * Outputs the selectors and properties for the Accordion component.
  *
  * @param {string} $primary-stylename (v-accordion) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  * @group accordion
  */
 
@@ -555,7 +555,7 @@
  * Outputs the selectors and properties for the Button component.
  *
  * @param {string} $primary-stylename (v-button) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group button
  */
@@ -578,7 +578,7 @@
  * Outputs the selectors and properties for the CheckBox component.
  *
  * @param {string} $primary-stylename (v-checkbox) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group checkbox
  */
@@ -596,7 +596,7 @@
  * Outputs the selectors and properties for the ComboBox component.
  *
  * @param {string} $primary-stylename (v-filterselect) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group combobox
  */
@@ -628,7 +628,7 @@
  * Outputs the selectors and properties for the DateField component.
  *
  * @param {string} $primary-stylename (v-datefield) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group datefield
  */
@@ -653,7 +653,7 @@
  * Outputs the selectors and properties for the FormLayout component.
  *
  * @param {string} $primary-stylename (v-formlayout) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group formlayout
  */
@@ -807,7 +807,7 @@
  * Outputs the selectors and properties for the TextArea component.
  *
  * @param {string} $primary-stylename (v-textarea) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group textarea
  */
@@ -836,7 +836,7 @@
 /**
  *
  *
- * @param {string} $primary-stylename (v-upload) - 
+ * @param {string} $primary-stylename (v-upload) -
  *
  * @group upload
  */
@@ -903,7 +903,7 @@
  */
 
 .v-vaadin-version:after {
-	content: "7.3.3";
+	content: "7.3.5";
 }
 
 .v-widget {
@@ -3873,19 +3873,27 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .dashboard [class*="margin-top"] > tbody > [class*="firstrow"] > td {
-	padding-top: 0;
+	padding-top: 37px;
 }
 
 .dashboard [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
-	padding-bottom: 0;
+	padding-bottom: 37px;
 }
 
 .dashboard [class*="margin-left"] > tbody > [class*="row"] > [class*="captioncell"] {
-	padding-left: 0;
+	padding-left: 37px;
+}
+
+.dashboard [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .dashboard [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .dashboard [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
+	left: 37px;
 }
 
 .dashboard [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"] {
-	padding-right: 0;
+	padding-right: 37px;
+}
+
+.dashboard [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .dashboard [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .dashboard [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
+	right: 37px;
 }
 
 .dashboard .v-formlayout > table {
@@ -3921,6 +3929,8 @@ div.v-layout.v-horizontal.v-widget {
 .dashboard .v-formlayout-contentcell  > .v-label-h2, .dashboard .v-formlayout-contentcell  > .v-label-h3, .dashboard .v-formlayout-contentcell  > .v-label-h4 {
 	position: absolute;
 	left: 0;
+	right: 0;
+	width: auto !important;
 	margin-top: -0.5em;
 	padding-bottom: 0.5em;
 	border-bottom: 1px solid #dfdfdf;
@@ -3930,7 +3940,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0;
 }
 
-.dashboard .v-formlayout.light  > table > tbody > [class*="row"] > td {
+.dashboard .v-formlayout.light  > table > tbody > tr > td {
 	padding-top: 0;
 	height: 37px;
 	border-bottom: 1px solid #eaeaea;
@@ -3940,11 +3950,15 @@ div.v-layout.v-horizontal.v-widget {
 	border-bottom: none;
 }
 
-.dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="captioncell"] {
+.dashboard .v-formlayout.light  > table > tbody > tr > [class*="captioncell"] {
 	color: #7d7d7d;
 	text-align: right;
 	padding-left: 13px;
 	line-height: 37px;
+}
+
+.dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"] {
+	padding-right: 0;
 }
 
 .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-textfield, .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-textarea, .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-filterselect, .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-datefield, .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-filterselect-input, .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-datefield-textfield {
@@ -4017,6 +4031,8 @@ div.v-layout.v-horizontal.v-widget {
 
 .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
 	border-bottom: none;
+	left: 0;
+	right: 0;
 }
 
 .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .dashboard .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
@@ -7615,8 +7631,16 @@ div.v-layout.v-horizontal.v-widget {
 	padding-left: 12px;
 }
 
+.dashboard .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .dashboard .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .dashboard .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
+	left: 12px;
+}
+
 .dashboard .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"] {
 	padding-right: 12px;
+}
+
+.dashboard .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .dashboard .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .dashboard .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
+	right: 12px;
 }
 
 .dashboard .v-window-contents  > .v-scrollable:focus {
@@ -7925,12 +7949,12 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .dashboard .v-table-header-cell-asc .v-table-sort-indicator:before {
-	content: "\f0dd";
+	content: "\f0de";
 	font-family: FontAwesome;
 }
 
 .dashboard .v-table-header-cell-desc .v-table-sort-indicator:before {
-	content: "\f0de";
+	content: "\f0dd";
 	font-family: FontAwesome;
 }
 
@@ -8349,6 +8373,7 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	border-bottom: 2px solid transparent;
+	position: relative;
 	-webkit-transition: border-bottom 200ms, color 200ms;
 	-moz-transition: border-bottom 200ms, color 200ms;
 	transition: border-bottom 200ms, color 200ms;
@@ -8371,7 +8396,6 @@ div.v-layout.v-horizontal.v-widget {
 	filter: alpha(opacity=50) ;
 	cursor: default;
 	color: inherit !important;
-	border-bottom: none;
 }
 
 .dashboard .v-tabsheet-tabitemcell:first-child .v-caption, .dashboard .v-tabsheet-tabitemcell[aria-hidden="true"] + td .v-caption {
@@ -8391,14 +8415,23 @@ div.v-layout.v-horizontal.v-widget {
 	color: #197de1;
 }
 
+.dashboard .v-tabsheet-tabitemcell .v-caption-closable {
+	padding-right: 22px;
+}
+
+.dashboard .v-tabsheet-tabitemcell.icons-on-top .v-caption-closable {
+	padding-right: 4px;
+}
+
 .dashboard .v-tabsheet-tabitemcell .v-tabsheet-caption-close {
-	display: inline-block;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	margin: -8px 0 0;
 	font-size: 18px;
 	line-height: 18px;
 	width: 18px;
-	vertical-align: middle;
 	text-align: center;
-	margin: 0 -4px 0 8px;
 	border-radius: 2px;
 	color: #969696;
 }
@@ -8572,9 +8605,9 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption {
-	position: relative;
 	margin-left: 4px;
 	padding: 0 12px;
+	background-color: #fafafa;
 	border: 1px solid transparent;
 	line-height: 36px;
 	border-radius: 4px 4px 0 0;
@@ -8587,6 +8620,20 @@ div.v-layout.v-horizontal.v-widget {
 .dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption:hover {
 	background-color: #f2f2f2;
 	border-bottom-color: #dfdfdf;
+}
+
+.dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption.v-disabled:hover {
+	background-color: #fafafa;
+}
+
+.dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption-closable {
+	padding-right: 30px;
+}
+
+.dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-tabsheet-caption-close {
+	top: 4px;
+	right: 4px;
+	margin-top: 0;
 }
 
 .dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer td:first-child .v-caption, .dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer [aria-hidden="true"] + td .v-caption {
@@ -8602,17 +8649,6 @@ div.v-layout.v-horizontal.v-widget {
 	border-color: #dfdfdf;
 	border-bottom: none;
 	padding-bottom: 1px;
-}
-
-.dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption-closable {
-	padding-right: 30px;
-}
-
-.dashboard .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-tabsheet-caption-close {
-	position: absolute;
-	top: 4px;
-	right: 4px;
-	margin: 0;
 }
 
 .dashboard .v-tabsheet-framed  > .v-tabsheet-content {
@@ -8631,8 +8667,8 @@ div.v-layout.v-horizontal.v-widget {
 	padding-top: 6px;
 }
 
-.dashboard .v-tabsheet-framed.icons-on-top .v-caption-closable {
-	padding-right: 12px;
+.dashboard .v-tabsheet-framed.icons-on-top  > .v-tabsheet-tabcontainer .v-tabsheet-tabitem-selected .v-caption {
+	padding-bottom: 7px;
 }
 
 .dashboard .v-tabsheet-centered-tabs  > .v-tabsheet-tabcontainer {
@@ -8647,22 +8683,27 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0 9px;
 }
 
-.dashboard .v-tabsheet-icons-on-top  > div > .v-tabsheet-tabs .v-caption {
+.dashboard .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-caption {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	line-height: 1.2;
 }
 
-.dashboard .v-tabsheet-icons-on-top  > div > .v-tabsheet-tabs .v-tabsheet-tabitem-selected .v-caption {
-	padding-bottom: 7px;
-}
-
-.dashboard .v-tabsheet-icons-on-top  > div > .v-tabsheet-tabs .v-icon {
+.dashboard .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-icon {
 	display: block;
 }
 
-.dashboard .v-tabsheet-icons-on-top  > div > .v-tabsheet-tabs .v-icon  + .v-captiontext.v-captiontext {
+.dashboard .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-icon  + .v-captiontext.v-captiontext {
 	margin-left: 0;
+}
+
+.dashboard .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-caption-closable {
+	padding-right: 12px;
+}
+
+.dashboard .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-tabsheet-caption-close {
+	top: 4px;
+	margin-top: 0;
 }
 
 .dashboard .v-tabsheet-compact-tabbar  > .v-tabsheet-tabcontainer-compact-tabbar .v-caption {
@@ -9728,6 +9769,10 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: normal;
 }
 
+.dashboard .v-upload-immediate .v-button {
+	width: 100%;
+}
+
 .dashboard .v-upload-immediate input[type="file"] {
 	opacity: 0;
 	filter: alpha(opacity=0) ;
@@ -10315,6 +10360,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0 37px 0 19px;
 	cursor: pointer;
 	position: relative;
+	overflow: hidden;
 	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
 	-webkit-transition: background-color 300ms, color 60ms;
 	-moz-transition: background-color 300ms, color 60ms;
@@ -10626,6 +10672,7 @@ div.v-layout.v-horizontal.v-widget {
 	height: 37px !important;
 	padding-top: 0;
 	padding-bottom: 0;
+	-webkit-backface-visibility: hidden;
 }
 
 .dashboard .v-ui[width-range~="0-800px"] .valo-menu .v-menubar-user-menu {
@@ -10638,6 +10685,7 @@ div.v-layout.v-horizontal.v-widget {
 	height: 37px;
 	color: #97bee5;
 	max-width: 30%;
+	-webkit-backface-visibility: hidden;
 }
 
 .dashboard .v-ui[width-range~="0-800px"] .valo-menu .v-menubar-user-menu .v-menubar-menuitem {

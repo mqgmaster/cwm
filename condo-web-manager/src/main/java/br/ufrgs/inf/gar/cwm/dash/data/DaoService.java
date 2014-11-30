@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.Variable;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.util.TableEvent;
 
@@ -17,16 +19,31 @@ import br.ufrgs.inf.gar.condo.domain.Sector;
 
 public class DaoService {
 	
-	private static Condominium condoCache;
+	public static final String AGENT_ADDRESS = "udp:10.0.0.105/16167";
+	
+	private static DaoService service = null;
+
 	private static List<Sector> sectorCache = new ArrayList<>();
 	private static List<Apartment> aptsCache = new ArrayList<>();
 	
-	//public static void init() throws IOException {
-	//	condo = getCondominium();
-	//	sectorList = getAllSectors();
-	//}
+	public static void init() throws IOException {
+		if (service != null) {
+			return;
+		}
+		service = new DaoService();
+		
+		try {
+			SNMPManager.start(AGENT_ADDRESS);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	public static Condominium getCondominium2() throws IOException {
+	public static DaoService get() {
+		return service;
+	}
+	
+	public Condominium getCondo() throws IOException {
 		VariableBinding[] vars = SNMPManager.get(
 				MIB.CondoOID.NAME,
 				MIB.CondoOID.ADDRESS,
@@ -37,8 +54,37 @@ public class DaoService {
 				vars[2].getVariable().toString());
 	}
 	
-	public static Condominium getCondominium() throws IOException {
-		return Simulator.CONDO.get();
+	public Condominium getCondoUsages() throws IOException {
+		VariableBinding[] vars = SNMPManager.get(
+				MIB.CondoOID.WATER_TOTAL_USAGE,
+				MIB.CondoOID.WATER_INSTANT_USAGE,
+				MIB.CondoOID.WATER_INSTANT_LIMIT,
+				MIB.CondoOID.ELECTRIC_TOTAL_USAGE,
+				MIB.CondoOID.ELECTRIC_INSTANT_USAGE,
+				MIB.CondoOID.ELECTRIC_INSTANT_LIMIT
+				);
+		Condominium condo = new Condominium();
+		
+		condo.getTotalWaterUsage().set(octetToASCII(vars[0].getVariable()));
+		condo.getInstantWaterUsage().set(octetToASCII(vars[1].getVariable()));
+		condo.getInstantWaterLimit().set(octetToASCII(vars[2].getVariable()));
+		condo.getTotalElectricUsage().set(octetToASCII(vars[3].getVariable()));
+		condo.getInstantElectricUsage().set(octetToASCII(vars[4].getVariable()));
+		condo.getInstantElectricLimit().set(octetToASCII(vars[5].getVariable()));
+		return condo;
+	}
+	
+	private String octetToASCII(Variable var) {
+		return ((OctetString) var).toASCII(' ');
+	}
+	
+	public static Apartment getApartment(Integer id) throws IOException {
+		for (Apartment apt : getAllApartments()) {
+			if (apt.getId().equals(id)) {
+				return apt;
+			}
+		}
+		return null;
 	}
 	
 	public static List<Apartment> getAllApartments2() throws IOException {
@@ -142,23 +188,6 @@ public class DaoService {
 			obj.setId(rowColumns[0].getVariable().toInt());
 			obj.setOn(Boolean.valueOf(rowColumns[1].getVariable().toString()));
 			obj.setSector(sectorCache.get(rowColumns[2].getVariable().toInt()));
-			list.add(obj);
-		}
-		return list;
-	}
-	
-	public static List<Sector> getAllSectors2() throws IOException {
-		List<Sector> list = new ArrayList<>();
-		Iterator<TableEvent> iterator = SNMPManager.walk(
-				MIB.SectorTableOID.ID,
-				MIB.SectorTableOID.NAME
-				);
-		while (iterator.hasNext()) {
-			TableEvent row = iterator.next();
-			VariableBinding[] rowColumns = row.getColumns();
-			Sector obj = new Sector();
-			obj.setId(rowColumns[0].getVariable().toInt());
-			obj.setName(rowColumns[1].getVariable().toString());
 			list.add(obj);
 		}
 		return list;

@@ -67,6 +67,7 @@ public class Condominium extends AbstractEntity<Integer, Condominium> {
     private Integer numUnknownPeople; 		//numero total de pessoas não identificadas no condominio (ladrão?).
     
     public Condominium() {
+    	this(null, null, null);
     }
      
     public Condominium(String name, String address, String managerName) {

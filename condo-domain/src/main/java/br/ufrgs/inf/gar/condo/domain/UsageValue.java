@@ -18,17 +18,31 @@ public class UsageValue extends AbstractEntity<String, UsageValue> {
 		this.value = String.valueOf(value);
 	}
 	
-	public UsageValue(String value) {
+	public UsageValue(String value) throws UnsupportedOperationException {
+		try {
+			Float.valueOf(value);
+		} catch (Exception e) {
+			throw new UnsupportedOperationException("String is not a float valid value");
+		}
 		this.value = value;
+	}
+	
+	public void set(Double value) {
+		this.value = String.valueOf(value);
 	}
 	
 	public void set(Float value) {
 		this.value = String.valueOf(value);
 	}
 	
-	public void set(String value) {
+	public void set(String value) throws UnsupportedOperationException {
+		try {
+			Float.valueOf(value);
+		} catch (Exception e) {
+			throw new UnsupportedOperationException("String is not a float valid value");
+		}
 		this.value = value;
-	}
+ 	}
 	
 	public void add(Float value) {
 		this.value = String.valueOf(value + Float.valueOf(this.value));
@@ -41,6 +55,10 @@ public class UsageValue extends AbstractEntity<String, UsageValue> {
 	
 	public Float toFloat() {
 		return Float.valueOf(value);
+	}
+	
+	public Double toDouble() {
+		return Double.valueOf(value);
 	}
 
 	@Override

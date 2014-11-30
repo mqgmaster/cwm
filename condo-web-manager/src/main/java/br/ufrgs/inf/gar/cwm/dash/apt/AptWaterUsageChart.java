@@ -1,14 +1,17 @@
-package br.ufrgs.inf.gar.cwm.dash.condo;
+package br.ufrgs.inf.gar.cwm.dash.apt;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
+import br.ufrgs.inf.gar.condo.domain.Apartment;
 import br.ufrgs.inf.gar.condo.domain.Condominium;
 import br.ufrgs.inf.gar.condo.domain.UsageValue;
+import br.ufrgs.inf.gar.cwm.dash.condo.RefresherComponent;
 import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
 import com.vaadin.addon.charts.Chart;
@@ -20,28 +23,24 @@ import com.vaadin.addon.charts.model.DataSeries;
 import com.vaadin.addon.charts.model.DataSeriesItem;
 import com.vaadin.addon.charts.model.DateTimeLabelFormats;
 import com.vaadin.addon.charts.model.PlotOptionsSpline;
-import com.vaadin.addon.charts.model.Tooltip;
 import com.vaadin.addon.charts.model.YAxis;
 import com.vaadin.addon.charts.model.style.SolidColor;
 
 @SuppressWarnings("serial")
-public class CondoUsageChart extends Chart implements RefresherComponent {
+public class AptWaterUsageChart extends Chart implements RefresherComponent {
 
-	private static final String TITLE_CHART = "Consumo diário";
-	private static final String ELECTRIC_SERIES_NAME = "Eletricidade";
-	private static final String WATER_SERIES_NAME = "Água";
-	private final DataSeries electricSeries = new DataSeries();
-	private final DataSeries waterSeries = new DataSeries();
+	private static final String TITLE_CHART = "Consumo de água diário (em Litros)";
+	private final HashMap<Integer, DataSeries> hash = new HashMap<Integer, DataSeries>();
+	private Date currentDate;
 	private int monthCounter = 1;
-	private int dayCounter = 1;
+	private int dayCounter = 0;
 	private final DateFormat df = new SimpleDateFormat("yyyy,MM,dd");
 
-	public CondoUsageChart() {
+	public AptWaterUsageChart() {
 		setCaption(TITLE_CHART);
 		final Configuration configuration = new Configuration();
 		configuration.getChart().setType(ChartType.SPLINE);
 		configuration.getTitle().setText(null);
-		configuration.getTooltip().setFormatter("");
 		configuration.getCredits().setEnabled(false);
 
 		Axis xAxis = configuration.getxAxis();
@@ -53,34 +52,36 @@ public class CondoUsageChart extends Chart implements RefresherComponent {
 		yAxis.setTitle("");
 		yAxis.setMin(0);
 
-		Tooltip tooltip = new Tooltip();
-        tooltip.setFormatter("function() { "
-                + "var unit = { 'Eletricidade': 'kWh', 'Água': 'L' }[this.series.name];"
-                + "return '<b>'+ this.series.name +'</b><br/>\' + Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' '+ unit; }");
-        configuration.setTooltip(tooltip);
-        
-		electricSeries.setName(ELECTRIC_SERIES_NAME);
-		PlotOptionsSpline opt = new PlotOptionsSpline();
-		electricSeries.setPlotOptions(opt);
-		waterSeries.setName(WATER_SERIES_NAME);
-		opt = new PlotOptionsSpline();
-		waterSeries.setPlotOptions(opt);
+		incrementDateCounter();
+		
+		Condominium condo = null;
 		try {
-			Condominium condo = DaoService.get().getCondoUsages();
-			addUsageItemsSeries(condo.getInstantElectricUsage(), condo.getInstantElectricLimit(), electricSeries, false);
-			addUsageItemsSeries(condo.getInstantWaterUsage(), condo.getInstantWaterLimit(), waterSeries, false);
+			condo = DaoService.get().getCondoUsages();
+		
+			DataSeries series;
+			boolean isShowed = true;
+			for (Apartment apt : DaoService.getAllApartments()) {
+				series = new DataSeries(String.valueOf(apt.getNumber()));
+				series.setPlotOptions(new PlotOptionsSpline());
+				if (isShowed) {
+					series.setVisible(true);
+					isShowed = false;
+				} else {
+					series.setVisible(false);
+				}
+				hash.put(apt.getId(), series);
+				addUsageItemsSeries(apt.getInstantWaterUsage(), condo.getAptInstantWaterLimit(), series, false);
+				configuration.addSeries(hash.get(apt.getId()));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		dayCounter++;
-		
-		configuration.addSeries(electricSeries);
-		configuration.addSeries(waterSeries);
+		incrementDateCounter();
 
 		drawChart(configuration);
 	}
 	
-	private Date getDate() {
+	private Date parseDate() {
         df.setTimeZone(TimeZone.getTimeZone("EET"));
         try {
             return df.parse("2014," + monthCounter + "," + dayCounter);
@@ -88,6 +89,20 @@ public class CondoUsageChart extends Chart implements RefresherComponent {
             throw new RuntimeException(e);
         }
     }
+	
+	private void incrementDateCounter() {
+		if (dayCounter > 29) {
+			dayCounter = 1;
+			if (monthCounter > 11) {
+				monthCounter = 1;
+			} else {
+				monthCounter++;
+			}
+		} else {
+			dayCounter++;
+		}
+		currentDate = parseDate();
+	}
 	
 	private Float normalizeUsage(final String value) {
 		if(value.length() > 3) {
@@ -98,8 +113,8 @@ public class CondoUsageChart extends Chart implements RefresherComponent {
 	}
 	
 	private void addUsageItemsSeries(final UsageValue usage, final UsageValue limit, DataSeries series, Boolean shift) {
-		DataSeriesItem item = new DataSeriesItem(getDate(), normalizeUsage(usage.toString()));
-		if (usage.toFloat() > limit.toFloat()) {
+		DataSeriesItem item = new DataSeriesItem(currentDate, normalizeUsage(usage.toString()));
+		if (usage.toFloat() > 0.8f) {
 			item.setColor(SolidColor.RED);
 		}
 		series.add(item, true, shift);
@@ -109,27 +124,20 @@ public class CondoUsageChart extends Chart implements RefresherComponent {
 	public void run() {
 		try {
 			Condominium condo = DaoService.get().getCondoUsages();
-			UsageValue electric = condo.getInstantElectricUsage();
-			UsageValue water = condo.getInstantWaterUsage();
-			UsageValue electricLimit = condo.getInstantElectricLimit();
-			UsageValue waterLimit = condo.getInstantWaterLimit();
-			if (electricSeries.size() > 29) {
-				addUsageItemsSeries(electric, electricLimit, electricSeries, true);
-				addUsageItemsSeries(water, waterLimit, waterSeries, true);
-			} else {
-				addUsageItemsSeries(electric, electricLimit, electricSeries, false);
-				addUsageItemsSeries(water, waterLimit, waterSeries, false);
-			}
-			if (dayCounter > 27) {
-				dayCounter = 1;
-				if (monthCounter > 11) {
-					monthCounter = 1;
+			UsageValue waterLimit = condo.getAptInstantWaterLimit();
+			
+			for (Apartment apt : DaoService.getAllApartments()) {
+				UsageValue water = apt.getInstantWaterUsage();
+				
+				DataSeries series = hash.get(apt.getId());
+				if (series.size() > 29) {
+					addUsageItemsSeries(water, waterLimit, series, true);
 				} else {
-					monthCounter++;
+					addUsageItemsSeries(water, waterLimit, series, false);
 				}
-			} else {
-				dayCounter++;
 			}
+			incrementDateCounter();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

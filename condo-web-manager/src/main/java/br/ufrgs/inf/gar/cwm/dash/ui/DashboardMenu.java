@@ -6,7 +6,6 @@ import br.ufrgs.inf.gar.cwm.dash.domain.User;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.PostViewChangeEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.ProfileUpdatedEvent;
-import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.ReportsCountUpdatedEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.UserLoggedOutEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
 
@@ -46,7 +45,6 @@ public final class DashboardMenu extends CustomComponent {
     public static final String NOTIFICATIONS_BADGE_ID = "dashboard-menu-notifications-badge";
     private static final String STYLE_VISIBLE = "valo-menu-visible";
     private Label notificationsBadge;
-    private Label reportsBadge;
     private MenuItem settingsItem;
 
     public DashboardMenu() {
@@ -197,12 +195,6 @@ public final class DashboardMenu extends CustomComponent {
                 .getUnreadNotificationsCount();
         notificationsBadge.setValue(String.valueOf(unreadNotificationsCount));
         notificationsBadge.setVisible(unreadNotificationsCount > 0);
-    }
-
-    @Subscribe
-    public void updateReportsCount(final ReportsCountUpdatedEvent event) {
-        reportsBadge.setValue(String.valueOf(event.getCount()));
-        reportsBadge.setVisible(event.getCount() > 0);
     }
 
     @Subscribe

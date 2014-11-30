@@ -46,23 +46,19 @@ public class Simulator {
 				try {
 					while (true) {
 			            //acumulado de 5 segundos, devido ao interalo da thread
-			            CONDO.get().setInstantElectricUsage(generateInstantElectricUsage(random));  //ex: 0.449
-			            CONDO.get().setTotalElectricUsage(
-			            		CONDO.get().getTotalElectricUsageFloat() + CONDO.get().getInstantElectricUsageFloat());
-			            CONDO.get().setInstantWaterUsage(generateInstantWaterUsage(random));  //ex: 0.008
-			            CONDO.get().setTotalWaterUsage(
-			            		CONDO.get().getTotalWaterUsageFloat() + CONDO.get().getInstantWaterUsageFloat());
+			            CONDO.get().getInstantElectricUsage().set(generateInstantElectricUsage(random));  //ex: 0.449
+			            CONDO.get().getTotalElectricUsage().add(CONDO.get().getInstantElectricUsage().toFloat());
+			            CONDO.get().getInstantWaterUsage().set(generateInstantWaterUsage(random));  //ex: 0.008
+			            CONDO.get().getTotalWaterUsage().add(CONDO.get().getInstantWaterUsage().toFloat());
 			            if (random.nextInt(10) == 1) 
 			            	 CONDO.get().setNumUnknownPeople(random.nextInt(10));
 			            else  CONDO.get().setNumUnknownPeople(0);
 
 			            for (Apartment apt : APTS.get()) {
-			            	apt.setInstantElectricUsage(generateInstantElectricUsage(random));  
-				            apt.setTotalElectricUsage(
-				            		apt.getTotalElectricUsageFloat() + apt.getInstantElectricUsageFloat());
-				            apt.setInstantWaterUsage(generateInstantWaterUsage(random));  
-				            apt.setTotalWaterUsage(
-				            		apt.getTotalWaterUsageFloat() + apt.getInstantWaterUsageFloat());
+			            	apt.getInstantElectricUsage().set(generateInstantElectricUsage(random));  
+				            apt.getTotalElectricUsage().add(apt.getInstantElectricUsage().toFloat());
+				            apt.getInstantWaterUsage().set(generateInstantWaterUsage(random));  
+				            apt.getTotalWaterUsage().add(apt.getInstantWaterUsage().toFloat());
 			            }
 						Thread.sleep(INTERVAL_ONE);
 					}
@@ -118,7 +114,7 @@ public class Simulator {
 	};
 	
 	private static Float generateInstantWaterUsage(Random random) {
-		return random.nextFloat() * 13.32f;
+		return random.nextFloat() * 13f;
 	};
 
 	private static void createData() {

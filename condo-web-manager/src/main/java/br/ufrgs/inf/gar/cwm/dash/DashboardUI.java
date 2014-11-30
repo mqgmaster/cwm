@@ -3,9 +3,8 @@ package br.ufrgs.inf.gar.cwm.dash;
 import java.io.IOException;
 import java.util.Locale;
 
-import br.ufrgs.inf.gar.cwm.dash.data.DataProvider;
+import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataProvider;
-import br.ufrgs.inf.gar.cwm.dash.data.SNMPManager;
 import br.ufrgs.inf.gar.cwm.dash.data.Simulator;
 import br.ufrgs.inf.gar.cwm.dash.domain.User;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.BrowserResizeEvent;
@@ -37,22 +36,14 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public final class DashboardUI extends UI {
 	
-	public static final String AGENT_ADDRESS = "udp:143.54.12.150/161";
-
-	/**
-	* Porta 161 é usada para gets and sets
-	* Porta 162 é usada para traps
-	*/
-
-    private final DataProvider dataProvider = new DummyDataProvider();
+    private final DummyDataProvider dataProvider = new DummyDataProvider();
     private final DashboardEventBus dashboardEventbus = new DashboardEventBus();
 
     @Override
     protected void init(final VaadinRequest request) {
         setLocale(Locale.US);
-        
         try {
-			SNMPManager.start(AGENT_ADDRESS);
+			DaoService.init();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -65,13 +56,13 @@ public final class DashboardUI extends UI {
         // Some views need to be aware of browser resize events so a
         // BrowserResizeEvent gets fired to the event but on every occasion.
         Page.getCurrent().addBrowserWindowResizeListener(
-                new BrowserWindowResizeListener() {
-                    @Override
-                    public void browserWindowResized(
-                            final BrowserWindowResizeEvent event) {
-                        DashboardEventBus.post(new BrowserResizeEvent());
-                    }
-                });
+            new BrowserWindowResizeListener() {
+                @Override
+                public void browserWindowResized(
+                        final BrowserWindowResizeEvent event) {
+                    DashboardEventBus.post(new BrowserResizeEvent());
+                }
+            });
     }
 
     /**
@@ -117,10 +108,7 @@ public final class DashboardUI extends UI {
         }
     }
 
-    /**
-     * @return An instance for accessing the (dummy) services layer.
-     */
-    public static DataProvider getDataProvider() {
+    public static DummyDataProvider getDataProvider() {
         return ((DashboardUI) getCurrent()).dataProvider;
     }
 

@@ -6,14 +6,15 @@ import java.util.Iterator;
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.AdvancedPanel;
+import br.ufrgs.inf.gar.cwm.dash.condo.CondoElectricWeekChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.CondoUsageChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.CondoWaterWeekChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.LimitPanel;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherComponent;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherThread;
-import br.ufrgs.inf.gar.cwm.dash.condo.WaterSparklineChart;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataGenerator;
 import br.ufrgs.inf.gar.cwm.dash.domain.DashboardNotification;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
@@ -50,7 +51,8 @@ public final class CondoView extends Panel implements View {
     private static final String HEADER = "Condomínio";
 	private static final String NOTIFICATIONS = "Notificações";
 	private static final String TITLE_ID = "dashboard-title";
-    private final RefresherThread refresher = new RefresherThread();
+    private final RefresherThread panelRefresher = new RefresherThread(8000, 8000);
+    private final RefresherThread sparkRefresher = new RefresherThread(14000, 14000);
 
     private Label titleLabel;
     private NotificationsButton notificationsButton;
@@ -93,20 +95,21 @@ public final class CondoView extends Panel implements View {
         sparks.setWidth("100%");
         Responsive.makeResponsive(sparks);
 
-        WaterSparklineChart s = new WaterSparklineChart();
+        CondoWaterWeekChart s = new CondoWaterWeekChart();
+        sparkRefresher.subscribe(s);
         sparks.addComponent(s);
-
-        SparklineChart s2 = new SparklineChart("Consumo de Luz / Mês", "kWh", "",
-                DummyDataGenerator.chartColors[2], 12, 3000, 4000);
+        
+        CondoElectricWeekChart s2 = new CondoElectricWeekChart();
+        sparkRefresher.subscribe(s2);
         sparks.addComponent(s2);
 
-        s2 = new SparklineChart("Problemas Reportados / Mês", "", "",
+        SparklineChart s3 = new SparklineChart("Problemas Reportados / Mês", "", "",
                 DummyDataGenerator.chartColors[3], 12, 0, 30);
-        sparks.addComponent(s2);
+        sparks.addComponent(s3);
 
-        s2 = new SparklineChart("Balanço Financeiro", "", "R$",
+        SparklineChart s4 = new SparklineChart("Balanço Financeiro", "", "R$",
                 DummyDataGenerator.chartColors[5], 12, 5000, 10000);
-        sparks.addComponent(s2);
+        sparks.addComponent(s4);
 
         return sparks;
     }
@@ -148,7 +151,7 @@ public final class CondoView extends Panel implements View {
         dashboardPanels.addStyleName("dashboard-panels");
         Responsive.makeResponsive(dashboardPanels);
 
-        dashboardPanels.addComponent(buildCondoLightChart());
+        dashboardPanels.addComponent(buildCondoUsageChart());
         dashboardPanels.addComponent(buildGarageTable());
         dashboardPanels.addComponent(buildEmployeeTable());
         dashboardPanels.addComponent(buildLampTable());
@@ -163,16 +166,14 @@ public final class CondoView extends Panel implements View {
 	}
 
 	private Component buildLimitPanel() {
-    	LimitPanel panel = new LimitPanel();
-    	refresher.subscribe(panel);
-        Component c = createContentWrapper(panel);
+        Component c = createContentWrapper(new LimitPanel());
         c.addStyleName("dashboard-panel-slot-table");
         return c;
     }
 
     private Component buildLampTable() {
     	LampTable table = new LampTable();
-    	refresher.subscribe(table);
+    	panelRefresher.subscribe(table);
         Component c = createContentWrapper(table);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
@@ -180,7 +181,7 @@ public final class CondoView extends Panel implements View {
     
     private Component buildGarageTable() {
     	GarageTable table = new GarageTable();
-    	refresher.subscribe(table);
+    	panelRefresher.subscribe(table);
     	Component c = createContentWrapper(table);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
@@ -188,15 +189,15 @@ public final class CondoView extends Panel implements View {
     
     private Component buildEmployeeTable() {
     	EmployeeTable table = new EmployeeTable();
-    	refresher.subscribe(table);
+    	panelRefresher.subscribe(table);
     	Component c = createContentWrapper(table);
         c.addStyleName("dashboard-panel-slot-table");
         return c;
     }
     
-    private Component buildCondoLightChart() {
+    private Component buildCondoUsageChart() {
     	CondoUsageChart chart = new CondoUsageChart();
-    	refresher.subscribe(chart);
+    	panelRefresher.subscribe(chart);
     	chart.setSizeFull();
         return createContentWrapper(chart);
     }
@@ -243,7 +244,7 @@ public final class CondoView extends Panel implements View {
         	MenuItem stopRefresher = root.addItem("Pausar", FontAwesome.PAUSE, new Command() {
                 @Override
                 public void menuSelected(final MenuItem selectedItem) {
-            		refresher.unsubscribe(component);
+                	panelRefresher.unsubscribe(component);
             		root.getChildren().get(0).setVisible(false);
             		root.getChildren().get(1).setVisible(true);
                 }
@@ -251,12 +252,12 @@ public final class CondoView extends Panel implements View {
     		MenuItem startRefresher = root.addItem("Continuar", FontAwesome.PLAY, new Command() {
                 @Override
                 public void menuSelected(final MenuItem selectedItem) {
-            		refresher.subscribe(component);
+                	panelRefresher.subscribe(component);
             		root.getChildren().get(0).setVisible(true);
             		root.getChildren().get(1).setVisible(false);
                 }
             });
-        	if (refresher.isSubscribed(component)) {
+        	if (panelRefresher.isSubscribed(component)) {
         		stopRefresher.setVisible(true);
         		startRefresher.setVisible(false);
         	} else {
