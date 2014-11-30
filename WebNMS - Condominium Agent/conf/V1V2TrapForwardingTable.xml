@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Table>
+    <row>
+        <column name="managerHostType"  value="1" ></column>
+        <column name="managerHost"  value="127.0.0.1" ></column>
+        <column name="managerPort"  value="8003" ></column>
+        <column name="version"  value="2" ></column>
+        <column name="community"  value="public" ></column>
+        <column name="timeOut"  value="5000" ></column>
+        <column name="retries"  value="0" ></column>
+        <column name="rowStatus"  value="1" ></column>
+    </row>
+</Table>

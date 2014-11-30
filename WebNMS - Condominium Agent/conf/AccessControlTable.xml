@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Table>
+    <row>
+        <column name="aclCommunity"  value="public" ></column>
+        <column name="aclAccess"  value="1" ></column>
+        <column name="aclManagers"  value="0:0:0:0" ></column>
+        <column name="aclStatus"  value="1" ></column>
+    </row>
+    <row>
+        <column name="aclCommunity"  value="private" ></column>
+        <column name="aclAccess"  value="3" ></column>
+        <column name="aclManagers"  value="0:0:0:0" ></column>
+        <column name="aclStatus"  value="1" ></column>
+    </row>
+</Table>

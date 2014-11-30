@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE AgentSettings SYSTEM "AgentStartup.dtd">
+<AgentSettings>
+    <SNMP targetComNotifSupport="false"  v1Compliance="true"  debugLevel="3"  logLocation="."  agentPort="8001"  trapPort="8002"  version="V2"  v3Compliance="false"  v2Compliance="true"  protocol="UDP" ></SNMP>
+    <MsgProcessing maxThreads="2"  asyncMode="true" ></MsgProcessing>
+    <ConfigTables>
+        <ConfigTable dynamicConfiguration="true"  tableName="V1V2TfTable"  isEnabled="true"  persistType="xml"  persistence="true"  fileName="V1V2TrapForwardingTable.xml" ></ConfigTable>
+        <ConfigTable dynamicConfiguration="true"  tableName="VaclTable"  isEnabled="false"  persistType="xml"  persistence="false"  fileName="ViewAccessControlTable.xml" ></ConfigTable>
+        <ConfigTable dynamicConfiguration="true"  tableName="V3TfTable"  isEnabled="false"  persistType="xml"  persistence="false"  fileName="V3TrapForwardingTable.xml" ></ConfigTable>
+        <ConfigTable dynamicConfiguration="false"  tableName="SysORTable"  isEnabled="false"  persistType="xml"  persistence="true"  fileName="SysORTable.xml" ></ConfigTable>
+        <ConfigTable dynamicConfiguration="false"  tableName="AclTable"  isEnabled="true"  persistType="xml"  persistence="true"  fileName="AccessControlTable.xml" ></ConfigTable>
+    </ConfigTables>
+</AgentSettings>

@@ -1,0 +1,3 @@
+~~~~~~~~~~~~~~~~~~~~~~~~ Logging started ~~~~~~~~~~~~~~~~~~~~~~~~ 
+~~~~~~~~~~~~~ Messages on Sun, Nov 30, 2014 03:55 PM ~~~~~~~~~~~~~
+15:55:46:884 SNMP: ERROR: Exception occured while trying to open SnmpSession

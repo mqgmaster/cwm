@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="/home/drieger/Desktop/Agent.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/WebNMS - Condominium Agent/Agent.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=WebNMS - Condominium Agent/src&lt;com.ufrgs.gerencia.agent{CondominioAgent.java[CondominioAgent" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <folder path="/WebNMS - Condominium Agent/conf"/>
+        <file path="/WebNMS - Condominium Agent/Agent.jardesc"/>
+        <folder path="/WebNMS - Condominium Agent/xmlFiles"/>
+        <file path="/WebNMS - Condominium Agent/.project"/>
+        <folder path="/WebNMS - Condominium Agent/jars"/>
+        <file path="/WebNMS - Condominium Agent/.classpath"/>
+        <javaElement handleIdentifier="=WebNMS - Condominium Agent/src"/>
+    </selectedElements>
+</jardesc>

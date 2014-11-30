@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Typical usage:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE Agent_startup_conf SYSTEM "Agent_startup_conf.dtd">
+	
+    <AgentSettings>
+    ...
+    </AgentSettings>
+
+-->
+<!ELEMENT AgentSettings (SNMP,MsgProcessing,ConfigTables)>
+
+<!ELEMENT SNMP EMPTY>
+<!-- Snmp agent related details can be specified here. -->
+<!ATTLIST SNMP
+	version (V1|V2|V3|v1|v2|v3) 'V3'
+	agentPort NMTOKEN #REQUIRED
+	trapPort NMTOKEN #REQUIRED
+	debugLevel (0|1|2|3|4|5|6)  #REQUIRED
+	logLocation NMTOKEN #REQUIRED
+	v1Compliance (true|false) #IMPLIED
+	v2Compliance (true|false) #IMPLIED
+	v3Compliance (true|false) #IMPLIED
+	targetComNotifSupport (true|false) #IMPLIED
+	protocol (UDP|TCP) 'UDP'
+>
+
+<!ELEMENT MsgProcessing EMPTY>
+<!-- Asynchronous message processing allows the agent to process multiple requests simultaneously. Default value is true. -->
+<!ATTLIST MsgProcessing
+	asyncMode (true|false) #REQUIRED
+	maxThreads NMTOKEN #IMPLIED
+>
+
+<!ELEMENT ConfigTables (ConfigTable)+>
+	
+<!ELEMENT ConfigTable EMPTY>
+
+<!ATTLIST ConfigTable
+	tableName CDATA #REQUIRED
+	isEnabled (true|false) #REQUIRED
+	fileName CDATA #REQUIRED
+	dynamicConfiguration (true|false) #REQUIRED
+	persistence (true|false) #REQUIRED
+	persistType (xml|Text) #REQUIRED
+>
