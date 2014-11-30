@@ -60,7 +60,7 @@ public class AptElectricUsageChart extends Chart implements RefresherComponent {
 		
 			DataSeries series;
 			boolean isShowed = true;
-			for (Apartment apt : DaoService.getAllApartments()) {
+			for (Apartment apt : DaoService.get().getAllApartmentsUsages()) {
 				series = new DataSeries(String.valueOf(apt.getNumber()));
 				series.setPlotOptions(new PlotOptionsSpline());
 				if (isShowed) {
@@ -126,7 +126,7 @@ public class AptElectricUsageChart extends Chart implements RefresherComponent {
 			Condominium condo = DaoService.get().getCondoUsages();
 			UsageValue electricLimit = condo.getAptInstantElectricLimit();
 			
-			for (Apartment apt : DaoService.getAllApartments()) {
+			for (Apartment apt : DaoService.get().getAllApartmentsUsages()) {
 				UsageValue electric = apt.getInstantElectricUsage();
 				
 				DataSeries series = hash.get(apt.getId());

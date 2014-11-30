@@ -38,7 +38,7 @@ public final class ApartmentsView extends Panel implements View {
     private CssLayout dashboardPanels;
     private final VerticalLayout root;
     private HorizontalLayout header;
-    private final RefresherThread refresher = new RefresherThread(2000, 2000);
+    private final RefresherThread refresher = new RefresherThread(8000, 8000);
 
     public ApartmentsView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);

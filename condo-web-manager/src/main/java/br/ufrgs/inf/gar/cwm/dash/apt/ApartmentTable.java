@@ -1,12 +1,14 @@
 package br.ufrgs.inf.gar.cwm.dash.apt;
 
 import java.io.IOException;
+import java.util.List;
 
 import br.ufrgs.inf.gar.condo.domain.Apartment;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherComponent;
 import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
@@ -33,7 +35,7 @@ public final class ApartmentTable extends Table implements RefresherComponent {
         BeanItemContainer<Apartment> container = null;
 		try {
 			container = new BeanItemContainer<>(
-					Apartment.class, DaoService.getAllApartments());
+					Apartment.class, DaoService.get().getAllApartments());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,9 +64,12 @@ public final class ApartmentTable extends Table implements RefresherComponent {
 	@Override
 	public void run() {
 		BeanItemContainer<Apartment> container = (BeanItemContainer<Apartment>) this.getContainerDataSource();
-		container.removeAllItems();
 		try {
-			container.addAll(DaoService.getAllApartments());
+			List<Apartment> list = DaoService.get().getAllApartmentsPeople();
+			for (Apartment apt : list) {
+				BeanItem<Apartment> bean = container.getItem(apt.getId());
+				bean.getBean().setNumPeople(apt.getNumPeople());
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

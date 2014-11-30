@@ -2,6 +2,7 @@ package br.ufrgs.inf.gar.cwm.dash.data;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import br.ufrgs.inf.gar.condo.domain.Sector;
 
 public class DaoService {
 	
-	public static final String AGENT_ADDRESS = "udp:10.0.0.105/16167";
+	public static final String AGENT_ADDRESS = "udp:127.0.0.1/16167";
 	
 	private static DaoService service = null;
 
@@ -49,9 +50,9 @@ public class DaoService {
 				MIB.CondoOID.ADDRESS,
 				MIB.CondoOID.MANAGER_NAME);
 		return new Condominium(
-				vars[0].getVariable().toString(), 
-				vars[1].getVariable().toString(), 
-				vars[2].getVariable().toString());
+				octetToASCII(vars[0].getVariable()), 
+				octetToASCII(vars[1].getVariable()), 
+				octetToASCII(vars[2].getVariable()));
 	}
 	
 	public Condominium getCondoUsages() throws IOException {
@@ -61,7 +62,9 @@ public class DaoService {
 				MIB.CondoOID.WATER_INSTANT_LIMIT,
 				MIB.CondoOID.ELECTRIC_TOTAL_USAGE,
 				MIB.CondoOID.ELECTRIC_INSTANT_USAGE,
-				MIB.CondoOID.ELECTRIC_INSTANT_LIMIT
+				MIB.CondoOID.ELECTRIC_INSTANT_LIMIT,
+				MIB.CondoOID.APT_ELECTRIC_INSTANT_LIMIT,
+				MIB.CondoOID.APT_WATER_INSTANT_LIMIT
 				);
 		Condominium condo = new Condominium();
 		
@@ -71,6 +74,8 @@ public class DaoService {
 		condo.getTotalElectricUsage().set(octetToASCII(vars[3].getVariable()));
 		condo.getInstantElectricUsage().set(octetToASCII(vars[4].getVariable()));
 		condo.getInstantElectricLimit().set(octetToASCII(vars[5].getVariable()));
+		condo.getAptInstantElectricLimit().set(octetToASCII(vars[6].getVariable()));
+		condo.getAptInstantWaterLimit().set(octetToASCII(vars[7].getVariable()));
 		return condo;
 	}
 	
@@ -78,16 +83,43 @@ public class DaoService {
 		return ((OctetString) var).toASCII(' ');
 	}
 	
-	public static Apartment getApartment(Integer id) throws IOException {
-		for (Apartment apt : getAllApartments()) {
-			if (apt.getId().equals(id)) {
-				return apt;
-			}
+	public List<Apartment> getAllApartmentsUsages() throws IOException {
+		List<Apartment> list = new ArrayList<>();
+		Iterator<TableEvent> iterator = SNMPManager.walk(
+				MIB.ApartmentOID.ElectricTable.APT_NUMBER,
+				MIB.ApartmentOID.ElectricTable.ELECTRIC_INSTANT_USAGE,
+				MIB.ApartmentOID.ElectricTable.ELECTRIC_TOTAL_USAGE
+				);
+		while (iterator.hasNext()) {
+			TableEvent row = iterator.next();
+			VariableBinding[] rowColumns = row.getColumns();
+			Apartment apt = new Apartment();
+			apt.setNumber(rowColumns[0].getVariable().toInt());
+			apt.getInstantElectricUsage().set(octetToASCII(rowColumns[1].getVariable()));
+			apt.getTotalElectricUsage().set(octetToASCII(rowColumns[2].getVariable()));
+			list.add(apt);
 		}
-		return null;
+		return list;
 	}
 	
-	public static List<Apartment> getAllApartments2() throws IOException {
+	public List<Apartment> getAllApartmentsPeople() throws IOException {
+		List<Apartment> list = new ArrayList<>();
+		Iterator<TableEvent> iterator = SNMPManager.walk(
+				MIB.ApartmentOID.Table.ID,
+				MIB.ApartmentOID.Table.NUM_PEOPLE
+				);
+		while (iterator.hasNext()) {
+			TableEvent row = iterator.next();
+			VariableBinding[] rowColumns = row.getColumns();
+			Apartment apt = new Apartment();
+			apt.setId(rowColumns[0].getVariable().toInt());
+			apt.setNumPeople(rowColumns[1].getVariable().toInt());
+			list.add(apt);
+		}
+		return list;
+	}
+	
+	public List<Apartment> getAllApartments() throws IOException {
 		List<Apartment> list = new ArrayList<>();
 		Iterator<TableEvent> iterator = SNMPManager.walk(
 				MIB.ApartmentOID.Table.ID,
@@ -103,17 +135,13 @@ public class DaoService {
 			Apartment apt = new Apartment();
 			apt.setId(rowColumns[0].getVariable().toInt());
 			apt.setNumber(rowColumns[1].getVariable().toInt());
-			apt.setOwnerName(rowColumns[2].getVariable().toString());
+			apt.setOwnerName(octetToASCII(rowColumns[2].getVariable()));
 			apt.setNumPeople(rowColumns[3].getVariable().toInt());
 			apt.setNumRooms(rowColumns[4].getVariable().toInt());
-			apt.setSector(sectorCache.get(rowColumns[5].getVariable().toInt()));
 			list.add(apt);
 		}
+		Collections.copy(aptsCache, list);
 		return list;
-	}
-	
-	public static List<Apartment> getAllApartments() throws IOException {
-		return Simulator.APTS.get();
 	}
 	
 	public static List<Employee> getAllEmployees() {
