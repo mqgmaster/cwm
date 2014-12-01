@@ -23,8 +23,8 @@ import br.ufrgs.inf.gar.condo.simulator.persistence.SessionFactoryService;
  */
 public class Simulator {
 	
-	private static final long INTERVAL_ONE = 5000;
-	private static final long INTERVAL_TWO = 8000;
+	private static final long INTERVAL_ONE = 8000;
+	private static final long INTERVAL_TWO = 12000;
 	private static Integer condominiumId;
 	private static Integer sectorGarageId;
 	private static Integer sectorFirstFloorId;
@@ -139,7 +139,7 @@ public class Simulator {
 	};
 	
 	private static Float generateInstantWaterUsage(Random random) {
-		return random.nextFloat() * 13.32f;
+		return random.nextFloat() * 13f;
 	};
 
 	private static void createData() {
@@ -155,14 +155,14 @@ public class Simulator {
         sectorSecondFloorId = (Integer) session.save(new Sector("Segundo andar", condo));
         Sector sectorSecondFloor = (Sector) session.get(Sector.class, sectorSecondFloorId);
         
-        APTS.add((Integer) session.save(new Apartment(101, "Silva", 2, sectorFirstFloor)));
+        APTS.add((Integer) session.save(new Apartment(101, "Soares", 2, sectorFirstFloor)));
         APTS.add((Integer) session.save(new Apartment(102, "Silva", 2, sectorFirstFloor)));
-        APTS.add((Integer) session.save(new Apartment(103, "Bento", 3, sectorFirstFloor)));
+        APTS.add((Integer) session.save(new Apartment(103, "Roberto", 3, sectorFirstFloor)));
         APTS.add((Integer) session.save(new Apartment(104, "Bento", 3, sectorFirstFloor)));
-        APTS.add((Integer) session.save(new Apartment(201, "Silva", 2, sectorSecondFloor)));
-        APTS.add((Integer) session.save(new Apartment(202, "Silva", 2, sectorSecondFloor)));
-        APTS.add((Integer) session.save(new Apartment(203, "Bento", 2, sectorSecondFloor)));
-        APTS.add((Integer) session.save(new Apartment(204, "Bento", 2, sectorSecondFloor)));
+        APTS.add((Integer) session.save(new Apartment(201, "Juarez", 2, sectorSecondFloor)));
+        APTS.add((Integer) session.save(new Apartment(202, "Jonas", 2, sectorSecondFloor)));
+        APTS.add((Integer) session.save(new Apartment(203, "Jonatas", 2, sectorSecondFloor)));
+        APTS.add((Integer) session.save(new Apartment(204, "Noeli", 2, sectorSecondFloor)));
         
         EMPS.add((Integer) session.save(new Employee("Juarez", "Porteiro", 1000, 40, condo)));
         EMPS.add((Integer) session.save(new Employee("Roberto", "Faxineiro", 1000, 40, condo)));
@@ -170,6 +170,8 @@ public class Simulator {
         
         GARS.add((Integer) session.save(new Garage(1, (Apartment) session.get(Apartment.class, APTS.get(0)), sectorGarage)));
         GARS.add((Integer) session.save(new Garage(2, (Apartment) session.get(Apartment.class, APTS.get(1)), sectorGarage)));
+        GARS.add((Integer) session.save(new Garage(3, null, sectorGarage)));
+        GARS.add((Integer) session.save(new Garage(4, null, sectorGarage)));
         
         LAMPS.add((Integer) session.save(new Lamp(sectorGarage)));
         LAMPS.add((Integer) session.save(new Lamp(sectorGarage)));
