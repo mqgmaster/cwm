@@ -1,5 +1,7 @@
 package br.ufrgs.inf.gar.cwm.dash.condo;
 
+import java.io.IOException;
+
 import br.ufrgs.inf.gar.condo.domain.Lamp;
 import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
@@ -54,12 +56,16 @@ public final class LampTable extends Table implements RefresherComponent {
         setSortEnabled(false);
         setSizeFull();
 
-        BeanItemContainer<Lamp> container = new BeanItemContainer<>(
-        		Lamp.class, DaoService.getAllLamps());
-        container.addNestedContainerProperty("sector.name");
-        setContainerDataSource(container);
-        setVisibleColumns(new Object[]{"id", "sector.name", "on"});
-        setColumnHeaders("Número", "Setor", "Situação");
+        BeanItemContainer<Lamp> container;
+		try {
+			container = new BeanItemContainer<>(Lamp.class, DaoService.get().getAllLamps());
+			container.addNestedContainerProperty("sector.name");
+	        setContainerDataSource(container);
+	        setVisibleColumns(new Object[]{"id", "sector.name", "on"});
+	        setColumnHeaders("Número", "Setor", "Situação");
+		} catch (IllegalArgumentException | IOException e) {
+			e.printStackTrace();
+		}
         
         this.setTableFieldFactory(new FieldFactory());
     }
@@ -81,7 +87,11 @@ public final class LampTable extends Table implements RefresherComponent {
 	@Override
 	public void run() {
 		this.removeAllItems();
-		this.addItems(DaoService.getAllLamps());
+		try {
+			this.addItems(DaoService.get().getAllLamps());
+		} catch (UnsupportedOperationException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

@@ -19,8 +19,9 @@ public class RefresherThread implements Serializable {
 					while (true) {
 						synchronized (list) {
 							for (RefresherComponent task : list) {
+								//task.execute();   faz sua tarefa
 								if (task.isAttached()) {
-									task.getUI().access(task);
+									task.getUI().access(task); //mostra ao usuario
 								}
 							}
 						}

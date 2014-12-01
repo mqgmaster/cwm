@@ -61,7 +61,7 @@ public class AdvancedPanel extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					result.setValue(SNMPManager.set(oid.getValue(), value.getValue()));
+					result.setValue(String.valueOf(SNMPManager.set(oid.getValue(), value.getValue())));
 				} catch (IOException | ParseException e) {
 					e.printStackTrace();
 				}

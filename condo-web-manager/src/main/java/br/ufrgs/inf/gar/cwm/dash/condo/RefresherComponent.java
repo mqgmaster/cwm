@@ -5,4 +5,6 @@ import com.vaadin.ui.Component;
 public interface RefresherComponent extends Runnable, Component {
 	
 	public String getComponentId();
+	
+	//public void execute();
 }

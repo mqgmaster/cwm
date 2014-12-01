@@ -90,27 +90,37 @@ public class SNMPManager {
 	* @throws IOException
 	*/
 	private static ResponseEvent snmpGet(OID...oids) throws IOException {
-		PDU pdu = new PDU();
-		for (OID oid : oids) {
-			pdu.add(new VariableBinding(oid));
+		ResponseEvent event;
+		synchronized (snmp) {
+			PDU pdu = new PDU();
+			for (OID oid : oids) {
+				pdu.add(new VariableBinding(oid));
+			}
+			pdu.setType(PDU.GET);
+			event = snmp.send(pdu, getTargetRead(), null);
 		}
-		pdu.setType(PDU.GET);
-		ResponseEvent event = snmp.send(pdu, getTargetRead(), null);
 		if(event != null) {
 			return event;
 		}
 		throw new RuntimeException("GET timed out");
 	}
 	
-	public static String set(String oid, String value) throws IOException, ParseException {
-		PDU pdu = new PDU();
-		pdu.add(new VariableBinding(new OID(oid), new OctetString(value)));
-		pdu.setType(PDU.SET);
-		ResponseEvent event = snmp.send(pdu, getTargetWrite(), null);
-		if(event != null) {
-			return event.getResponse().getErrorStatusText();
+	public static int set(OID oid, String value) throws IOException, ParseException {
+		ResponseEvent event;
+		synchronized (snmp) {
+			PDU pdu = new PDU();
+			pdu.add(new VariableBinding(new OID(oid), new OctetString(value)));
+			pdu.setType(PDU.SET);
+			event = snmp.send(pdu, getTargetWrite(), null);
 		}
-		throw new RuntimeException("GET timed out");
+		if(event != null) {
+			return event.getResponse().getErrorStatus();
+		}
+		throw new RuntimeException("SET timed out");
+	}
+	
+	public static int set(String oid, String value) throws IOException, ParseException {
+		return set(new OID(oid), value);
 	}
 	
 	/**
@@ -152,9 +162,13 @@ public class SNMPManager {
 	}
 	
 	public static Iterator<TableEvent> walk(OID...columnsOids) throws IOException {
-		DefaultPDUFactory localfactory=new DefaultPDUFactory();
-		TableUtils tableRet=new TableUtils(snmp,localfactory);
-		tableRet.setMaxNumColumnsPerPDU(WALK_MAX_COLUMNS);
-		return tableRet.getTable(getTargetRead(),columnsOids,null,null).iterator();
+		List<TableEvent> list;
+		synchronized (snmp) {
+			DefaultPDUFactory localfactory=new DefaultPDUFactory();
+			TableUtils tableRet=new TableUtils(snmp,localfactory);
+			tableRet.setMaxNumColumnsPerPDU(WALK_MAX_COLUMNS);
+			list = tableRet.getTable(getTargetRead(),columnsOids,null,null);
+		}
+		return list.iterator();
 	}
 }

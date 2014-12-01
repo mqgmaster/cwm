@@ -4,7 +4,9 @@ import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.apt.ApartmentTable;
 import br.ufrgs.inf.gar.cwm.dash.apt.AptElectricUsageChart;
+import br.ufrgs.inf.gar.cwm.dash.apt.AptLimitPanel;
 import br.ufrgs.inf.gar.cwm.dash.apt.AptWaterUsageChart;
+import br.ufrgs.inf.gar.cwm.dash.condo.RefresherComponent;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherThread;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEventBus;
@@ -23,7 +25,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -31,7 +32,7 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public final class ApartmentsView extends Panel implements View {
 
-    private static final String HEADER = "Apartmentos";
+    private static final String HEADER = "Apartamentos";
     public static final String TITLE_ID = "dashboard-title";
 
     private Label titleLabel;
@@ -89,11 +90,18 @@ public final class ApartmentsView extends Panel implements View {
         dashboardPanels.addComponent(buildAptElectricUsageChart());
         dashboardPanels.addComponent(buildApartmentTable());
         dashboardPanels.addComponent(buildAptWaterUsageChart());
+        dashboardPanels.addComponent(buildLimitPanel());
 
         return dashboardPanels;
     }
 
-    private Component buildApartmentTable() {
+    private Component buildLimitPanel() {
+    	 Component c = createContentWrapper(new AptLimitPanel());
+         c.addStyleName("dashboard-panel-slot-table");
+         return c;
+	}
+
+	private Component buildApartmentTable() {
     	ApartmentTable table = new ApartmentTable();
     	refresher.subscribe(table);
         Component c = createContentWrapper(table);
@@ -152,12 +160,40 @@ public final class ApartmentsView extends Panel implements View {
         });
         max.setStyleName("icon-only");
         MenuItem root = tools.addItem("", FontAwesome.COG, null);
-        root.addItem("Configurar", new Command() {
-            @Override
-            public void menuSelected(final MenuItem selectedItem) {
-                Notification.show(":)");
-            }
-        });
+        if (content instanceof RefresherComponent) {
+        	RefresherComponent component = (RefresherComponent) content;
+        	MenuItem stopRefresher = root.addItem("Pausar", FontAwesome.PAUSE, new Command() {
+                @Override
+                public void menuSelected(final MenuItem selectedItem) {
+                	refresher.unsubscribe(component);
+            		root.getChildren().get(0).setVisible(false);
+            		root.getChildren().get(1).setVisible(true);
+                }
+            });
+    		MenuItem startRefresher = root.addItem("Continuar", FontAwesome.PLAY, new Command() {
+                @Override
+                public void menuSelected(final MenuItem selectedItem) {
+                	refresher.subscribe(component);
+            		root.getChildren().get(0).setVisible(true);
+            		root.getChildren().get(1).setVisible(false);
+                }
+            });
+        	if (refresher.isSubscribed(component)) {
+        		stopRefresher.setVisible(true);
+        		startRefresher.setVisible(false);
+        	} else {
+        		stopRefresher.setVisible(false);
+        		startRefresher.setVisible(true);
+        		
+        	}
+        	root.addSeparator();
+        	root.addItem("Atualizar uma vez", FontAwesome.REFRESH, new Command() {
+                @Override
+                public void menuSelected(final MenuItem selectedItem) {
+            		component.run();
+                }
+            });
+        }
 
         toolbar.addComponents(caption, tools);
         toolbar.setExpandRatio(caption, 1);

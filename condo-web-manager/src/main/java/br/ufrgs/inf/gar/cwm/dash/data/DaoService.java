@@ -1,8 +1,8 @@
 package br.ufrgs.inf.gar.cwm.dash.data;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,8 +24,7 @@ public class DaoService {
 	
 	private static DaoService service = null;
 
-	private static List<Sector> sectorCache = new ArrayList<>();
-	private static List<Apartment> aptsCache = new ArrayList<>();
+	private static Sector[] sectorCache = {new Sector("Garagem", null)};
 	
 	public static void init() throws IOException {
 		if (service != null) {
@@ -85,40 +84,43 @@ public class DaoService {
 	
 	public List<Apartment> getAllApartmentsUsages() throws IOException {
 		List<Apartment> list = new ArrayList<>();
+		TableEvent row;
+		VariableBinding[] rowColumns;
+		Apartment apt;
 		Iterator<TableEvent> iterator = SNMPManager.walk(
+				MIB.ApartmentOID.ElectricTable.ID,
 				MIB.ApartmentOID.ElectricTable.APT_NUMBER,
 				MIB.ApartmentOID.ElectricTable.ELECTRIC_INSTANT_USAGE,
 				MIB.ApartmentOID.ElectricTable.ELECTRIC_TOTAL_USAGE
 				);
 		while (iterator.hasNext()) {
-			TableEvent row = iterator.next();
-			VariableBinding[] rowColumns = row.getColumns();
-			Apartment apt = new Apartment();
-			apt.setNumber(rowColumns[0].getVariable().toInt());
-			apt.getInstantElectricUsage().set(octetToASCII(rowColumns[1].getVariable()));
-			apt.getTotalElectricUsage().set(octetToASCII(rowColumns[2].getVariable()));
+			row = iterator.next();
+			rowColumns = row.getColumns();
+			apt = new Apartment();
+			apt.setId(rowColumns[0].getVariable().toInt());
+			apt.setNumber(rowColumns[1].getVariable().toInt());
+			apt.getInstantElectricUsage().set(octetToASCII(rowColumns[2].getVariable()));
+			apt.getTotalElectricUsage().set(octetToASCII(rowColumns[3].getVariable()));
 			list.add(apt);
 		}
-		return list;
-	}
-	
-	public List<Apartment> getAllApartmentsPeople() throws IOException {
-		List<Apartment> list = new ArrayList<>();
-		Iterator<TableEvent> iterator = SNMPManager.walk(
-				MIB.ApartmentOID.Table.ID,
-				MIB.ApartmentOID.Table.NUM_PEOPLE
+		iterator = SNMPManager.walk(
+				MIB.ApartmentOID.WaterTable.ID,
+				MIB.ApartmentOID.WaterTable.WATER_INSTANT_USAGE,
+				MIB.ApartmentOID.WaterTable.WATER_TOTAL_USAGE
 				);
 		while (iterator.hasNext()) {
-			TableEvent row = iterator.next();
-			VariableBinding[] rowColumns = row.getColumns();
-			Apartment apt = new Apartment();
-			apt.setId(rowColumns[0].getVariable().toInt());
-			apt.setNumPeople(rowColumns[1].getVariable().toInt());
-			list.add(apt);
+			row = iterator.next();
+			rowColumns = row.getColumns();
+			for (Apartment ap : list) {
+				if (ap.getId().equals(rowColumns[0].getVariable().toInt())) {
+					ap.getInstantWaterUsage().set(octetToASCII(rowColumns[1].getVariable()));
+					ap.getTotalWaterUsage().set(octetToASCII(rowColumns[2].getVariable()));
+				}
+			}
 		}
 		return list;
 	}
-	
+
 	public List<Apartment> getAllApartments() throws IOException {
 		List<Apartment> list = new ArrayList<>();
 		Iterator<TableEvent> iterator = SNMPManager.walk(
@@ -140,15 +142,10 @@ public class DaoService {
 			apt.setNumRooms(rowColumns[4].getVariable().toInt());
 			list.add(apt);
 		}
-		Collections.copy(aptsCache, list);
 		return list;
 	}
 	
-	public static List<Employee> getAllEmployees() {
-		return Simulator.EMPS.get();
-	}
-	
-	public static List<Employee> getAllEmployees2() throws IOException {
+	public List<Employee> getAllEmployees() throws IOException {
 		List<Employee> list = new ArrayList<>();
 		Iterator<TableEvent> iterator = SNMPManager.walk(
 				MIB.EmployeeTableOID.ID,
@@ -164,20 +161,16 @@ public class DaoService {
 			Employee obj = new Employee();
 			obj.setId(rowColumns[0].getVariable().toInt());
 			obj.setMonthWage(rowColumns[1].getVariable().toInt());
-			obj.setName(rowColumns[2].getVariable().toString());
-			obj.setRole(rowColumns[3].getVariable().toString());
+			obj.setName(octetToASCII(rowColumns[2].getVariable()));
+			obj.setRole(octetToASCII(rowColumns[3].getVariable()));
 			obj.setWeekWorkload(rowColumns[4].getVariable().toInt());
-			obj.setWorking(Boolean.valueOf(rowColumns[5].getVariable().toString()));
+			obj.setWorking(toBoolean(rowColumns[5].getVariable()));
 			list.add(obj);
 		}
 		return list;
 	}
 	
-	public static List<Garage> getAllGarages() {
-		return Simulator.GARS.get();
-	}
-	
-	public static List<Garage> getAllGarages2() throws IOException {
+	public List<Garage> getAllGarages() throws IOException {
 		List<Garage> list = new ArrayList<>();
 		Iterator<TableEvent> iterator = SNMPManager.walk(
 				MIB.GarageTableOID.ID,
@@ -191,18 +184,18 @@ public class DaoService {
 			Garage obj = new Garage();
 			obj.setId(rowColumns[0].getVariable().toInt());
 			obj.setNumber(rowColumns[1].getVariable().toInt());
-			obj.setApartment(aptsCache.get(rowColumns[2].getVariable().toInt()));
-			obj.setOccupied(Boolean.valueOf(rowColumns[3].getVariable().toString()));
+			VariableBinding[] vars = SNMPManager.get(MIB.ApartmentOID.Table.NUMBER + "." + rowColumns[2].getVariable().toInt());
+			Apartment apt = new Apartment();
+			apt.setId(rowColumns[2].getVariable().toInt());
+			apt.setNumber(vars[0].getVariable().toInt());
+			obj.setApartment(apt);
+			obj.setOccupied(toBoolean(rowColumns[3].getVariable()));
 			list.add(obj);
 		}
 		return list;
 	}
 	
-	public static List<Lamp> getAllLamps() {
-		return Simulator.LAMPS.get();
-	}
-	
-	public static List<Lamp> getAllLamps2() throws IOException {
+	public List<Lamp> getAllLamps() throws IOException {
 		List<Lamp> list = new ArrayList<>();
 		Iterator<TableEvent> iterator = SNMPManager.walk(
 				MIB.LampTableOID.ID,
@@ -214,10 +207,28 @@ public class DaoService {
 			VariableBinding[] rowColumns = row.getColumns();
 			Lamp obj = new Lamp();
 			obj.setId(rowColumns[0].getVariable().toInt());
-			obj.setOn(Boolean.valueOf(rowColumns[1].getVariable().toString()));
-			obj.setSector(sectorCache.get(rowColumns[2].getVariable().toInt()));
+			obj.setOn(toBoolean(rowColumns[1].getVariable()));
+			obj.setSector(sectorCache[0]);
 			list.add(obj);
 		}
 		return list;
+	}
+	
+	private boolean toBoolean(Variable var) {
+		if (var.toInt() == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void setCondoUsageLimits(Condominium condo) throws IOException, ParseException {
+		SNMPManager.set(MIB.CondoOID.WATER_INSTANT_LIMIT, condo.getInstantWaterLimit().toString());
+		SNMPManager.set(MIB.CondoOID.ELECTRIC_INSTANT_LIMIT, condo.getInstantElectricLimit().toString());
+	}
+	
+	public void setAptsUsageLimits(Condominium condo) throws IOException, ParseException {
+		SNMPManager.set(MIB.CondoOID.APT_WATER_INSTANT_LIMIT, condo.getAptInstantWaterLimit().toString());
+		SNMPManager.set(MIB.CondoOID.APT_ELECTRIC_INSTANT_LIMIT, condo.getAptInstantElectricLimit().toString());
 	}
 }

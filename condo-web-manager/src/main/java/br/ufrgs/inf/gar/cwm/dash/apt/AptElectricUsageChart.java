@@ -71,7 +71,7 @@ public class AptElectricUsageChart extends Chart implements RefresherComponent {
 				}
 				hash.put(apt.getId(), series);
 				addUsageItemsSeries(apt.getInstantElectricUsage(), condo.getAptInstantElectricLimit(), series, false);
-				configuration.addSeries(hash.get(apt.getId()));
+				configuration.addSeries(series);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -114,7 +114,7 @@ public class AptElectricUsageChart extends Chart implements RefresherComponent {
 	
 	private void addUsageItemsSeries(final UsageValue usage, final UsageValue limit, DataSeries series, Boolean shift) {
 		DataSeriesItem item = new DataSeriesItem(currentDate, normalizeUsage(usage.toString()));
-		if (usage.toFloat() > 0.8f) {
+		if (usage.toFloat() > limit.toFloat()) {
 			item.setColor(SolidColor.RED);
 		}
 		series.add(item, true, shift);

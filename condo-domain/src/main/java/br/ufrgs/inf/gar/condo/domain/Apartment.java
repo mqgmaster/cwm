@@ -57,6 +57,7 @@ public class Apartment extends AbstractEntity<Integer, Apartment> {
     private Sector sector;
     
     public Apartment() {
+    	this(null, null, null, null);
 	}
      
     public Apartment(Integer number, String ownerName, Integer numRooms, Sector sector) {

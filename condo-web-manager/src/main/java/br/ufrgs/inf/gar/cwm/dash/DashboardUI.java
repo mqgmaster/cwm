@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 import br.ufrgs.inf.gar.cwm.dash.data.DummyDataProvider;
-import br.ufrgs.inf.gar.cwm.dash.data.Simulator;
 import br.ufrgs.inf.gar.cwm.dash.domain.User;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.BrowserResizeEvent;
 import br.ufrgs.inf.gar.cwm.dash.event.DashboardEvent.CloseOpenWindowsEvent;
@@ -41,20 +40,17 @@ public final class DashboardUI extends UI {
 
     @Override
     protected void init(final VaadinRequest request) {
-        setLocale(Locale.US);
+        setLocale(Locale.US); //Necessario devido a valores float
         try {
 			DaoService.init();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        Simulator.start();
         DashboardEventBus.register(this);
         Responsive.makeResponsive(this);
 
         updateContent();
 
-        // Some views need to be aware of browser resize events so a
-        // BrowserResizeEvent gets fired to the event but on every occasion.
         Page.getCurrent().addBrowserWindowResizeListener(
             new BrowserWindowResizeListener() {
                 @Override
@@ -65,11 +61,6 @@ public final class DashboardUI extends UI {
             });
     }
 
-    /**
-     * Updates the correct content for this UI based on the current user status.
-     * If the user is logged in with appropriate privileges, main view is shown.
-     * Otherwise login view is shown.
-     */
     private void updateContent() {
         User user = (User) VaadinSession.getCurrent().getAttribute(
                 User.class.getName());
@@ -94,9 +85,6 @@ public final class DashboardUI extends UI {
 
     @Subscribe
     public void userLoggedOut(final UserLoggedOutEvent event) {
-        // When the user logs out, current VaadinSession gets closed and the
-        // page gets reloaded on the login screen. Do notice the this doesn't
-        // invalidate the current HttpSession.
         VaadinSession.getCurrent().close();
         Page.getCurrent().reload();
     }

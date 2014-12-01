@@ -1,4 +1,4 @@
-package br.ufrgs.inf.gar.cwm.dash.condo;
+package br.ufrgs.inf.gar.cwm.dash.apt;
 
 import java.io.IOException;
 
@@ -26,7 +26,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class LimitPanel extends Panel {
+public class AptLimitPanel extends Panel {
 	
 	private static final String TITLE = "Limiares de consumo";
 
@@ -36,7 +36,7 @@ public class LimitPanel extends Panel {
     private TextField waterUsageLimit;
     private TextField electricUsageLimit;
 
-	public LimitPanel() {
+	public AptLimitPanel() {
 		setCaption(TITLE);
 		addStyleName(ValoTheme.PANEL_BORDERLESS);
 		
@@ -53,12 +53,12 @@ public class LimitPanel extends Panel {
 
         waterUsageLimit = new TextField("Água (litros)");
         waterUsageLimit.setImmediate(true);
-        waterUsageLimit.setValue(condo.getInstantWaterLimit().toString());
+        waterUsageLimit.setValue(condo.getAptInstantWaterLimit().toString());
         details.addComponent(waterUsageLimit);
         
         electricUsageLimit = new TextField("Eletricidade (kWh)");
         electricUsageLimit.setImmediate(true);
-        electricUsageLimit.setValue(condo.getInstantElectricLimit().toString());
+        electricUsageLimit.setValue(condo.getAptInstantElectricLimit().toString());
         details.addComponent(electricUsageLimit);
         
         FocusListener focus = new FocusListener() {
@@ -100,10 +100,10 @@ public class LimitPanel extends Panel {
             public void buttonClick(ClickEvent event) {
         		try {
         			Condominium condo = new Condominium();
-        			condo.getInstantElectricLimit().set(electricUsageLimit.getValue());
-        			condo.getInstantWaterLimit().set(waterUsageLimit.getValue());
+        			condo.getAptInstantElectricLimit().set(electricUsageLimit.getValue());
+        			condo.getAptInstantWaterLimit().set(waterUsageLimit.getValue());
         			
-        			DaoService.get().setCondoUsageLimits(condo);
+        			DaoService.get().setAptsUsageLimits(condo);
                     
                     Notification success = new Notification(
                             "Limiares atualizados com sucesso");

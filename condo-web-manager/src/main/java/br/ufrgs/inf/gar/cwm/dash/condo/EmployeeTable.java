@@ -1,5 +1,7 @@
 package br.ufrgs.inf.gar.cwm.dash.condo;
 
+import java.io.IOException;
+
 import br.ufrgs.inf.gar.condo.domain.Employee;
 import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
@@ -46,12 +48,17 @@ public final class EmployeeTable extends Table implements RefresherComponent {
         setImmediate(true);
         setSizeFull();
 
-        BeanItemContainer<Employee> container = new BeanItemContainer<>(
-        		Employee.class, DaoService.getAllEmployees());
-        setContainerDataSource(container);
-        setVisibleColumns(new Object[]{"name", "role", "monthWage", "weekWorkload", "working"});
-        setColumnHeaders("Nome", "Cargo", "Salário", "Carga Horária", "Status");
-        
+        BeanItemContainer<Employee> container;
+		try {
+			container = new BeanItemContainer<>(
+					Employee.class, DaoService.get().getAllEmployees());
+			setContainerDataSource(container);
+			setVisibleColumns(new Object[]{"name", "role", "monthWage", "weekWorkload", "working"});
+	        setColumnHeaders("Nome", "Cargo", "Salário", "Carga Horária", "Status");
+		} catch (IllegalArgumentException | IOException e) {
+			e.printStackTrace();
+		}
+		
         this.setTableFieldFactory(new FieldFactory());
     }
     
@@ -69,12 +76,14 @@ public final class EmployeeTable extends Table implements RefresherComponent {
         }
     }
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		BeanItemContainer<Employee> container = (BeanItemContainer<Employee>) this.getContainerDataSource();
-		container.removeAllItems();
-		container.addAll(DaoService.getAllEmployees());
+		this.removeAllItems();
+		try {
+			this.addItems(DaoService.get().getAllEmployees());
+		} catch (UnsupportedOperationException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

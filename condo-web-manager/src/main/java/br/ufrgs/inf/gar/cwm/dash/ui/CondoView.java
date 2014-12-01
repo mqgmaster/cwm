@@ -5,12 +5,12 @@ import java.util.Iterator;
 
 import br.ufrgs.inf.gar.cwm.dash.DashboardUI;
 import br.ufrgs.inf.gar.cwm.dash.component.SparklineChart;
-import br.ufrgs.inf.gar.cwm.dash.condo.AdvancedPanel;
 import br.ufrgs.inf.gar.cwm.dash.condo.CondoElectricWeekChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.CondoUsageChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.CondoWaterWeekChart;
 import br.ufrgs.inf.gar.cwm.dash.condo.EmployeeTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.GarageTable;
+import br.ufrgs.inf.gar.cwm.dash.condo.InfoPanel;
 import br.ufrgs.inf.gar.cwm.dash.condo.LampTable;
 import br.ufrgs.inf.gar.cwm.dash.condo.LimitPanel;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherComponent;
@@ -52,7 +52,7 @@ public final class CondoView extends Panel implements View {
 	private static final String NOTIFICATIONS = "Notificações";
 	private static final String TITLE_ID = "dashboard-title";
     private final RefresherThread panelRefresher = new RefresherThread(8000, 8000);
-    private final RefresherThread sparkRefresher = new RefresherThread(14000, 14000);
+    private final RefresherThread sparkRefresher = new RefresherThread(25000, 25000);
 
     private Label titleLabel;
     private NotificationsButton notificationsButton;
@@ -156,14 +156,20 @@ public final class CondoView extends Panel implements View {
         dashboardPanels.addComponent(buildEmployeeTable());
         dashboardPanels.addComponent(buildLampTable());
         dashboardPanels.addComponent(buildLimitPanel());
-        dashboardPanels.addComponent(buildAdvancedPanel());
+        dashboardPanels.addComponent(buildInfoPanel());
 
         return dashboardPanels;
     }
     
-    private Component buildAdvancedPanel() {
-		return createContentWrapper(new AdvancedPanel());
+    private Component buildInfoPanel() {
+    	 Component c = createContentWrapper(new InfoPanel());
+         c.addStyleName("dashboard-panel-slot-table");
+         return c;
 	}
+    
+   // private Component buildAdvancedPanel() {
+	//	return createContentWrapper(new AdvancedPanel());
+	//}
 
 	private Component buildLimitPanel() {
         Component c = createContentWrapper(new LimitPanel());

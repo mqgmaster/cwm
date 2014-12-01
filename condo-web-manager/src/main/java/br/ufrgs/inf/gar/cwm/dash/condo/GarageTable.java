@@ -1,5 +1,7 @@
 package br.ufrgs.inf.gar.cwm.dash.condo;
 
+import java.io.IOException;
+
 import br.ufrgs.inf.gar.condo.domain.Garage;
 import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
@@ -54,12 +56,17 @@ public final class GarageTable extends Table implements RefresherComponent {
         setSortEnabled(false);
         setSizeFull();
 
-        BeanItemContainer<Garage> container = new BeanItemContainer<>(
-        		Garage.class, DaoService.getAllGarages());
-        container.addNestedContainerProperty("apartment.number");
-        setContainerDataSource(container);
-        setVisibleColumns(new Object[]{"number", "apartment.number", "occupied"});
-        setColumnHeaders("Número", "Proprietário", "Situação");
+        BeanItemContainer<Garage> container;
+		try {
+			container = new BeanItemContainer<>(
+					Garage.class, DaoService.get().getAllGarages());
+			container.addNestedContainerProperty("apartment.number");
+	        setContainerDataSource(container);
+	        setVisibleColumns(new Object[]{"number", "apartment.number", "occupied"});
+	        setColumnHeaders("Número", "Proprietário", "Situação");
+		} catch (IllegalArgumentException | IOException e) {
+			e.printStackTrace();
+		}
         
         this.setTableFieldFactory(new FieldFactory());
     }
@@ -78,12 +85,14 @@ public final class GarageTable extends Table implements RefresherComponent {
         }
     }
     
-    @SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		BeanItemContainer<Garage> container = (BeanItemContainer<Garage>) this.getContainerDataSource();
-		container.removeAllItems();
-		container.addAll(DaoService.getAllGarages());
+    	this.removeAllItems();
+		try {
+			this.addItems(DaoService.get().getAllGarages());
+		} catch (UnsupportedOperationException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

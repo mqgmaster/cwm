@@ -1,14 +1,12 @@
 package br.ufrgs.inf.gar.cwm.dash.apt;
 
 import java.io.IOException;
-import java.util.List;
 
 import br.ufrgs.inf.gar.condo.domain.Apartment;
 import br.ufrgs.inf.gar.cwm.dash.condo.RefresherComponent;
 import br.ufrgs.inf.gar.cwm.dash.data.DaoService;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
@@ -60,17 +58,12 @@ public final class ApartmentTable extends Table implements RefresherComponent {
         }
     }
     
-	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		BeanItemContainer<Apartment> container = (BeanItemContainer<Apartment>) this.getContainerDataSource();
+		this.removeAllItems();
 		try {
-			List<Apartment> list = DaoService.get().getAllApartmentsPeople();
-			for (Apartment apt : list) {
-				BeanItem<Apartment> bean = container.getItem(apt.getId());
-				bean.getBean().setNumPeople(apt.getNumPeople());
-			}
-		} catch (IOException e) {
+			this.addItems(DaoService.get().getAllApartments());
+		} catch (UnsupportedOperationException | IOException e) {
 			e.printStackTrace();
 		}
 	}
