@@ -1,2 +1,2 @@
-ufrgs-inf-gerencia-project
+Condo Web Manager
 ==========================
